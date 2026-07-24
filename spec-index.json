@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "generated_policy": "Headings, hashes, sizes and status are recomputed by tools/spec_slice.py; selectors and dependency/context maps are reviewed inputs.",
+  "known_external_references": ["ARCHITECTURE-1.md"],
+  "documents": [
+    {
+      "id": "CON",
+      "canonical_path": "CONSTITUTION.md",
+      "aliases": [],
+      "authority_rank": 1,
+      "version": "0.1",
+      "depends_on": [],
+      "planned": false
+    },
+    {
+      "id": "ARCH",
+      "canonical_path": "ARCHITECTURE.md",
+      "aliases": ["01-ARCHITECTURE-2-2.md"],
+      "authority_rank": 2,
+      "version": "0.1",
+      "depends_on": ["CON"],
+      "planned": false
+    },
+    {
+      "id": "DATA",
+      "canonical_path": "DATA-CLASSIFICATION.md",
+      "aliases": ["02-DATA-CLASSIFICATION-1-2.md"],
+      "authority_rank": 4,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH"],
+      "planned": false
+    },
+    {
+      "id": "CAP",
+      "canonical_path": "CAPABILITY-CONTRACT.md",
+      "aliases": ["03-CAPABILITY-CONTRACT-1-2.md"],
+      "authority_rank": 4,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH", "DATA"],
+      "planned": false
+    },
+    {
+      "id": "MOD",
+      "canonical_path": "MODULE-MANIFEST.md",
+      "aliases": ["04-MODULE-MANIFEST-1.md"],
+      "authority_rank": 4,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH", "DATA", "CAP"],
+      "planned": false
+    },
+    {
+      "id": "LOOP",
+      "canonical_path": "LOOP-SPEC.md",
+      "aliases": ["05-LOOP-SPEC-1.md"],
+      "authority_rank": 4,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH", "DATA", "CAP", "MOD"],
+      "planned": false
+    },
+    {
+      "id": "KNOW",
+      "canonical_path": "KNOWLEDGE-MODULE.md",
+      "aliases": ["06-KNOWLEDGE-MODULE.md"],
+      "authority_rank": 5,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH", "DATA", "CAP", "MOD", "LOOP"],
+      "planned": false
+    },
+    {
+      "id": "DOC",
+      "canonical_path": "DOCUMENT-MODULE.md",
+      "aliases": [],
+      "authority_rank": 5,
+      "version": "0.1",
+      "depends_on": ["CON", "ARCH", "DATA", "CAP", "MOD", "LOOP"],
+      "optional_alignment": ["KNOW"],
+      "planned": false
+    },
+    {
+      "id": "BACKUP",
+      "canonical_path": "BACKUP-RECOVERY.md",
+      "aliases": [],
+      "authority_rank": 4,
+      "version": null,
+      "depends_on": ["CON", "ARCH", "DATA", "CAP", "MOD", "LOOP", "KNOW", "DOC"],
+      "planned": true
+    },
+    {
+      "id": "NAV",
+      "canonical_path": "SPEC-NAVIGATION.md",
+      "aliases": [],
+      "authority_rank": 6,
+      "version": "0.1",
+      "depends_on": [],
+      "planned": false,
+      "normative": false
+    },
+    {
+      "id": "ROADMAP",
+      "canonical_path": "ROADMAP.md",
+      "aliases": [],
+      "authority_rank": 6,
+      "version": null,
+      "depends_on": ["CON", "ARCH", "DATA", "CAP", "MOD", "LOOP", "KNOW", "DOC", "BACKUP", "NAV"],
+      "planned": true,
+      "normative": false
+    },
+    {
+      "id": "AGENTS",
+      "canonical_path": "AGENTS.md",
+      "aliases": [],
+      "authority_rank": 7,
+      "version": null,
+      "depends_on": ["ROADMAP", "NAV"],
+      "planned": true,
+      "normative": false
+    }
+  ],
+  "impact_tags": {
+    "canonical-write": ["CON:I1", "CON:I10", "ARCH:7", "DATA:2", "CAP:10", "CAP:11"],
+    "immutable-fact": ["CON:I2", "DATA:4.1", "CAP:11.9", "LOOP:8", "LOOP:10"],
+    "revisioned-entity": ["CON:I3", "ARCH:10.3", "ARCH:10.4", "CAP:11.6", "CAP:20"],
+    "relation": ["ARCH:10.5", "DATA:4.3", "MOD:17", "LOOP:10"],
+    "blob": ["ARCH:11", "DATA:4.4", "MOD:18", "MOD:19"],
+    "derived": ["CON:I4", "ARCH:9", "DATA:4.6", "CAP:14"],
+    "workflow": ["CON:I10", "ARCH:9", "CAP:18", "CAP:21"],
+    "import": ["CON:I1", "CON:I14", "ARCH:18", "CAP:11", "CAP:19"],
+    "export": ["CON:I16", "ARCH:19", "DATA:9", "CAP:17", "MOD:19"],
+    "backup-recovery": ["ARCH:19", "DATA:10", "MOD:19"],
+    "sensitive": ["CON:4.2", "ARCH:18", "DATA:6", "DATA:12", "CAP:9"],
+    "ai-boundary": ["CON:I13", "ARCH:17", "DATA:12", "CAP:25"],
+    "module-contract": ["CON:I6", "MOD:4", "MOD:5", "MOD:8", "MOD:9", "MOD:13"],
+    "loop-coverage": ["CON:I7", "CON:I8", "LOOP:4", "LOOP:6", "LOOP:7", "LOOP:10"],
+    "offline-sync-ready": ["CON:I12", "ARCH:10", "ARCH:16", "MOD:18"],
+    "purge": ["CON:I11", "ARCH:18.6", "DATA:11"],
+    "failure-domain": ["CON:I15", "ARCH:20", "CAP:24"]
+  },
+  "context_packs": {
+    "spec-authoring": {
+      "version": 1,
+      "tags": [],
+      "selectors": ["CON:0", "CON:1", "CON:5", "CON:6", "CON:7", "ARCH:0", "ARCH:24", "ARCH:25", "ARCH:28", "NAV:2", "NAV:3", "NAV:4", "NAV:6", "NAV:8"]
+    },
+    "knowledge-note-core": {
+      "version": 1,
+      "tags": ["canonical-write", "revisioned-entity", "relation", "sensitive", "loop-coverage", "offline-sync-ready"],
+      "selectors": ["KNOW:2", "KNOW:3", "KNOW:7", "KNOW:8", "KNOW:9", "KNOW:10", "KNOW:16", "KNOW:18", "KNOW:19", "KNOW:20", "KNOW:25", "KNOW:26", "KNOW:28", "KNOW:32"]
+    },
+    "knowledge-import": {
+      "version": 1,
+      "tags": ["canonical-write", "revisioned-entity", "relation", "import", "workflow", "sensitive", "export", "failure-domain"],
+      "selectors": ["KNOW:16", "KNOW:18", "KNOW:19", "KNOW:23", "KNOW:24", "KNOW:25", "KNOW:27", "KNOW:28", "KNOW:29", "KNOW:32"]
+    },
+    "document-import": {
+      "version": 1,
+      "tags": ["canonical-write", "revisioned-entity", "blob", "derived", "workflow", "import", "sensitive", "failure-domain"],
+      "selectors": ["DOC:2.3", "DOC:7", "DOC:8", "DOC:18", "DOC:20.8", "DOC:21.2", "DOC:23", "DOC:29", "DOC:30", "DOC:33.4"]
+    },
+    "document-reader": {
+      "version": 1,
+      "tags": ["blob", "derived", "sensitive", "failure-domain"],
+      "selectors": ["DOC:2.5", "DOC:2.7", "DOC:8", "DOC:9", "DOC:10", "DOC:11", "DOC:17", "DOC:19", "DOC:22.4", "DOC:24", "DOC:29", "DOC:30", "DOC:33.6"]
+    },
+    "document-anchor-write": {
+      "version": 1,
+      "tags": ["canonical-write", "revisioned-entity", "relation", "derived", "sensitive", "export", "loop-coverage", "offline-sync-ready"],
+      "selectors": ["DATA:16.2", "DOC:3.4", "DOC:10", "DOC:11", "DOC:12", "DOC:18", "DOC:20.2", "DOC:21.4", "DOC:22.6", "DOC:25", "DOC:26.3", "DOC:27.4", "DOC:29", "DOC:33.2"]
+    },
+    "module-activation": {
+      "version": 1,
+      "tags": ["module-contract", "loop-coverage", "failure-domain"],
+      "selectors": ["CAP:5", "MOD:4", "MOD:5", "MOD:7", "MOD:8", "MOD:9", "MOD:10", "MOD:13", "MOD:22", "LOOP:16"]
+    },
+    "portable-export": {
+      "version": 1,
+      "tags": ["export", "sensitive", "failure-domain"],
+      "selectors": ["CON:I16", "ARCH:19", "DATA:9", "CAP:17", "CAP:27.7", "MOD:19", "KNOW:24", "DOC:25"]
+    }
+  }
+}
