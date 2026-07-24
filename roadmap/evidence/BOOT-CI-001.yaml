@@ -1,0 +1,45 @@
+schema_version: 1
+task_id: BOOT-CI-001
+context_manifest_sha256: 13536ff8dbc21e27d33a1d47ad621a824e026bfbab38578eb156f7bf6bbf60e9
+selectors:
+- ARCH:25
+- CON:7
+- NAV:6
+- NAV:8
+- BOOT:3
+- BOOT:5
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  BOOT: 8b30b93bc180f78bffdfa8838c8c481f56e80ccf80865ee6161f97763c3382b0
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
+impact_tags:
+- failure-domain
+changed_paths:
+- .gitattributes
+- .github/CODEOWNERS
+- .github/pull_request_template.md
+- .github/workflows/bootstrap-gates.yml
+- governance/GITHUB-PROTECTION.md
+- roadmap/evidence/BOOT-CI-001.yaml
+- roadmap/tasks/BOOT-CI-001.yaml
+- tests/test_nabla_nav.py
+- tests/test_spec_slice.py
+- tools/nabla_nav.py
+changed_contracts:
+- GITHUB-GATE-v1
+tests:
+- command: python -m pytest -q
+  exit_code: 0
+- command: python tools/nabla_nav.py validate
+  exit_code: 0
+- command: python tools/nabla_nav.py check-lock
+  exit_code: 0
+- command: git diff --check
+  exit_code: 0
+unresolved_decisions: []
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/6
