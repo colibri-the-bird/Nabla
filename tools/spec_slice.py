@@ -30,6 +30,20 @@ class SpecError(RuntimeError):
     pass
 
 
+def configure_utf8_stdio() -> None:
+    """Make CLI output deterministic and Unicode-safe on every supported host."""
+
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="strict", newline="\n")
+        except (OSError, ValueError):
+            # Redirected/test streams may already be closed or immutable.
+            continue
+
+
 @dataclass(frozen=True)
 class Heading:
     key: str
@@ -583,6 +597,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    configure_utf8_stdio()
     parser = build_parser()
     args = parser.parse_args(argv)
     index_path = args.index.resolve()
