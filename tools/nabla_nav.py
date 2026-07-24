@@ -7,6 +7,7 @@ import argparse
 import fnmatch
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -51,6 +52,7 @@ EVIDENCE_REQUIRED_KEYS = {
     "unresolved_decisions",
     "pr_url",
 }
+PR_TITLE_RE = re.compile(r"^\[([A-Z0-9]+(?:-[A-Z0-9]+)+)\]\s+\S")
 
 
 class NavError(RuntimeError):
@@ -664,11 +666,11 @@ def validate_task_semantics(
     for dependency in dependencies["tasks"]:
         if dependency not in tasks:
             errors.append(f"{task_id}: unknown task dependency {dependency}")
-    if task["state"] == "ready":
+    if task["state"] in {"ready", "completed"}:
         for dependency in dependencies["tasks"]:
             if dependency in tasks and tasks[dependency]["state"] != "completed":
                 errors.append(
-                    f"{task_id}: ready task depends on non-completed task {dependency}"
+                    f"{task_id}: active task depends on non-completed task {dependency}"
                 )
         for decision_id in dependencies["decisions"]:
             entry = decisions.get(decision_id)
@@ -969,6 +971,67 @@ def validate_changed_paths(task: dict[str, Any], changed_paths: Sequence[str]) -
     return errors
 
 
+def task_id_from_pr_title(title: str) -> str:
+    match = PR_TITLE_RE.match(title.strip())
+    if not match:
+        raise NavError("PR title must start with [TASK-ID] followed by an outcome")
+    return match.group(1)
+
+
+def validate_pr_evidence(
+    root: Path,
+    task: dict[str, Any],
+    task_path: Path,
+    changed_paths: Sequence[str],
+    pr_url: str,
+) -> list[str]:
+    errors: list[str] = []
+    evidence_path = root / "roadmap" / "evidence" / f"{task['task_id']}.yaml"
+    if not evidence_path.exists():
+        return [f"{task['task_id']}: PR requires evidence file {evidence_path}"]
+    evidence = read_yaml(evidence_path)
+    errors.extend(validate_evidence(root, task))
+    if errors:
+        return errors
+    index = spec_slice.load_index(root / "spec-index.json")
+    spec_errors, _, docs = spec_slice.validate_index(root, index)
+    if spec_errors:
+        return ["spec validation failed before PR evidence check"]
+    try:
+        _, manifest = build_context_bundle(root, task, task_path, index, docs)
+    except (NavError, spec_slice.SpecError, OSError) as exc:
+        return [str(exc)]
+    if evidence["context_manifest_sha256"] != manifest["manifest_sha256"]:
+        errors.append(
+            f"{task['task_id']}: evidence context manifest is stale; "
+            "run prepare and update evidence"
+        )
+    normalized_changed = sorted(path.replace("\\", "/") for path in changed_paths)
+    evidence_changed = sorted(path.replace("\\", "/") for path in evidence["changed_paths"])
+    if evidence_changed != normalized_changed:
+        errors.append(f"{task['task_id']}: evidence changed_paths does not match PR diff")
+    if evidence["pr_url"] != pr_url:
+        errors.append(f"{task['task_id']}: evidence pr_url does not match current PR")
+    if not evidence["tests"]:
+        errors.append(f"{task['task_id']}: evidence requires at least one test result")
+    else:
+        for position, test in enumerate(evidence["tests"]):
+            if not isinstance(test, dict):
+                errors.append(
+                    f"{task['task_id']}: evidence.tests[{position}] must be a mapping"
+                )
+                continue
+            if not isinstance(test.get("command"), str) or not test["command"]:
+                errors.append(
+                    f"{task['task_id']}: evidence.tests[{position}].command is required"
+                )
+            if test.get("exit_code") != 0:
+                errors.append(
+                    f"{task['task_id']}: evidence.tests[{position}] did not exit with 0"
+                )
+    return errors
+
+
 def git_changed_paths(root: Path, base: str) -> list[str]:
     result = subprocess.run(
         ["git", "diff", "--name-only", f"{base}...HEAD"],
@@ -995,6 +1058,40 @@ def command_check_scope(args: argparse.Namespace, root: Path) -> int:
     return 0
 
 
+def command_ci_pr(args: argparse.Namespace, root: Path) -> int:
+    task_id = task_id_from_pr_title(args.title)
+    errors, warnings, tasks, task_paths = validate_repository(root)
+    if errors:
+        raise NavError("repository validation failed:\n- " + "\n- ".join(errors))
+    if task_id not in tasks:
+        raise NavError(f"PR references unknown task id: {task_id}")
+    task = tasks[task_id]
+    if task["state"] != "completed":
+        raise NavError(f"{task_id}: PR task card must set state to completed")
+    expected_prefix = f"task/{task_id}-"
+    if not args.branch.startswith(expected_prefix):
+        raise NavError(
+            f"{task_id}: branch must start with {expected_prefix!r}, got {args.branch!r}"
+        )
+    changed = git_changed_paths(root, args.base)
+    pr_errors = validate_changed_paths(task, changed)
+    pr_errors.extend(
+        validate_pr_evidence(
+            root,
+            task,
+            task_paths[task_id],
+            changed,
+            args.pr_url,
+        )
+    )
+    if pr_errors:
+        raise NavError("PR gate failed:\n- " + "\n- ".join(pr_errors))
+    for warning in warnings:
+        print(f"WARNING: {warning}", file=sys.stderr)
+    print(f"PR gate passed: {task_id}; {len(changed)} changed path(s)")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -1017,6 +1114,11 @@ def build_parser() -> argparse.ArgumentParser:
     scope.add_argument("task_id")
     scope.add_argument("--base", default="origin/main")
     scope.add_argument("--path", action="append", default=[])
+    ci_pr = subparsers.add_parser("ci-pr", help="validate one pull request gate")
+    ci_pr.add_argument("--title", required=True)
+    ci_pr.add_argument("--base", required=True)
+    ci_pr.add_argument("--branch", required=True)
+    ci_pr.add_argument("--pr-url", required=True)
     return parser
 
 
@@ -1040,6 +1142,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return command_evidence(args, root)
         if args.command == "check-scope":
             return command_check_scope(args, root)
+        if args.command == "ci-pr":
+            return command_ci_pr(args, root)
         raise NavError(f"unsupported command: {args.command}")
     except (NavError, spec_slice.SpecError, OSError, json.JSONDecodeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

@@ -1,0 +1,7 @@
+# The repository owner manually merges every task PR.
+* @colibri-the-bird
+
+/CONSTITUTION.md @colibri-the-bird
+/SPEC-*.md @colibri-the-bird
+/governance/ @colibri-the-bird
+/roadmap/ @colibri-the-bird

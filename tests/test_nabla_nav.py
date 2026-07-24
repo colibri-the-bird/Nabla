@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,6 +61,10 @@ def test_context_manifest_is_deterministic() -> None:
     assert first_context.encode("utf-8") == second_context.encode("utf-8")
     assert nabla_nav.canonical_json(first_manifest) == nabla_nav.canonical_json(second_manifest)
     assert first_manifest["context_words"] < 12000
+    assert (
+        first_manifest["manifest_sha256"]
+        == "0b62ed7122fc94683884c63ed6dbabc35eafcb86bf4dd78047992ec36390b3df"
+    )
 
 
 def test_stale_selector_is_rejected() -> None:
@@ -94,6 +99,21 @@ def test_ready_task_cannot_depend_on_incomplete_task() -> None:
     errors, _ = nabla_nav.validate_task_semantics(task, scenario, index, docs, {}, {})
 
     assert any("depends on non-completed task BOOT-NAV-001" in error for error in errors)
+
+
+def test_completed_task_cannot_skip_dependency_chain() -> None:
+    index, docs, tasks, _ = repository_state()
+    scenario = copy.deepcopy(tasks)
+    scenario["BOOT-NAV-001"]["state"] = "blocked"
+    task = copy.deepcopy(scenario["BOOT-SLICE-001"])
+    task["state"] = "completed"
+
+    errors, _ = nabla_nav.validate_task_semantics(task, scenario, index, docs, {}, {})
+
+    assert any(
+        "active task depends on non-completed task BOOT-NAV-001" in error
+        for error in errors
+    )
 
 
 def test_ready_task_cannot_use_missing_artifact() -> None:
@@ -246,3 +266,94 @@ def test_traceability_covers_exactly_i1_through_i16() -> None:
     assert {entry["id"] for entry in trace["invariants"]} == {
         f"I{number}" for number in range(1, 17)
     }
+
+
+@pytest.mark.parametrize(
+    ("title", "task_id"),
+    [
+        ("[BOOT-CI-001] Add GitHub gates", "BOOT-CI-001"),
+        ("  [BOOT-NAV-001] Define navigation  ", "BOOT-NAV-001"),
+    ],
+)
+def test_pr_title_yields_exact_task_id(title: str, task_id: str) -> None:
+    assert nabla_nav.task_id_from_pr_title(title) == task_id
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "BOOT-CI-001 Add GitHub gates",
+        "[BOOT-CI-001]",
+        "[boot-ci-001] Add GitHub gates",
+        "[BOOT_CI_001] Add GitHub gates",
+    ],
+)
+def test_pr_title_rejects_missing_or_malformed_task_id(title: str) -> None:
+    with pytest.raises(nabla_nav.NavError, match="PR title must start"):
+        nabla_nav.task_id_from_pr_title(title)
+
+
+def test_pr_evidence_must_match_manifest_diff_and_url(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    task = copy.deepcopy(repository_state()[2]["BOOT-CI-001"])
+    task["state"] = "completed"
+    evidence_path = tmp_path / "roadmap" / "evidence" / "BOOT-CI-001.yaml"
+    evidence_path.parent.mkdir(parents=True)
+    evidence_path.write_text(
+        yaml.safe_dump(
+            {
+                "schema_version": 1,
+                "task_id": "BOOT-CI-001",
+                "context_manifest_sha256": "stale",
+                "selectors": [],
+                "document_hashes": {},
+                "impact_tags": [],
+                "changed_paths": ["wrong.txt"],
+                "changed_contracts": [],
+                "tests": [{"command": "pytest", "exit_code": 1}],
+                "unresolved_decisions": [],
+                "pr_url": "https://github.com/colibri-the-bird/Nabla/pull/1",
+            },
+            allow_unicode=True,
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(nabla_nav, "validate_evidence", lambda *_: [])
+    monkeypatch.setattr(spec_slice, "load_index", lambda *_: {})
+    monkeypatch.setattr(spec_slice, "validate_index", lambda *_: ([], [], {}))
+    monkeypatch.setattr(
+        nabla_nav,
+        "build_context_bundle",
+        lambda *_: ("context", {"manifest_sha256": "current"}),
+    )
+
+    errors = nabla_nav.validate_pr_evidence(
+        tmp_path,
+        task,
+        tmp_path / "roadmap" / "tasks" / "BOOT-CI-001.yaml",
+        [".github/workflows/bootstrap-gates.yml"],
+        "https://github.com/colibri-the-bird/Nabla/pull/2",
+    )
+
+    assert any("context manifest is stale" in error for error in errors)
+    assert any("changed_paths does not match" in error for error in errors)
+    assert any("pr_url does not match" in error for error in errors)
+    assert any("did not exit with 0" in error for error in errors)
+
+
+def test_workflow_has_exact_required_checks_and_no_path_filters() -> None:
+    workflow_path = ROOT / ".github" / "workflows" / "bootstrap-gates.yml"
+    workflow = yaml.load(workflow_path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+
+    assert set(workflow["jobs"]) == {
+        "navigation-linux",
+        "navigation-windows",
+        "task-card-gate",
+        "scope-and-evidence-gate",
+        "spec-lock-and-traceability-gate",
+    }
+    assert workflow["on"]["pull_request"] == ""
+    assert workflow["on"]["push"]["branches"] == ["main"]
+    assert "paths" not in workflow["on"]["push"]
