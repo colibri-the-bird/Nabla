@@ -1,0 +1,60 @@
+schema_version: 1
+task_id: BOOT-SLICE-001
+type: tooling
+state: blocked
+outcome: Selector/slicer детерминирован, Unicode-safe и протестирован на Windows и Linux.
+router: BOOT:1
+scope:
+  include:
+    - Исправить UTF-8 stdout/stderr.
+    - Покрыть selector parser и security boundaries тестами.
+  exclude:
+    - Не изменять нормативную семантику.
+    - Не добавлять network или Markdown execution.
+  paths:
+    include:
+      - tools/spec_slice.py
+      - tools/requirements.txt
+      - tests/test_spec_slice.py
+      - roadmap/tasks/BOOT-SLICE-001.yaml
+      - roadmap/evidence/BOOT-SLICE-001.yaml
+    exclude:
+      - "*.md"
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs: []
+  required:
+    - NAV:2
+    - NAV:7
+    - NAV:8
+    - NAV:11
+    - BOOT:1
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NAVIGATION
+  writes:
+    - SELECTOR-CLI
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-NAV-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q tests/test_spec_slice.py
+    - python tools/spec_slice.py validate
+  invariants:
+    - I15
+  evidence:
+    - Windows cp1251 regression test passes with UTF-8 output.
+    - Repeated slice output is byte-identical.
+approval:
+  owner_required: false
+  required_spec_status: draft-allowed

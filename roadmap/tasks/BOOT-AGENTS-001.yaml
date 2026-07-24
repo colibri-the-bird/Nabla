@@ -1,0 +1,59 @@
+schema_version: 1
+task_id: BOOT-AGENTS-001
+type: tooling
+state: blocked
+outcome: Корневой AGENTS.md направляет Codex только через одну валидную task card.
+router: BOOT:1
+scope:
+  include:
+    - Добавить короткий Codex entrypoint.
+    - Зафиксировать start, reslice, stop и completion protocol.
+  exclude:
+    - Не пересказывать архитектуру.
+    - Не хранить product semantics в AGENTS.md.
+  paths:
+    include:
+      - AGENTS.md
+      - spec-index.json
+      - roadmap/tasks/BOOT-AGENTS-001.yaml
+      - roadmap/evidence/BOOT-AGENTS-001.yaml
+    exclude:
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs: []
+  required:
+    - NAV:1
+    - NAV:6
+    - NAV:9
+    - BOOT:3
+    - BOOT:4
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NAVIGATION
+    - TASK-CARD-v1
+  writes:
+    - AGENT-ENTRYPOINT-v1
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-TRACE-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - AGENTS.md remains a short router.
+    - Mutation without TASK-ID is explicitly prohibited.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed
