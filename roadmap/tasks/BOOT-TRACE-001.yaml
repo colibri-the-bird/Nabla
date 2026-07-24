@@ -1,0 +1,80 @@
+schema_version: 1
+task_id: BOOT-TRACE-001
+type: audit
+state: blocked
+outcome: Living spec lock, decision/artifact registries и I1–I16 traceability валидируются.
+router: BOOT:1
+scope:
+  include:
+    - Создать generated spec-lock.
+    - Зарегистрировать ADR, spikes и missing artifacts.
+    - Связать I1–I16 с применимыми selectors и будущими tests.
+  exclude:
+    - Не восстанавливать отсутствующие документы по сообщениям чатов.
+    - Не утверждать draft specifications автоматически.
+  paths:
+    include:
+      - governance/**
+      - tools/nabla_nav.py
+      - tests/test_nabla_nav.py
+      - roadmap/tasks/BOOT-TRACE-001.yaml
+      - roadmap/evidence/BOOT-TRACE-001.yaml
+    exclude:
+      - checksums.sha256
+      - archive/**
+context:
+  packs:
+    - id: spec-authoring
+      version: 1
+  required:
+    - CON:5
+    - CON:7
+    - ARCH:24
+    - ARCH:25
+    - NAV:8
+    - BOOT:2
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - CONSTITUTION
+    - SPEC-INDEX
+  writes:
+    - SPEC-LOCK-v1
+    - TRACEABILITY-v1
+    - DECISION-REGISTRY-v1
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-CARDS-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+  invariants:
+    - I1
+    - I2
+    - I3
+    - I4
+    - I5
+    - I6
+    - I7
+    - I8
+    - I9
+    - I10
+    - I11
+    - I12
+    - I13
+    - I14
+    - I15
+    - I16
+  evidence:
+    - spec-lock is byte-current.
+    - Missing artifacts remain explicit blockers.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed
