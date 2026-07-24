@@ -207,3 +207,28 @@ def test_repository_index_is_valid_json() -> None:
     index = json.loads((ROOT / "spec-index.json").read_text(encoding="utf-8"))
 
     assert index["schema_version"] == 1
+
+
+def test_all_context_packs_fit_hard_budget_and_known_large_packs_warn() -> None:
+    index = spec_slice.load_index(ROOT / "spec-index.json")
+    errors, _, docs = spec_slice.validate_index(ROOT, index)
+    assert errors == []
+    entries = spec_slice.document_entries(index)
+    pack_words: dict[str, int] = {}
+
+    for pack_id, pack in index["context_packs"].items():
+        selectors = spec_slice.expand_context(index, [pack_id], [], [])
+        content = spec_slice.build_slice(
+            docs,
+            entries,
+            selectors,
+            requested_selectors=(),
+            packs=[pack_id],
+            tags=pack.get("tags", []),
+        )
+        pack_words[pack_id] = spec_slice.word_count(content)
+
+    assert all(words <= 16000 for words in pack_words.values())
+    assert {
+        pack_id for pack_id, words in pack_words.items() if words > 12000
+    } == {"knowledge-note-core", "knowledge-import"}

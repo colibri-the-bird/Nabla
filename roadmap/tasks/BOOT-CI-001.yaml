@@ -1,22 +1,27 @@
 schema_version: 1
 task_id: BOOT-CI-001
 type: tooling
-state: blocked
+state: ready
 outcome: GitHub Actions проверяет navigation, task scope, evidence, spec lock и traceability.
 router: BOOT:1
 scope:
   include:
     - Добавить обязательные Windows/Linux checks.
     - Добавить PR template и branch protection guide.
+    - Добавить исполнимый PR gate и тесты бюджетов context packs.
   exclude:
     - Не включать deployment.
     - Не хранить GitHub secrets в репозитории.
   paths:
     include:
       - .github/**
+      - .gitattributes
       - governance/GITHUB-PROTECTION.md
       - roadmap/tasks/BOOT-CI-001.yaml
       - roadmap/evidence/BOOT-CI-001.yaml
+      - tools/nabla_nav.py
+      - tests/test_nabla_nav.py
+      - tests/test_spec_slice.py
     exclude:
       - src/**
       - app/**
