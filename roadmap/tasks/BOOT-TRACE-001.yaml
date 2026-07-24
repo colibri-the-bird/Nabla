@@ -1,7 +1,7 @@
 schema_version: 1
 task_id: BOOT-TRACE-001
 type: audit
-state: ready
+state: completed
 outcome: Living spec lock, decision/artifact registries и I1–I16 traceability валидируются.
 router: BOOT:1
 scope:

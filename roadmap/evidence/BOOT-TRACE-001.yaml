@@ -1,0 +1,49 @@
+schema_version: 1
+task_id: BOOT-TRACE-001
+context_manifest_sha256: 5d63abc839bae91c3d6c60b7ea1d72aef4171ef2d1861e73fb35d57ede33b29e
+selectors:
+- CON:5
+- CON:7
+- ARCH:24
+- ARCH:25
+- NAV:8
+- BOOT:2
+- CON:0
+- CON:1
+- CON:6
+- ARCH:0
+- ARCH:28
+- NAV:2
+- NAV:3
+- NAV:4
+- NAV:6
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  BOOT: 8b30b93bc180f78bffdfa8838c8c481f56e80ccf80865ee6161f97763c3382b0
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
+impact_tags: []
+changed_paths:
+- governance/artifacts.yaml
+- governance/decisions.yaml
+- governance/spec-lock.json
+- governance/traceability.yaml
+- roadmap/evidence/BOOT-TRACE-001.yaml
+- roadmap/tasks/BOOT-TRACE-001.yaml
+- tests/test_nabla_nav.py
+- tools/nabla_nav.py
+changed_contracts:
+- SPEC-LOCK-v1
+- TRACEABILITY-v1
+- DECISION-REGISTRY-v1
+tests:
+- command: python -m pytest -q
+  exit_code: 0
+- command: python tools/nabla_nav.py validate
+  exit_code: 0
+- command: python tools/nabla_nav.py check-lock
+  exit_code: 0
+- command: git diff --check
+  exit_code: 0
+unresolved_decisions: []
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/4
