@@ -1,7 +1,7 @@
 schema_version: 1
 task_id: BOOT-CARDS-001
 type: tooling
-state: blocked
+state: completed
 outcome: YAML task cards, DAG, context bundles и evidence управляются единым CLI.
 router: BOOT:1
 scope:

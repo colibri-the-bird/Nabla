@@ -1,7 +1,7 @@
 schema_version: 1
 task_id: BOOT-NAV-001
 type: spec
-state: ready
+state: completed
 outcome: Navigation v0.2 и bootstrap router готовы к ручному утверждению владельцем.
 router: BOOT:1
 scope:

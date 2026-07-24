@@ -33,12 +33,17 @@ def test_repository_task_cards_validate() -> None:
     assert len(tasks) == 7
 
 
-def test_only_first_bootstrap_task_is_ready() -> None:
+def test_ready_tasks_have_completed_dependencies() -> None:
     _, _, tasks, _ = repository_state()
 
-    ready = sorted(task_id for task_id, task in tasks.items() if task["state"] == "ready")
+    ready = [task for task in tasks.values() if task["state"] == "ready"]
 
-    assert ready == ["BOOT-NAV-001"]
+    assert len(ready) <= 1
+    for task in ready:
+        assert all(
+            tasks[dependency]["state"] == "completed"
+            for dependency in task["dependencies"]["tasks"]
+        )
 
 
 def test_context_manifest_is_deterministic() -> None:
@@ -81,10 +86,12 @@ def test_wrong_pack_version_is_rejected() -> None:
 
 def test_ready_task_cannot_depend_on_incomplete_task() -> None:
     index, docs, tasks, _ = repository_state()
-    task = copy.deepcopy(tasks["BOOT-SLICE-001"])
+    scenario = copy.deepcopy(tasks)
+    scenario["BOOT-NAV-001"]["state"] = "blocked"
+    task = copy.deepcopy(scenario["BOOT-SLICE-001"])
     task["state"] = "ready"
 
-    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+    errors, _ = nabla_nav.validate_task_semantics(task, scenario, index, docs, {}, {})
 
     assert any("depends on non-completed task BOOT-NAV-001" in error for error in errors)
 
@@ -92,6 +99,7 @@ def test_ready_task_cannot_depend_on_incomplete_task() -> None:
 def test_ready_task_cannot_use_missing_artifact() -> None:
     index, docs, tasks, _ = repository_state()
     task = copy.deepcopy(tasks["BOOT-NAV-001"])
+    task["state"] = "ready"
     task["dependencies"]["artifacts"] = ["MISSING"]
 
     errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
@@ -148,6 +156,7 @@ def test_context_over_hard_budget_is_rejected() -> None:
 def test_ready_implementation_task_rejects_draft_spec_and_missing_roadmap() -> None:
     index, docs, tasks, _ = repository_state()
     task = copy.deepcopy(tasks["BOOT-NAV-001"])
+    task["state"] = "ready"
     task["type"] = "implementation"
     task["context"]["packs"] = []
     task["context"]["required"] = ["ARCH:25"]
