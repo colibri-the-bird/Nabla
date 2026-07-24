@@ -1,7 +1,7 @@
 schema_version: 1
 task_id: BOOT-AGENTS-001
 type: tooling
-state: blocked
+state: ready
 outcome: Корневой AGENTS.md направляет Codex только через одну валидную task card.
 router: BOOT:1
 scope:
@@ -15,6 +15,7 @@ scope:
     include:
       - AGENTS.md
       - spec-index.json
+      - governance/spec-lock.json
       - roadmap/tasks/BOOT-AGENTS-001.yaml
       - roadmap/evidence/BOOT-AGENTS-001.yaml
     exclude:
