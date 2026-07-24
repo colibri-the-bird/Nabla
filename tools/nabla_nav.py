@@ -67,6 +67,12 @@ def sha256_bytes(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
+def normalized_text_sha256(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    return sha256_bytes(normalized.encode("utf-8"))
+
+
 def canonical_json(data: Any) -> str:
     return json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
@@ -434,7 +440,7 @@ def build_context_bundle(
     manifest_payload = {
         "schema_version": 1,
         "task_id": task["task_id"],
-        "task_card_sha256": sha256_bytes(task_path.read_bytes()),
+        "task_card_sha256": normalized_text_sha256(task_path),
         "router": task["router"],
         "triggers": sorted(set(triggers)),
         "packs": pack_versions,
