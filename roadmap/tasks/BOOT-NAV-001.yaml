@@ -1,0 +1,70 @@
+schema_version: 1
+task_id: BOOT-NAV-001
+type: spec
+state: ready
+outcome: Navigation v0.2 и bootstrap router готовы к ручному утверждению владельцем.
+router: BOOT:1
+scope:
+  include:
+    - Уточнить selector/addressing и Codex bootstrap protocol.
+    - Зафиксировать запрет production tasks до нормативной готовности.
+  exclude:
+    - Не утверждать остальные нормативные спецификации.
+    - Не реализовывать production-код.
+  paths:
+    include:
+      - SPEC-NAVIGATION.md
+      - spec-index.json
+      - roadmap/BOOTSTRAP.md
+      - roadmap/tasks/BOOT-NAV-001.yaml
+      - roadmap/evidence/BOOT-NAV-001.yaml
+    exclude:
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs:
+    - id: spec-authoring
+      version: 1
+  required:
+    - NAV:0
+    - NAV:1
+    - NAV:3
+    - NAV:6
+    - NAV:7
+    - NAV:8
+    - NAV:9
+    - NAV:10
+    - NAV:11
+    - BOOT:0
+    - BOOT:1
+    - BOOT:2
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NAVIGATION
+  writes:
+    - NAVIGATION
+  changes:
+    - NAVIGATION-v0.2
+dependencies:
+  tasks: []
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/spec_slice.py validate
+    - python -m pytest -q
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Resolved selectors and document hashes.
+    - Validation commands with exit code 0.
+    - PR URL and owner merge.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

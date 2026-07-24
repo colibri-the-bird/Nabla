@@ -1,0 +1,72 @@
+schema_version: 1
+task_id: BOOT-CARDS-001
+type: tooling
+state: blocked
+outcome: YAML task cards, DAG, context bundles и evidence управляются единым CLI.
+router: BOOT:1
+scope:
+  include:
+    - Реализовать validate, list-ready, prepare, evidence и check-scope.
+    - Добавить bootstrap task cards и тесты отрицательных сценариев.
+  exclude:
+    - Не создавать production Roadmap.
+    - Не изменять product contracts.
+  paths:
+    include:
+      - tools/nabla_nav.py
+      - tools/requirements.txt
+      - tests/test_nabla_nav.py
+      - roadmap/tasks/**
+      - roadmap/evidence/**
+      - .gitignore
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+context:
+  packs: []
+  required:
+    - NAV:3
+    - NAV:4
+    - NAV:5
+    - NAV:6
+    - NAV:7
+    - NAV:8
+    - BOOT:1
+    - BOOT:3
+    - BOOT:4
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NAVIGATION
+    - TASK-CARD-v1
+  writes:
+    - CONTEXT-MANIFEST-v1
+    - EVIDENCE-v1
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-SLICE-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q tests/test_nabla_nav.py
+    - python tools/nabla_nav.py validate
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Deterministic manifest and context hashes.
+    - Negative tests for cards, DAG, budget and scope.
+approval:
+  owner_required: false
+  required_spec_status: draft-allowed

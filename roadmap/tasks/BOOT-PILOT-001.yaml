@@ -1,0 +1,69 @@
+schema_version: 1
+task_id: BOOT-PILOT-001
+type: tooling
+state: blocked
+outcome: Безопасная tooling-задача проходит полный Codex context/evidence/CI workflow.
+router: BOOT:1
+scope:
+  include:
+    - Подготовить context bundle без чтения всех specs.
+    - Выполнить ограниченную tooling-проверку и сохранить evidence.
+  exclude:
+    - Не изменять production-код.
+    - Не снимать production gate.
+  paths:
+    include:
+      - tests/pilot/**
+      - roadmap/tasks/BOOT-PILOT-001.yaml
+      - roadmap/evidence/BOOT-PILOT-001.yaml
+    exclude:
+      - "*.md"
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs: []
+  required:
+    - NAV:6
+    - NAV:7
+    - BOOT:2
+    - BOOT:3
+    - BOOT:4
+    - BOOT:5
+  conditional:
+    - when: scope-expanded
+      selectors:
+        - NAV:3
+      packs: []
+      impact_tags:
+        - failure-domain
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - TASK-CARD-v1
+    - CONTEXT-MANIFEST-v1
+  writes:
+    - PILOT-EVIDENCE-v1
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-CI-001
+  decisions: []
+  artifacts:
+    - GITHUB-BRANCH-PROTECTION
+acceptance:
+  tests:
+    - python tools/nabla_nav.py prepare BOOT-PILOT-001
+    - python tools/nabla_nav.py evidence BOOT-PILOT-001
+    - python tools/nabla_nav.py validate
+  invariants:
+    - I15
+  evidence:
+    - Agent did not read full specifications.
+    - Context stayed within budget.
+    - All required GitHub checks passed.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

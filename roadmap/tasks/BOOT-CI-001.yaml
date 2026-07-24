@@ -1,0 +1,63 @@
+schema_version: 1
+task_id: BOOT-CI-001
+type: tooling
+state: blocked
+outcome: GitHub Actions проверяет navigation, task scope, evidence, spec lock и traceability.
+router: BOOT:1
+scope:
+  include:
+    - Добавить обязательные Windows/Linux checks.
+    - Добавить PR template и branch protection guide.
+  exclude:
+    - Не включать deployment.
+    - Не хранить GitHub secrets в репозитории.
+  paths:
+    include:
+      - .github/**
+      - governance/GITHUB-PROTECTION.md
+      - roadmap/tasks/BOOT-CI-001.yaml
+      - roadmap/evidence/BOOT-CI-001.yaml
+    exclude:
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs: []
+  required:
+    - ARCH:25
+    - CON:7
+    - NAV:6
+    - NAV:8
+    - BOOT:3
+    - BOOT:5
+  conditional: []
+  impact_tags:
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - TASK-CARD-v1
+    - EVIDENCE-v1
+    - SPEC-LOCK-v1
+  writes:
+    - GITHUB-GATE-v1
+  changes: []
+dependencies:
+  tasks:
+    - BOOT-AGENTS-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - GitHub Actions workflow syntax is valid.
+    - All five named checks pass on a pilot PR.
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Required check names are unique.
+    - Server-side protection status is recorded.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed
