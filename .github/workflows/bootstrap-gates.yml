@@ -1,0 +1,101 @@
+name: Bootstrap gates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  navigation-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: python -m pip install --requirement tools/requirements.txt
+      - run: python -m pytest -q tests/test_spec_slice.py
+      - run: python tools/spec_slice.py validate
+
+  navigation-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: python -m pip install --requirement tools/requirements.txt
+      - run: python -m pytest -q tests/test_spec_slice.py
+      - run: python tools/spec_slice.py validate
+
+  task-card-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: python -m pip install --requirement tools/requirements.txt
+      - run: python -m pytest -q tests/test_nabla_nav.py
+      - run: python tools/nabla_nav.py validate
+      - run: python tools/nabla_nav.py list-ready
+
+  scope-and-evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: python -m pip install --requirement tools/requirements.txt
+      - name: Validate pull request scope and evidence
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: >-
+          python tools/nabla_nav.py ci-pr
+          --title "$PR_TITLE"
+          --base "$BASE_SHA"
+          --branch "$HEAD_REF"
+          --pr-url "$PR_URL"
+      - name: Validate repository on main
+        if: github.event_name == 'push'
+        run: python tools/nabla_nav.py validate
+
+  spec-lock-and-traceability-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+      - run: python -m pip install --requirement tools/requirements.txt
+      - run: python tools/nabla_nav.py check-lock
+      - run: python tools/nabla_nav.py validate
