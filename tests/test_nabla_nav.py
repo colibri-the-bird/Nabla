@@ -63,7 +63,18 @@ def test_context_manifest_is_deterministic() -> None:
     assert first_manifest["context_words"] < 12000
     assert (
         first_manifest["manifest_sha256"]
-        == "0b62ed7122fc94683884c63ed6dbabc35eafcb86bf4dd78047992ec36390b3df"
+        == "eef4a279f45a7fea6b7b5787ab2dbd83ba8b2f4457260a5e942db88922c6fc6e"
+    )
+
+
+def test_task_card_hash_normalizes_line_endings(tmp_path: Path) -> None:
+    windows = tmp_path / "windows.yaml"
+    unix = tmp_path / "unix.yaml"
+    windows.write_bytes(b"task_id: TEST\r\nstate: ready\r\n")
+    unix.write_bytes(b"task_id: TEST\nstate: ready\n")
+
+    assert nabla_nav.normalized_text_sha256(windows) == nabla_nav.normalized_text_sha256(
+        unix
     )
 
 
