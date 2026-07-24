@@ -1,0 +1,32 @@
+schema_version: 1
+task_id: BOOT-AGENTS-001
+context_manifest_sha256: d5d61e830c8df6a5b542081e8d36191f4612e99895494896a4e3eb874b99a3d3
+selectors:
+- NAV:1
+- NAV:6
+- NAV:9
+- BOOT:3
+- BOOT:4
+document_hashes:
+  BOOT: 8b30b93bc180f78bffdfa8838c8c481f56e80ccf80865ee6161f97763c3382b0
+  NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
+impact_tags: []
+changed_paths:
+- AGENTS.md
+- governance/spec-lock.json
+- roadmap/evidence/BOOT-AGENTS-001.yaml
+- roadmap/tasks/BOOT-AGENTS-001.yaml
+- spec-index.json
+changed_contracts:
+- AGENT-ENTRYPOINT-v1
+tests:
+- command: python -m pytest -q
+  exit_code: 0
+- command: python tools/nabla_nav.py validate
+  exit_code: 0
+- command: python tools/nabla_nav.py check-lock
+  exit_code: 0
+- command: git diff --check
+  exit_code: 0
+unresolved_decisions: []
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/5
