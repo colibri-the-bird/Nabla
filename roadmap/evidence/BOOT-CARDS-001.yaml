@@ -1,0 +1,44 @@
+schema_version: 1
+task_id: BOOT-CARDS-001
+context_manifest_sha256: c9751b148c94b0b3610c750ea5e95aa7ba91e5930ca421cd2507666a6c84fe33
+selectors:
+- NAV:3
+- NAV:4
+- NAV:5
+- NAV:6
+- NAV:7
+- NAV:8
+- BOOT:1
+- BOOT:3
+- BOOT:4
+document_hashes:
+  BOOT: 8b30b93bc180f78bffdfa8838c8c481f56e80ccf80865ee6161f97763c3382b0
+  NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
+impact_tags: []
+changed_paths:
+- .gitignore
+- roadmap/evidence/BOOT-CARDS-001.yaml
+- roadmap/evidence/BOOT-NAV-001.yaml
+- roadmap/evidence/BOOT-SLICE-001.yaml
+- roadmap/tasks/BOOT-AGENTS-001.yaml
+- roadmap/tasks/BOOT-CARDS-001.yaml
+- roadmap/tasks/BOOT-CI-001.yaml
+- roadmap/tasks/BOOT-NAV-001.yaml
+- roadmap/tasks/BOOT-PILOT-001.yaml
+- roadmap/tasks/BOOT-SLICE-001.yaml
+- roadmap/tasks/BOOT-TRACE-001.yaml
+- tests/test_nabla_nav.py
+- tools/nabla_nav.py
+changed_contracts:
+- TASK-CARD-v1
+- CONTEXT-MANIFEST-v1
+- EVIDENCE-v1
+tests:
+- command: python -m pytest -q
+  exit_code: 0
+- command: python tools/nabla_nav.py validate
+  exit_code: 0
+- command: git diff --check
+  exit_code: 0
+unresolved_decisions: []
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/3
