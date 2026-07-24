@@ -1,0 +1,62 @@
+schema_version: 1
+decisions:
+  - id: ADR-001
+    title: Language, packaging and Core Runtime process model
+    status: required
+    required_before: Production skeleton
+    selectors: [ARCH:24.1]
+  - id: ADR-002
+    title: Full snapshots, patches or hybrid revisions
+    status: required
+    required_before: Revision DDL
+    selectors: [ARCH:24.1]
+  - id: ADR-003
+    title: Safe Query DSL
+    status: required
+    required_before: Layout and saved-query implementation
+    selectors: [ARCH:24.1]
+  - id: ADR-004
+    title: Markdown three-way merge and conflict format
+    status: required
+    required_before: Sync conflict implementation
+    selectors: [ARCH:24.1]
+  - id: ADR-005
+    title: DB, blob and backup encryption with key recovery
+    status: required
+    required_before: Security claim and release policy
+    selectors: [ARCH:24.1]
+  - id: ADR-006
+    title: Stable document anchors
+    status: required
+    required_before: Annotation schema freeze
+    selectors: [ARCH:24.1]
+  - id: ADR-007
+    title: Module packaging and trust
+    status: required
+    required_before: Module framework freeze
+    selectors: [ARCH:24.1]
+  - id: ADR-008
+    title: Retention, tombstones, audit, backups and purge
+    status: required
+    required_before: DDL retention rules
+    selectors: [ARCH:24.1]
+  - id: ADR-009
+    title: Global IDs, device identity, sequence and logical time
+    status: required
+    required_before: v1 identity schema freeze
+    selectors: [ARCH:24.2]
+  - id: ADR-010
+    title: Local IPC, authentication and Core lifecycle
+    status: required
+    required_before: Core process boundary implementation
+    selectors: [ARCH:24.2]
+  - id: ADR-011
+    title: PDF renderer, parser, licensing and isolation
+    status: required
+    required_before: Document reader production binding
+    selectors: [ARCH:24.2]
+  - id: ADR-012
+    title: Migration framework and compatibility policy
+    status: required
+    required_before: First long-lived DDL
+    selectors: [ARCH:24.2]
