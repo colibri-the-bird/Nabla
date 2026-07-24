@@ -1,7 +1,7 @@
-# Nabla Specification Navigation v0.1
+# Nabla Specification Navigation v0.2
 
 **Статус:** проект к утверждению  
-**Дата:** 2026-07-13  
+**Дата:** 2026-07-24
 **Роль:** ненормативный маршрутизатор нормативного контекста  
 **Не переопределяет:** `CONSTITUTION.md`, `ARCHITECTURE.md`, ADR, contracts,
 module specifications, Data Catalog или DDL
@@ -22,11 +22,15 @@ module specifications, Data Catalog или DDL
 Настоящий документ определяет progressive-disclosure navigation layer:
 
 1. короткий `AGENTS.md` задаёт неизменяемый порядок работы;
-2. `ROADMAP.md` содержит task cards и является главным маршрутизатором;
-3. generated `spec-index.json` перечисляет документы, sections и context packs;
-4. `tools/spec_slice.py` извлекает только точные нормативные sections;
-5. impact tags расширяют контекст, когда изменение пересекает границы;
-6. validators доказывают, что selector не устарел и обязательное требование не
+2. до production Roadmap файл `roadmap/BOOTSTRAP.md` маршрутизирует создание
+   самого navigation layer;
+3. `ROADMAP.md` содержит milestone/DAG, а отдельные YAML task cards являются
+   исполнимыми единицами работы;
+4. generated `spec-index.json` перечисляет документы, sections и context packs;
+5. `tools/spec_slice.py` извлекает только точные нормативные sections;
+6. `tools/nabla_nav.py` валидирует task cards и собирает task context bundle;
+7. impact tags расширяют контекст, когда изменение пересекает границы;
+8. validators доказывают, что selector не устарел и обязательное требование не
    потеряно.
 
 Navigation layer не является второй архитектурой. Он хранит адреса, зависимости
@@ -53,7 +57,9 @@ Navigation layer не является второй архитектурой. О
 
 ### `ROADMAP.md`
 
-Каждая исполнимая задача имеет task card с:
+После появления production Roadmap он хранит milestone ordering, dependency DAG
+и ссылки на task cards. Каждая исполнимая задача хранится отдельно в
+`roadmap/tasks/<TASK-ID>.yaml` и содержит:
 
 - одним проверяемым outcome;
 - границей scope и non-goals;
@@ -65,6 +71,11 @@ Navigation layer не является второй архитектурой. О
 
 Roadmap является главным маршрутизатором контекста, но не нормативным источником
 семантики продукта.
+
+До выполнения prerequisite из `ARCH:28` корневой `ROADMAP.md` остаётся
+`planned`. В этот период `roadmap/BOOTSTRAP.md` маршрутизирует только
+specification, tooling, audit и CI tasks. Он MUST NOT содержать production
+implementation task.
 
 ### Generated index и slicer
 
@@ -200,6 +211,33 @@ acceptance:
 
 Production task без `context`, `scope`, `acceptance` или `invariants` invalid.
 
+## 3.4 Хранение и состояние task cards
+
+Task card хранится в отдельном YAML-файле и имеет одно из состояний:
+
+- `draft`;
+- `ready`;
+- `blocked`;
+- `completed`.
+
+Mutable execution evidence хранится отдельно в
+`roadmap/evidence/<TASK-ID>.yaml`. Task card не дублирует нормативный текст и не
+содержит generated slice.
+
+Переход в `ready` запрещён, если:
+
+- dependency task не `completed`;
+- blocking ADR, spike или artifact отсутствует;
+- selector или pinned context pack version не разрешается;
+- implementation task зависит от неутверждённой нормативной specification;
+- context bundle превышает 16 000 слов;
+- slice между 12 000 и 16 000 слов не имеет явного
+  `context_budget_justification`.
+
+Каждый Codex run получает один явный `TASK-ID`. Один task соответствует одной
+ветке `task/<TASK-ID>-<slug>` и одному PR. Начальный bootstrap MAY быть доставлен
+stacked PRs, но каждый merge всё равно закрывает только одну task card.
+
 ## 3.2 Required vs conditional
 
 - `required` читается до изменения кода или schema.
@@ -315,11 +353,15 @@ Pack hash вычисляется из normalized selectors/dependencies, но н
 Агент обязан:
 
 1. открыть корневой `AGENTS.md`;
-2. выбрать ровно одну active Roadmap task;
+2. получить из prompt ровно один `TASK-ID`;
 3. проверить её dependencies/blockers;
-4. получить slice по pinned packs/selectors;
+4. выполнить `python tools/nabla_nav.py prepare <TASK-ID>`;
 5. прочитать scope exclusions и acceptance tests;
 6. перечислить предполагаемые impact tags до первой mutation.
+
+Если `TASK-ID` не указан, агент MAY исследовать repository и выполнить
+`list-ready`, но MUST NOT изменять файлы. Агент не выбирает implementation task
+самостоятельно.
 
 ## 6.2 During work
 
@@ -360,6 +402,20 @@ Evidence содержит:
 Он создаёт specification defect/ADR request, а не выбирает удобную семантику
 молча.
 
+## 6.5 Bootstrap exception
+
+До появления `ROADMAP.md` разрешены только task types:
+
+- `spec`;
+- `adr`;
+- `spike`;
+- `tooling`;
+- `audit`.
+
+Bootstrap task MUST ссылаться на `roadmap/BOOTSTRAP.md`. Тип `implementation`
+остаётся заблокированным до утверждения применимых specifications, закрытия
+обязательных decisions/artifacts и появления production Roadmap.
+
 ---
 
 # 7. Context budget policy
@@ -377,6 +433,9 @@ Evidence содержит:
 Это policy по умолчанию, а не обещание одинакового token count для всех models.
 Если корректный task slice превышает threshold, task сначала делится по contract
 boundary. Требования не удаляются ради бюджета.
+
+Slice от 12 001 до 16 000 слов является warning и требует явного обоснования в
+task card. Slice свыше 16 000 слов является validation error.
 
 ## 7.2 Deduplication
 
@@ -440,6 +499,10 @@ Generated values MUST NOT редактироваться как независи
 9. context budget рассчитан;
 10. changed normative section перечисляет affected packs/tasks.
 
+Task validator дополнительно проверяет YAML schema, task dependency DAG, pinned
+pack versions, blockers, draft-spec prohibition, context budget, path scope и
+согласованность evidence с context manifest.
+
 ## 8.3 Security
 
 Index/slicer:
@@ -461,10 +524,14 @@ Index/slicer:
 Roadmap владеет:
 
 - ordering tasks;
-- current status/dependencies;
-- task-specific context selection;
+- milestone dependencies;
+- ссылками на отдельные task cards;
 - acceptance/evidence routing;
 - milestone/gate mapping.
+
+Отдельная task card владеет task-specific context selection, scope и
+dependencies. Evidence-файл владеет результатами выполнения. Эти слои не
+копируют нормативную семантику.
 
 ## 9.2 What belongs in AGENTS
 
@@ -492,13 +559,17 @@ specification, summary слишком подробен и должен быть 
 
 Navigation layer вводится без задержки нормативной последовательности:
 
-1. утвердить selector/addressing contract;
-2. создать generated index и read-only slicer;
-3. проверить текущие документы на unique keys/references;
-4. при создании `ROADMAP.md` дать каждой task context contract;
-5. после Roadmap создать короткий root `AGENTS.md`;
-6. включить selector/impact validation в CI до production implementation;
-7. не создавать вручную отдельные summaries каждого документа.
+1. утвердить selector/addressing contract v0.2;
+2. создать bootstrap router без production tasks;
+3. укрепить generated index и read-only slicer;
+4. добавить отдельные task cards, evidence и context builder;
+5. проверить текущие документы на unique keys/references/traceability;
+6. создать короткий root `AGENTS.md`;
+7. включить selector/task/impact validation в CI;
+8. выполнить pilot tooling task;
+9. оставить production implementation закрытой до `BACKUP`, ADR, DDL и
+   production `ROADMAP.md`;
+10. не создавать вручную отдельные summaries каждого документа.
 
 `DOCUMENT-MODULE.md`, `BACKUP-RECOVERY.md`, ADR и DDL продолжают нормативную
 последовательность параллельно; navigation artifacts остаются support layer.
@@ -524,4 +595,8 @@ Navigation v0.1 готова к утверждению, если:
 13. index generated fields не становятся parallel source of truth;
 14. security model запрещает execution/network/path escape;
 15. rollout не блокирует создание следующих нормативных документов.
-
+16. Codex без `TASK-ID` не выполняет mutation;
+17. bootstrap router не разрешает production implementation;
+18. task cards и evidence хранятся отдельно;
+19. Windows и Linux создают идентичный UTF-8 context bundle;
+20. draft specifications и unresolved artifacts блокируют implementation task.
