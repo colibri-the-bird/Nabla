@@ -120,9 +120,9 @@
       "canonical_path": "AGENTS.md",
       "aliases": [],
       "authority_rank": 7,
-      "version": null,
+      "version": "0.1",
       "depends_on": ["BOOT", "NAV"],
-      "planned": true,
+      "planned": false,
       "normative": false
     }
   ],

@@ -15,6 +15,7 @@ scope:
     include:
       - AGENTS.md
       - spec-index.json
+      - governance/spec-lock.json
       - roadmap/tasks/BOOT-AGENTS-001.yaml
       - roadmap/evidence/BOOT-AGENTS-001.yaml
     exclude:
