@@ -207,3 +207,42 @@ def test_prepared_manifest_round_trips_as_utf8_json() -> None:
     loaded = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     assert loaded == manifest
+
+
+def test_living_spec_lock_is_current_and_deterministic() -> None:
+    index, docs, _, _ = repository_state()
+    expected = nabla_nav.canonical_json(nabla_nav.build_spec_lock(ROOT, index, docs))
+    actual = (ROOT / "governance" / "spec-lock.json").read_text(encoding="utf-8")
+
+    assert actual == expected
+    assert nabla_nav.check_spec_lock(ROOT, index, docs) == []
+
+
+def test_decision_registry_contains_all_required_adrs() -> None:
+    decisions = nabla_nav.load_registry(
+        ROOT / "governance" / "decisions.yaml", "decisions"
+    )
+
+    assert set(decisions) == {f"ADR-{number:03d}" for number in range(1, 13)}
+    assert all(entry["status"] == "required" for entry in decisions.values())
+
+
+def test_missing_external_artifacts_remain_blockers() -> None:
+    artifacts = nabla_nav.load_registry(
+        ROOT / "governance" / "artifacts.yaml", "artifacts"
+    )
+
+    assert artifacts["BACKUP-RECOVERY-SPEC"]["status"] == "missing"
+    assert artifacts["CORE-PORTABILITY-SPIKE"]["status"] == "missing"
+    assert artifacts["GITHUB-BRANCH-PROTECTION"]["status"] == "missing"
+
+
+def test_traceability_covers_exactly_i1_through_i16() -> None:
+    index, docs, _, _ = repository_state()
+    errors, _, _ = nabla_nav.validate_governance(ROOT, index, docs)
+    trace = nabla_nav.read_yaml(ROOT / "governance" / "traceability.yaml")
+
+    assert errors == []
+    assert {entry["id"] for entry in trace["invariants"]} == {
+        f"I{number}" for number in range(1, 17)
+    }

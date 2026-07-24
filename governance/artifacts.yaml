@@ -1,0 +1,50 @@
+schema_version: 1
+artifacts:
+  - id: BACKUP-RECOVERY-SPEC
+    title: BACKUP-RECOVERY.md
+    status: missing
+    source: ChatGPT Library or a new approved spec PR
+    blocks: [production-roadmap, production-implementation]
+    reconstruction_policy: Do not reconstruct from chat summaries.
+  - id: CORE-PORTABILITY-SPIKE
+    title: SPIKE-CORE-PORTABILITY.md
+    status: missing
+    source: ChatGPT Library or a new approved spike PR
+    blocks: [ADR-001, production-skeleton]
+    reconstruction_policy: Do not reconstruct from chat summaries.
+  - id: BACKUP-RECOVERY-DRAFT-ARCHIVE
+    title: Nabla-spec-2026-07-13-backup-recovery-draft.zip
+    status: missing
+    source: ChatGPT Library
+    blocks: []
+    reconstruction_policy: Preserve original bytes if recovered.
+  - id: CORE-PORTABILITY-DRAFT-ARCHIVE
+    title: Nabla-spec-2026-07-13-core-portability-spike-draft.zip
+    status: missing
+    source: ChatGPT Library
+    blocks: []
+    reconstruction_policy: Preserve original bytes if recovered.
+  - id: PDF-SPIKE
+    title: PDF renderer and anchor spike
+    status: required
+    source: New measured spike task
+    blocks: [ADR-006, ADR-011]
+    reconstruction_policy: Must be executed, not inferred.
+  - id: BACKUP-RESTORE-SPIKE
+    title: SQLite and blob backup/restore spike
+    status: required
+    source: New measured spike task
+    blocks: [backup-implementation]
+    reconstruction_policy: Must be executed, not inferred.
+  - id: REVISION-SYNC-PREPARATION-SPIKE
+    title: Offline identity, revisions, outbox and replay spike
+    status: required
+    source: New measured spike task
+    blocks: [revision-ddl, sync-preparation]
+    reconstruction_policy: Must be executed, not inferred.
+  - id: GITHUB-BRANCH-PROTECTION
+    title: Server-side protection for main
+    status: missing
+    source: GitHub repository settings
+    blocks: [bootstrap-complete]
+    reconstruction_policy: Configure after required checks have run successfully.

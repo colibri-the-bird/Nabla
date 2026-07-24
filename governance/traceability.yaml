@@ -1,0 +1,82 @@
+schema_version: 1
+invariants:
+  - id: I1
+    title: Единственный контролируемый путь изменения
+    owner: project-owner
+    selectors: [CON:I1, ARCH:7, ARCH:27, DATA:2, CAP:10, CAP:11]
+    future_tests: [static-write-boundary, canonical-command-integration]
+  - id: I2
+    title: Первичные факты не переписываются
+    owner: project-owner
+    selectors: [CON:I2, ARCH:27, DATA:4.1, CAP:11.9, LOOP:8, LOOP:10]
+    future_tests: [immutable-fact-storage, correction-chain]
+  - id: I3
+    title: Изменяемые сущности имеют неизменяемые ревизии
+    owner: project-owner
+    selectors: [CON:I3, ARCH:10.3, ARCH:10.4, ARCH:27, CAP:11.6, CAP:20]
+    future_tests: [revision-history, conflict-dag]
+  - id: I4
+    title: Производные данные полностью восстанавливаемы
+    owner: project-owner
+    selectors: [CON:I4, ARCH:9, ARCH:27, DATA:4.6, CAP:14]
+    future_tests: [delete-and-rebuild, processor-version-rebuild]
+  - id: I5
+    title: Семантика данных версионируется
+    owner: project-owner
+    selectors: [CON:I5, ARCH:27]
+    future_tests: [contract-compatibility, migration-compatibility]
+  - id: I6
+    title: Расширение выполняется через capabilities и доверенные модули
+    owner: project-owner
+    selectors: [CON:I6, ARCH:27, MOD:4, MOD:5, MOD:8, MOD:9, MOD:13]
+    future_tests: [module-activation, module-trust-boundary]
+  - id: I7
+    title: Сохраняемая информация должна иметь доказанную полезность
+    owner: project-owner
+    selectors: [CON:I7, ARCH:27, LOOP:4, LOOP:6, LOOP:7, LOOP:10]
+    future_tests: [data-catalog-coverage, technical-purpose-coverage]
+  - id: I8
+    title: Пользовательская функция должна завершаться полезным результатом
+    owner: project-owner
+    selectors: [CON:I8, ARCH:27, LOOP:4, LOOP:7]
+    future_tests: [capability-outcome, end-to-end-outcome]
+  - id: I9
+    title: Результат, уверенность и качество измерения разделяются
+    owner: project-owner
+    selectors: [CON:I9, ARCH:27]
+    future_tests: [raw-confidence-schema, uncertainty-recalculation]
+  - id: I10
+    title: Canonical-команды аудируемы и идемпотентны
+    owner: project-owner
+    selectors: [CON:I10, ARCH:9, ARCH:27, CAP:18, CAP:21]
+    future_tests: [command-retry, transactional-audit-outbox]
+  - id: I11
+    title: Undo сохраняет историю; необратимость является отдельным режимом
+    owner: project-owner
+    selectors: [CON:I11, ARCH:18.6, ARCH:27, DATA:11]
+    future_tests: [undo-policy, purge-isolation]
+  - id: I12
+    title: Локальная работа является базовым режимом
+    owner: project-owner
+    selectors: [CON:I12, ARCH:10, ARCH:16, ARCH:27, MOD:18]
+    future_tests: [network-blocked-suite, offline-command-queue]
+  - id: I13
+    title: ИИ является недоверенным и заменяемым участником
+    owner: project-owner
+    selectors: [CON:I13, ARCH:17, ARCH:27, DATA:12, CAP:25]
+    future_tests: [prompt-injection-boundary, tool-permission-escalation]
+  - id: I14
+    title: Семантически значимые трансформации не скрываются
+    owner: project-owner
+    selectors: [CON:I14, ARCH:18, ARCH:27]
+    future_tests: [raw-transformed-trace, provenance-chain]
+  - id: I15
+    title: Отказы локализуются в определённых failure domains
+    owner: project-owner
+    selectors: [CON:I15, ARCH:20, ARCH:27, CAP:24]
+    future_tests: [fault-injection, transaction-rollback, job-isolation]
+  - id: I16
+    title: Данные переносимы независимо от Nabla
+    owner: project-owner
+    selectors: [CON:I16, ARCH:19, ARCH:27, DATA:9, CAP:17, MOD:19]
+    future_tests: [portable-export-validation, external-readability-import]
