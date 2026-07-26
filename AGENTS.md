@@ -91,6 +91,12 @@ python tools/nabla_nav.py validate
 
 Evidence должен перечислять context manifest hash, selectors/document hashes,
 impact tags, changed paths/contracts, команды с exit codes, unresolved decisions
-и PR URL. Card переводится в `completed`, когда outcome и локальные acceptance
-tests завершены и evidence готов для PR gate. Task считается закрытой только
-после зелёного CI и ручного merge владельцем.
+и PR URL. Для каждой декларации `acceptance.tests` и `acceptance.evidence`
+должна существовать отдельная связанная запись evidence. Если
+`approval.owner_required: true`, evidence содержит явную ссылку на одобрение
+владельца; оно не выводится автоматически из состояния card.
+
+Card переводится в `completed`, когда outcome и локальные acceptance tests
+завершены и evidence готов для PR gate. `completed` означает PR-ready результат,
+но не доказывает успешный CI или merge. Task считается закрытой только после
+зелёного CI на текущем head и ручного merge владельцем.

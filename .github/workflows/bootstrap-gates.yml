@@ -23,7 +23,9 @@ jobs:
           cache-dependency-path: tools/requirements.txt
       - run: python -m pip install --requirement tools/requirements.txt
       - run: python -m pytest -q tests/test_spec_slice.py
+      - run: python -m pytest -q tests/test_nabla_nav.py
       - run: python tools/spec_slice.py validate
+      - run: python tools/nabla_nav.py validate
 
   navigation-windows:
     runs-on: windows-latest
@@ -38,7 +40,9 @@ jobs:
           cache-dependency-path: tools/requirements.txt
       - run: python -m pip install --requirement tools/requirements.txt
       - run: python -m pytest -q tests/test_spec_slice.py
+      - run: python -m pytest -q tests/test_nabla_nav.py
       - run: python tools/spec_slice.py validate
+      - run: python tools/nabla_nav.py validate
 
   task-card-gate:
     runs-on: ubuntu-latest

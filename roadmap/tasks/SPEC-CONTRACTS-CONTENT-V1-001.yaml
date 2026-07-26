@@ -1,0 +1,96 @@
+schema_version: 2
+task_id: SPEC-CONTRACTS-CONTENT-V1-001
+type: spec
+state: blocked
+outcome: Machine-readable Knowledge and Documents v1 contracts are complete and compatible with the core bundle before DDL.
+router: BOOT:1
+scope:
+  include:
+    - Materialize Knowledge and Documents capability descriptors, schemas and module manifests.
+    - Validate imports, queries, commands, events, processors, exports and catalog references.
+    - Prove content contracts do not bypass core authority or lifecycle boundaries.
+    - Activate SPEC-DDL-CORE-V1-001 as the sole successor.
+  exclude:
+    - Do not implement handlers, UI, readers, ingestion or database tables.
+    - Do not add production dependencies.
+  paths:
+    include:
+      - contracts/knowledge/**
+      - contracts/documents/**
+      - schemas/knowledge/**
+      - schemas/documents/**
+      - manifests/knowledge/**
+      - manifests/documents/**
+      - tools/validate_contracts.py
+      - tests/test_contracts.py
+      - roadmap/tasks/SPEC-CONTRACTS-CONTENT-V1-001.yaml
+      - roadmap/tasks/SPEC-DDL-CORE-V1-001.yaml
+      - roadmap/evidence/SPEC-CONTRACTS-CONTENT-V1-001.yaml
+    exclude:
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I1
+    - CON:I6
+    - KNOW:18
+    - KNOW:19
+    - KNOW:24
+    - DOC:20
+    - DOC:21
+    - DOC:25
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - canonical-write
+    - revisioned-entity
+    - import
+    - export
+    - module-contract
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: This task requires both content module contract inventories to prove compatibility with the shared bundle.
+contracts:
+  reads:
+    - DATA-CATALOG-v1
+    - CORE-CONTRACT-BUNDLE-v1
+    - ADR-002
+    - ADR-003
+    - ADR-006
+    - ADR-011
+  writes:
+    - CONTENT-CONTRACT-BUNDLE-v1
+  changes: []
+dependencies:
+  tasks:
+    - SPEC-CONTRACTS-CORE-V1-001
+  decisions:
+    - ADR-002
+    - ADR-003
+    - ADR-006
+    - ADR-011
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/validate_contracts.py
+    - python tools/nabla_nav.py validate
+    - Machine-readable content contract conformance review
+  invariants:
+    - I1
+    - I3
+    - I6
+    - I15
+  evidence:
+    - Every content descriptor validates and resolves catalog, schema and core contract references.
+    - Canonical writes, revisions, imports, exports and external effects preserve approved authority.
+    - Knowledge and Documents contracts use compatible shared types and lifecycle rules.
+    - SPEC-DDL-CORE-V1-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

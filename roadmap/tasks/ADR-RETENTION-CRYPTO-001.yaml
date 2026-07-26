@@ -1,0 +1,93 @@
+schema_version: 2
+task_id: ADR-RETENTION-CRYPTO-001
+type: adr
+state: blocked
+outcome: ADR-005 and ADR-008 define encryption, key recovery, retention, tombstones, audit, backup and purge.
+router: BOOT:1
+scope:
+  include:
+    - Resolve ADR-005 and ADR-008 from approved security, lifecycle and measured backup evidence.
+    - Define authority, key recovery, retention, tombstone, audit, backup and purge boundaries.
+    - Update the decision registry only after owner approval.
+    - Activate AUDIT-ADR-GATE-001 as the sole successor.
+  exclude:
+    - Do not implement encryption, purge, backup or recovery.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-005-*.md
+      - adr/ADR-008-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-RETENTION-CRYPTO-001.yaml
+      - roadmap/tasks/AUDIT-ADR-GATE-001.yaml
+      - roadmap/evidence/ADR-RETENTION-CRYPTO-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - BACKUP-RECOVERY.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I11
+    - CON:I15
+    - CON:I16
+    - ARCH:18.6
+    - ARCH:19
+    - ARCH:24
+    - ARCH:24.1
+    - DATA:10
+    - DATA:11
+    - DATA:12
+    - KNOW:27
+    - KNOW:28
+    - DOC:28
+    - DOC:29
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - backup-recovery
+    - purge
+    - sensitive
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-006
+    - ADR-011
+    - BACKUP-RESTORE-SPIKE-v1
+  writes:
+    - ADR-005
+    - ADR-008
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - ADR-DOCUMENT-ENGINE-001
+  decisions:
+    - ADR-006
+    - ADR-011
+  artifacts:
+    - BACKUP-RESTORE-SPIKE
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I11
+    - I15
+    - I16
+  evidence:
+    - Encryption, recovery, retention, purge and backup authorities are explicit.
+    - Destructive and unavailable-key paths have explicit consequences and stop conditions.
+    - ADR-005 and ADR-008 are accepted in the registry after owner approval.
+    - AUDIT-ADR-GATE-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

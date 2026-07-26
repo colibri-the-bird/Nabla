@@ -1,0 +1,115 @@
+schema_version: 2
+task_id: AUDIT-ADR-GATE-001
+type: audit
+state: blocked
+outcome: All twelve mandatory ADRs are accepted, mutually compatible and traceable before specification closure.
+router: BOOT:1
+scope:
+  include:
+    - Audit all mandatory ADRs against their source selectors and measured artifacts.
+    - Detect incompatible authority, identity, lifecycle, recovery and platform assumptions.
+    - Record owner checkpoint approval for the decision baseline.
+    - Apply owner-requested changes to blocked downstream cards or add a bounded corrective task.
+    - Activate SPEC-BASELINE-001 as the sole successor.
+  exclude:
+    - Do not rewrite ADR outcomes inside the audit.
+    - Do not change normative specifications or implement application code.
+  paths:
+    include:
+      - audits/ADR-GATE-001.md
+      - governance/decisions.yaml
+      - governance/spec-lock.json
+      - spec-index.json
+      - roadmap/BOOTSTRAP.md
+      - roadmap/tasks/AUDIT-ADR-GATE-001.yaml
+      - roadmap/tasks/CORRECTIVE-*.yaml
+      - roadmap/tasks/SPEC-BASELINE-001.yaml
+      - roadmap/tasks/SPEC-*.yaml
+      - roadmap/tasks/AUDIT-FOUNDATION-CONFORMANCE-001.yaml
+      - roadmap/tasks/PREP-ROADMAP-PROD-001.yaml
+      - roadmap/tasks/AUDIT-SCAFFOLD-READINESS-001.yaml
+      - roadmap/evidence/AUDIT-ADR-GATE-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:24
+    - ARCH:24.4
+    - ARCH:25
+    - NAV:6
+    - BOOT:1
+    - BOOT:2
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  writes:
+    - ADR-GATE-REPORT-v1
+  changes:
+    - BOOTSTRAP-DAG-v1
+    - SPEC-LOCK-v1
+dependencies:
+  tasks:
+    - ADR-RETENTION-CRYPTO-001
+  decisions:
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  artifacts:
+    - CORE-PORTABILITY-SPIKE
+    - PDF-SPIKE
+    - BACKUP-RESTORE-SPIKE
+    - REVISION-SYNC-PREPARATION-SPIKE
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR cross-consistency audit
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Every required decision is accepted and links to its ADR and source evidence.
+    - Cross-decision authority, identity, lifecycle, platform and recovery assumptions are compatible.
+    - Unresolved contradictions block completion instead of becoming roadmap assumptions.
+    - Owner-requested downstream DAG changes are recorded without rewriting accepted ADR history.
+    - The owner explicitly approves this checkpoint and SPEC-BASELINE-001 is the only successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

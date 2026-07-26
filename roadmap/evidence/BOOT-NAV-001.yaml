@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-NAV-001
 context_manifest_sha256: 8baf4e8e7aeb1e9fbbfaa71f725222cb072c04059bbbdc079fcbd96b81fd41d0
 selectors:
@@ -31,6 +31,7 @@ document_hashes:
   CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
   NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
 impact_tags: []
+triggers: []
 changed_paths:
 - SPEC-NAVIGATION.md
 - roadmap/BOOTSTRAP.md
@@ -38,9 +39,24 @@ changed_paths:
 changed_contracts:
 - NAVIGATION-v0.2
 tests:
-- command: python tools/spec_slice.py validate
+- requirement: python tools/spec_slice.py validate
+  command: python tools/spec_slice.py validate
   exit_code: 0
-- command: git diff --check
+- requirement: python -m pytest -q
+  command: python -m pytest -q
   exit_code: 0
+- requirement: git diff --check
+  command: git diff --check
+  exit_code: 0
+acceptance_evidence:
+- requirement: Resolved selectors and document hashes.
+  proof: selectors and document_hashes in this evidence match the prepared context.
+- requirement: Validation commands with exit code 0.
+  proof: tests entries record the declared validation commands.
+- requirement: PR URL and owner merge.
+  proof: https://github.com/colibri-the-bird/Nabla/pull/1 is merged on main.
+owner_approval:
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/1
 unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/1

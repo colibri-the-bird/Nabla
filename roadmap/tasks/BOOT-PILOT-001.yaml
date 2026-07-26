@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-PILOT-001
 type: tooling
 state: blocked
@@ -8,6 +8,9 @@ scope:
   include:
     - Подготовить context bundle без чтения всех specs.
     - Выполнить ограниченную tooling-проверку и сохранить evidence.
+    - Открыть pilot PR до включения strict checks и подтвердить наличие пяти check contexts.
+    - Оставить зелёный статус актуального head внешним merge gate, а не самоссылочным committed evidence.
+    - Активировать отдельную task настройки server-side protection.
   exclude:
     - Не изменять production-код.
     - Не снимать production gate.
@@ -15,9 +18,17 @@ scope:
     include:
       - tests/pilot/**
       - roadmap/tasks/BOOT-PILOT-001.yaml
+      - roadmap/tasks/BOOT-PROTECT-001.yaml
       - roadmap/evidence/BOOT-PILOT-001.yaml
     exclude:
-      - "*.md"
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
       - src/**
       - app/**
       - core/**
@@ -42,28 +53,28 @@ context:
   context_budget_justification: null
 contracts:
   reads:
-    - TASK-CARD-v1
+    - TASK-CARD-v2
     - CONTEXT-MANIFEST-v1
   writes:
     - PILOT-EVIDENCE-v1
   changes: []
 dependencies:
   tasks:
-    - BOOT-CI-001
+    - BOOT-REPAIR-001
   decisions: []
-  artifacts:
-    - GITHUB-BRANCH-PROTECTION
+  artifacts: []
 acceptance:
   tests:
-    - python tools/nabla_nav.py prepare BOOT-PILOT-001
-    - python tools/nabla_nav.py evidence BOOT-PILOT-001
+    - python -m pytest -q
     - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
   invariants:
     - I15
   evidence:
     - Agent did not read full specifications.
     - Context stayed within budget.
-    - All required GitHub checks passed.
+    - The pilot PR exposes all five required check contexts; green status for its current head is an external merge condition.
+    - BOOT-PROTECT-001 is the only activated successor.
 approval:
   owner_required: true
   required_spec_status: draft-allowed

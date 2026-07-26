@@ -1,0 +1,114 @@
+schema_version: 2
+task_id: AUDIT-SCAFFOLD-READINESS-001
+type: audit
+state: blocked
+outcome: The owner confirms that the repository, roadmap and first implementation card are safe to begin application scaffolding.
+router: BOOT:1
+scope:
+  include:
+    - Audit the production roadmap and APP-SCAFFOLD-001 against the approved foundation.
+    - Confirm development tooling, required checks, contracts, DDL and recovery gates are usable.
+    - Apply owner-requested roadmap or scaffold-card corrections that remain within the approved foundation.
+    - If the audit finds a bounded defect, insert a CORRECTIVE task before this checkpoint and rewire the bootstrap router to it.
+    - Record explicit owner approval as the final pre-development checkpoint.
+    - Activate APP-SCAFFOLD-001 only when every gate passes.
+  exclude:
+    - Do not broaden product scope or authority beyond the approved foundation without a new task.
+    - Do not create application code, prototypes or production dependency state.
+    - Do not waive failed or unresolved gates.
+  paths:
+    include:
+      - audits/SCAFFOLD-READINESS-001.md
+      - ROADMAP.md
+      - roadmap/BOOTSTRAP.md
+      - roadmap/tasks/CORRECTIVE-*.yaml
+      - governance/spec-lock.json
+      - spec-index.json
+      - roadmap/tasks/AUDIT-SCAFFOLD-READINESS-001.yaml
+      - roadmap/tasks/APP-SCAFFOLD-001.yaml
+      - roadmap/evidence/AUDIT-SCAFFOLD-READINESS-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - BACKUP-RECOVERY.md
+      - DATA-CATALOG.md
+      - db/**
+      - contracts/**
+      - schemas/**
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:25
+    - NAV:1.1
+    - NAV:6
+    - NAV:9
+    - BOOT:1
+    - BOOT:2
+    - BOOT:5
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - FOUNDATION-CONFORMANCE-REPORT-v1
+    - PRODUCTION-ROADMAP-v1
+    - APP-SCAFFOLD-TASK-v1
+  writes:
+    - SCAFFOLD-READINESS-REPORT-v1
+  changes:
+    - PRODUCTION-ROADMAP-v1
+    - SPEC-LOCK-v1
+    - BOOTSTRAP-DAG-v1
+dependencies:
+  tasks:
+    - PREP-ROADMAP-PROD-001
+  decisions:
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  artifacts:
+    - BACKUP-RECOVERY-SPEC
+    - CORE-PORTABILITY-SPIKE
+    - PDF-SPIKE
+    - BACKUP-RESTORE-SPIKE
+    - REVISION-SYNC-PREPARATION-SPIKE
+    - GITHUB-BRANCH-PROTECTION
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - First implementation task scope and dependency review
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - The roadmap, first implementation task and repository gates agree on scope and dependencies.
+    - Required checks, contracts, DDL, migration and recovery evidence are available.
+    - No mandatory decision, artifact, reference or unresolved foundation defect remains.
+    - The owner explicitly approves application development and APP-SCAFFOLD-001 is activated.
+approval:
+  owner_required: true
+  required_spec_status: approved

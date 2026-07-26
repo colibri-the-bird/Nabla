@@ -1,0 +1,138 @@
+schema_version: 2
+task_id: AUDIT-FOUNDATION-CONFORMANCE-001
+type: audit
+state: blocked
+outcome: The complete normative, catalog, contract and DDL foundation passes cross-layer conformance and owner checkpoint review.
+router: BOOT:1
+scope:
+  include:
+    - Audit traceability from Constitution through specs, ADRs, catalog, contracts and DDL.
+    - Run all foundation validators and representative lifecycle, failure and recovery scenarios.
+    - Record every unresolved issue as a blocker or an explicitly non-blocking deferred decision.
+    - Apply owner-requested changes to blocked roadmap/scaffold preparation or add a bounded corrective task.
+    - Activate PREP-ROADMAP-PROD-001 as the sole successor after owner approval.
+  exclude:
+    - Do not fix normative or schema defects inside the audit task.
+    - Do not create application code or a production roadmap.
+  paths:
+    include:
+      - audits/FOUNDATION-CONFORMANCE-001.md
+      - tests/conformance/**
+      - governance/spec-lock.json
+      - spec-index.json
+      - roadmap/BOOTSTRAP.md
+      - roadmap/tasks/AUDIT-FOUNDATION-CONFORMANCE-001.yaml
+      - roadmap/tasks/CORRECTIVE-*.yaml
+      - roadmap/tasks/PREP-ROADMAP-PROD-001.yaml
+      - roadmap/tasks/AUDIT-SCAFFOLD-READINESS-001.yaml
+      - roadmap/evidence/AUDIT-FOUNDATION-CONFORMANCE-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - BACKUP-RECOVERY.md
+      - DATA-CATALOG.md
+      - db/**
+      - contracts/**
+      - schemas/**
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:25
+    - ARCH:28
+    - DATA:23
+    - CAP:27
+    - CAP:32
+    - MOD:22
+    - MOD:27
+    - LOOP:20
+    - LOOP:26
+    - KNOW:32
+    - KNOW:35
+    - DOC:33
+    - DOC:36
+    - NAV:6
+    - BOOT:1
+    - BOOT:2
+  conditional: []
+  impact_tags:
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: This owner checkpoint intentionally combines acceptance and conformance surfaces from every normative layer.
+contracts:
+  reads:
+    - NORMATIVE-BASELINE-v1
+    - BACKUP-RECOVERY-v1
+    - DATA-CATALOG-v1
+    - CORE-CONTRACT-BUNDLE-v1
+    - CONTENT-CONTRACT-BUNDLE-v1
+    - CORE-DDL-v1
+    - CONTENT-DDL-v1
+  writes:
+    - FOUNDATION-CONFORMANCE-REPORT-v1
+  changes:
+    - BOOTSTRAP-DAG-v1
+    - SPEC-LOCK-v1
+dependencies:
+  tasks:
+    - SPEC-DDL-CONTENT-V1-001
+  decisions:
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  artifacts:
+    - BACKUP-RECOVERY-SPEC
+    - CORE-PORTABILITY-SPIKE
+    - PDF-SPIKE
+    - BACKUP-RESTORE-SPIKE
+    - REVISION-SYNC-PREPARATION-SPIKE
+    - GITHUB-BRANCH-PROTECTION
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - python tools/validate_data_catalog.py
+    - python tools/validate_contracts.py
+    - python tools/validate_ddl.py
+    - Foundation cross-layer conformance review
+  invariants:
+    - I1
+    - I2
+    - I3
+    - I6
+    - I7
+    - I8
+    - I11
+    - I12
+    - I15
+    - I16
+  evidence:
+    - Every persistent field traces from authority and purpose through contract to DDL.
+    - All validators and representative failure, migration, backup and recovery scenarios pass.
+    - No unresolved mandatory decision, artifact, reference, authority or lifecycle defect remains.
+    - Owner-requested downstream plan changes are recorded as blocked cards or corrective work.
+    - The owner explicitly approves this checkpoint and PREP-ROADMAP-PROD-001 is the only successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

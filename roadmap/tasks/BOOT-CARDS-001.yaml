@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-CARDS-001
 type: tooling
 state: completed
@@ -61,6 +61,7 @@ acceptance:
   tests:
     - python -m pytest -q tests/test_nabla_nav.py
     - python tools/nabla_nav.py validate
+    - git diff --check
   invariants:
     - I6
     - I15

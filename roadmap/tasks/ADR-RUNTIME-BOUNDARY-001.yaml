@@ -1,0 +1,76 @@
+schema_version: 2
+task_id: ADR-RUNTIME-BOUNDARY-001
+type: adr
+state: blocked
+outcome: ADR-001 and ADR-010 define the runtime, portability and extension boundary from measured evidence.
+router: BOOT:1
+scope:
+  include:
+    - Resolve ADR-001 and ADR-010 from the approved architecture and portability spike.
+    - Record alternatives, consequences, compatibility constraints and supersession rules.
+    - Update the decision registry only after owner approval.
+    - Activate ADR-MODULE-TRUST-001 as the sole successor.
+  exclude:
+    - Do not create the production skeleton or add production dependencies.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-001-*.md
+      - adr/ADR-010-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+      - roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+      - roadmap/evidence/ADR-RUNTIME-BOUNDARY-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:5
+    - ARCH:6
+    - ARCH:24
+    - ARCH:24.3
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - module-contract
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ARCHITECTURE-v0.1
+    - CORE-PORTABILITY-SPIKE-v1
+  writes:
+    - ADR-001
+    - ADR-010
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - SPIKE-REVISION-REPLAY-001
+  decisions: []
+  artifacts:
+    - CORE-PORTABILITY-SPIKE
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - ADR-001 and ADR-010 cite measured portability evidence and approved sources.
+    - Alternatives, rejected options, consequences and compatibility risks are explicit.
+    - Both decisions are accepted in the registry after owner approval.
+    - ADR-MODULE-TRUST-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

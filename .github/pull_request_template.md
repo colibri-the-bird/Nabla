@@ -1,8 +1,8 @@
 ## Task
 
-- TASK-ID: `BOOT-...`
+- TASK-ID: `<TASK-ID>`
 - Outcome:
-- Evidence: `roadmap/evidence/BOOT-....yaml`
+- Evidence: `roadmap/evidence/<TASK-ID>.yaml`
 
 ## Scope
 
@@ -14,13 +14,16 @@
 ## Verification
 
 - [ ] `python tools/nabla_nav.py prepare <TASK-ID>`
+- [ ] `python tools/nabla_nav.py check-scope <TASK-ID> --base origin/main`
 - [ ] `python tools/nabla_nav.py evidence <TASK-ID>`
 - [ ] `python tools/nabla_nav.py validate`
-- [ ] Evidence contains the current PR URL and successful commands.
+- [ ] `python tools/nabla_nav.py check-lock`
+- [ ] Evidence maps every declared acceptance test and proof requirement.
+- [ ] Evidence contains the current PR URL and explicit owner approval when required.
 - [ ] There are no unresolved decisions.
 
 ## Owner merge
 
-- [ ] All five required checks are successful and current.
+- [ ] All repository-required checks are successful on the current head.
 - [ ] Conversations are resolved.
-- [ ] I performed the final manual merge.
+- [ ] The owner will perform the final manual merge; `completed` alone does not claim merge.

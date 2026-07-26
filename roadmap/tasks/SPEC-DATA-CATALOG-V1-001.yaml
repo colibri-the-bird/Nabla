@@ -1,0 +1,91 @@
+schema_version: 2
+task_id: SPEC-DATA-CATALOG-V1-001
+type: spec
+state: blocked
+outcome: Data Catalog v1 assigns every persistent field a class, owner, writer and loop or technical purpose before schemas.
+router: BOOT:1
+scope:
+  include:
+    - Create the v1 catalog for Kernel, Platform, Knowledge and Documents persistent fields.
+    - Record class, sensitivity, owner, canonical writer, lifecycle, provenance and loop or technical purpose.
+    - Add deterministic catalog validation and register the document.
+    - Activate SPEC-CONTRACTS-CORE-V1-001 as the sole successor.
+  exclude:
+    - Do not author physical DDL or application models.
+    - Do not invent fields unsupported by approved normative contracts.
+  paths:
+    include:
+      - DATA-CATALOG.md
+      - schemas/data-catalog/**
+      - tools/validate_data_catalog.py
+      - tests/test_data_catalog.py
+      - governance/spec-lock.json
+      - spec-index.json
+      - roadmap/tasks/SPEC-DATA-CATALOG-V1-001.yaml
+      - roadmap/tasks/SPEC-CONTRACTS-CORE-V1-001.yaml
+      - roadmap/evidence/SPEC-DATA-CATALOG-V1-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I1
+    - CON:I6
+    - CON:I7
+    - CON:I8
+    - DATA:2
+    - DATA:19
+    - DATA:23
+    - MOD:6
+    - MOD:7
+    - LOOP:10
+    - KNOW:16
+    - DOC:18
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - canonical-write
+    - loop-coverage
+    - module-contract
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NORMATIVE-BASELINE-v1
+    - BACKUP-RECOVERY-v1
+  writes:
+    - DATA-CATALOG-v1
+    - DATA-CATALOG-SCHEMA-v1
+  changes:
+    - SPEC-INDEX-v1
+dependencies:
+  tasks:
+    - SPEC-BACKUP-RECOVERY-001
+  decisions: []
+  artifacts:
+    - BACKUP-RECOVERY-SPEC
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/validate_data_catalog.py
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+  invariants:
+    - I1
+    - I6
+    - I7
+    - I8
+  evidence:
+    - Every persistent v1 field has class, sensitivity, owner and exactly one canonical writer.
+    - Every persistent v1 field has a loop binding or a valid technical purpose.
+    - Catalog references to modules, contracts and data types resolve deterministically.
+    - SPEC-CONTRACTS-CORE-V1-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

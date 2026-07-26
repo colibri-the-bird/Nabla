@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-AGENTS-001
 type: tooling
 state: completed
@@ -48,7 +48,10 @@ dependencies:
   artifacts: []
 acceptance:
   tests:
+    - python -m pytest -q
     - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - git diff --check
   invariants:
     - I6
     - I15

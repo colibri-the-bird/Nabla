@@ -25,6 +25,9 @@ import spec_slice
 
 TASK_TYPES = {"spec", "adr", "spike", "tooling", "audit", "implementation"}
 TASK_STATES = {"draft", "ready", "blocked", "completed"}
+TASK_SCHEMA_VERSION = 2
+EVIDENCE_SCHEMA_VERSION = 2
+SCAFFOLD_READINESS_TASK_ID = "AUDIT-SCAFFOLD-READINESS-001"
 TASK_REQUIRED_KEYS = {
     "schema_version",
     "task_id",
@@ -46,9 +49,12 @@ EVIDENCE_REQUIRED_KEYS = {
     "selectors",
     "document_hashes",
     "impact_tags",
+    "triggers",
     "changed_paths",
     "changed_contracts",
     "tests",
+    "acceptance_evidence",
+    "owner_approval",
     "unresolved_decisions",
     "pr_url",
 }
@@ -134,7 +140,10 @@ def load_tasks(root: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Path]]:
     return tasks, paths
 
 
-def task_dependency_cycles(tasks: dict[str, dict[str, Any]]) -> list[str]:
+def task_dependency_cycles(
+    tasks: dict[str, dict[str, Any]],
+    artifacts: dict[str, dict[str, Any]] | None = None,
+) -> list[str]:
     visiting: set[str] = set()
     visited: set[str] = set()
     stack: list[str] = []
@@ -150,7 +159,29 @@ def task_dependency_cycles(tasks: dict[str, dict[str, Any]]) -> list[str]:
         visiting.add(task_id)
         stack.append(task_id)
         dependencies = tasks[task_id].get("dependencies", {})
-        for dependency in dependencies.get("tasks", []) if isinstance(dependencies, dict) else []:
+        dependency_ids = list(
+            dependencies.get("tasks", []) if isinstance(dependencies, dict) else []
+        )
+        if artifacts is not None and isinstance(dependencies, dict):
+            for artifact_id in dependencies.get("artifacts", []):
+                artifact = artifacts.get(artifact_id)
+                if artifact is None:
+                    continue
+                provider = artifact.get("provided_by")
+                if provider is None:
+                    continue
+                if not isinstance(provider, str) or not provider.strip():
+                    errors.append(
+                        f"{artifact_id}: provided_by must be a non-empty task ID"
+                    )
+                    continue
+                if provider not in tasks:
+                    errors.append(
+                        f"{artifact_id}: unknown provider task {provider}"
+                    )
+                    continue
+                dependency_ids.append(provider)
+        for dependency in dependency_ids:
             if dependency not in tasks:
                 errors.append(f"{task_id}: unknown task dependency {dependency}")
             else:
@@ -161,6 +192,169 @@ def task_dependency_cycles(tasks: dict[str, dict[str, Any]]) -> list[str]:
 
     for task_id in tasks:
         visit(task_id)
+    return errors
+
+
+def ready_cardinality_errors(tasks: dict[str, dict[str, Any]]) -> list[str]:
+    ready = sorted(
+        task_id for task_id, task in tasks.items() if task.get("state") == "ready"
+    )
+    if len(ready) <= 1:
+        return []
+    return ["more than one task is ready: " + ", ".join(ready)]
+
+
+def artifact_provider_errors(
+    tasks: dict[str, dict[str, Any]],
+    artifacts: dict[str, dict[str, Any]],
+) -> list[str]:
+    errors: list[str] = []
+    for artifact_id, artifact in artifacts.items():
+        provider = artifact.get("provided_by")
+        if provider is None:
+            continue
+        if not isinstance(provider, str) or not provider.strip():
+            errors.append(f"{artifact_id}: provided_by must be a non-empty task ID")
+            continue
+        task = tasks.get(provider)
+        if task is None:
+            errors.append(f"{artifact_id}: unknown provider task {provider}")
+            continue
+        changes = task.get("contracts", {}).get("changes", [])
+        if artifact_id not in changes:
+            errors.append(
+                f"{artifact_id}: provider task {provider} must declare the artifact "
+                "in contracts.changes"
+            )
+        if artifact.get("status") == "available" and task.get("state") != "completed":
+            errors.append(
+                f"{artifact_id}: available artifact provider task is not completed: "
+                f"{provider}"
+            )
+    return errors
+
+
+def bootstrap_chain_errors(tasks: dict[str, dict[str, Any]]) -> list[str]:
+    bootstrap = {
+        task_id: task
+        for task_id, task in tasks.items()
+        if isinstance(task.get("router"), str)
+        and task["router"].startswith("BOOT:")
+    }
+    if not bootstrap:
+        return ["bootstrap task chain is missing"]
+
+    errors: list[str] = []
+    predecessors: dict[str, list[str]] = {}
+    successors: dict[str, list[str]] = {task_id: [] for task_id in bootstrap}
+    for task_id, task in bootstrap.items():
+        declared = task.get("dependencies", {}).get("tasks", [])
+        foreign = [dependency for dependency in declared if dependency not in bootstrap]
+        if foreign:
+            errors.append(
+                f"{task_id}: bootstrap task depends outside bootstrap chain: "
+                + ", ".join(foreign)
+            )
+        direct = [dependency for dependency in declared if dependency in bootstrap]
+        predecessors[task_id] = direct
+        if len(direct) > 1:
+            errors.append(
+                f"{task_id}: bootstrap chain requires exactly one predecessor, "
+                f"found {len(direct)}"
+            )
+        for dependency in direct:
+            successors[dependency].append(task_id)
+
+    roots = sorted(task_id for task_id, deps in predecessors.items() if not deps)
+    tails = sorted(task_id for task_id, next_ids in successors.items() if not next_ids)
+    if len(roots) != 1:
+        errors.append(
+            "bootstrap chain requires exactly one root, found: "
+            + (", ".join(roots) if roots else "none")
+        )
+    if len(tails) != 1:
+        errors.append(
+            "bootstrap chain requires exactly one tail, found: "
+            + (", ".join(tails) if tails else "none")
+        )
+    for task_id, next_ids in successors.items():
+        if len(next_ids) > 1:
+            errors.append(
+                f"{task_id}: bootstrap chain branches to: "
+                + ", ".join(sorted(next_ids))
+            )
+    if errors or not roots:
+        return errors
+
+    ordered: list[str] = []
+    current = roots[0]
+    while current not in ordered:
+        ordered.append(current)
+        next_ids = successors[current]
+        if not next_ids:
+            break
+        if len(next_ids) != 1:
+            break
+        current = next_ids[0]
+    if len(ordered) != len(bootstrap):
+        missing = sorted(set(bootstrap) - set(ordered))
+        errors.append(
+            "bootstrap chain is disconnected or cyclic; unreachable: "
+            + ", ".join(missing)
+        )
+        return errors
+
+    ready_positions = [
+        position
+        for position, task_id in enumerate(ordered)
+        if bootstrap[task_id].get("state") == "ready"
+    ]
+    if ready_positions:
+        ready_position = ready_positions[0]
+        for task_id in ordered[:ready_position]:
+            if bootstrap[task_id].get("state") != "completed":
+                errors.append(
+                    f"{task_id}: task before the ready frontier must be completed"
+                )
+        for task_id in ordered[ready_position + 1 :]:
+            if bootstrap[task_id].get("state") not in {"blocked", "draft"}:
+                errors.append(
+                    f"{task_id}: task after the ready frontier must be blocked or draft"
+                )
+    elif any(task.get("state") != "completed" for task in bootstrap.values()):
+        errors.append("non-completed bootstrap chain requires exactly one ready task")
+
+    for predecessor, successor in zip(ordered, ordered[1:]):
+        if bootstrap[successor].get("state") == "completed":
+            continue
+        successor_path = f"roadmap/tasks/{successor}.yaml"
+        include = bootstrap[predecessor].get("scope", {}).get("paths", {}).get(
+            "include", []
+        )
+        if not match_any(successor_path, include):
+            errors.append(
+                f"{predecessor}: scope does not authorize successor card "
+                f"{successor_path}"
+            )
+
+    implementation = sorted(
+        task_id
+        for task_id, task in bootstrap.items()
+        if task.get("type") == "implementation"
+    )
+    if implementation:
+        errors.append(
+            "bootstrap chain cannot contain implementation tasks: "
+            + ", ".join(implementation)
+        )
+    if len(tails) == 1:
+        tail = bootstrap[tails[0]]
+        if tail.get("type") != "audit" or not tail.get("approval", {}).get(
+            "owner_required"
+        ):
+            errors.append(
+                f"{tails[0]}: bootstrap tail must be an owner-required audit"
+            )
     return errors
 
 
@@ -179,8 +373,10 @@ def validate_task_shape(task: dict[str, Any], path: Path) -> list[str]:
     label = str(path)
     try:
         require_keys(task, TASK_REQUIRED_KEYS, label)
-        if task["schema_version"] != 1:
-            raise NavError(f"{label}: schema_version must be 1")
+        if task["schema_version"] != TASK_SCHEMA_VERSION:
+            raise NavError(
+                f"{label}: schema_version must be {TASK_SCHEMA_VERSION}"
+            )
         if task["type"] not in TASK_TYPES:
             raise NavError(f"{label}: unsupported task type {task['type']!r}")
         if task["state"] not in TASK_STATES:
@@ -678,14 +874,32 @@ def validate_task_semantics(
                 errors.append(
                     f"{task_id}: active task depends on non-completed task {dependency}"
                 )
-        for decision_id in dependencies["decisions"]:
-            entry = decisions.get(decision_id)
-            if entry is None or entry.get("status") != "accepted":
-                errors.append(f"{task_id}: blocking decision is not accepted: {decision_id}")
-        for artifact_id in dependencies["artifacts"]:
-            entry = artifacts.get(artifact_id)
-            if entry is None or entry.get("status") != "available":
-                errors.append(f"{task_id}: blocking artifact is not available: {artifact_id}")
+    for decision_id in dependencies["decisions"]:
+        entry = decisions.get(decision_id)
+        if entry is None:
+            errors.append(f"{task_id}: unknown decision dependency {decision_id}")
+        elif task["state"] == "ready" and entry.get("status") != "accepted":
+            errors.append(f"{task_id}: blocking decision is not accepted: {decision_id}")
+        elif task["state"] == "completed" and entry.get("status") not in {
+            "accepted",
+            "superseded",
+        }:
+            errors.append(
+                f"{task_id}: completed task decision was never accepted: {decision_id}"
+            )
+    for artifact_id in dependencies["artifacts"]:
+        entry = artifacts.get(artifact_id)
+        if entry is None:
+            errors.append(f"{task_id}: unknown artifact dependency {artifact_id}")
+        elif task["state"] == "ready" and entry.get("status") != "available":
+            errors.append(f"{task_id}: blocking artifact is not available: {artifact_id}")
+        elif task["state"] == "completed" and entry.get("status") not in {
+            "available",
+            "superseded",
+        }:
+            errors.append(
+                f"{task_id}: completed task artifact was never available: {artifact_id}"
+            )
 
     if task["type"] == "implementation" and task["state"] == "ready":
         for selector in selectors:
@@ -696,6 +910,21 @@ def validate_task_semantics(
                 )
         if "ROADMAP" not in docs:
             errors.append(f"{task_id}: production ROADMAP.md is required")
+        scaffold_gate = tasks.get(SCAFFOLD_READINESS_TASK_ID)
+        if scaffold_gate is None:
+            errors.append(
+                f"{task_id}: {SCAFFOLD_READINESS_TASK_ID} task is required"
+            )
+        elif scaffold_gate["state"] != "completed":
+            errors.append(
+                f"{task_id}: {SCAFFOLD_READINESS_TASK_ID} must be completed "
+                "before implementation becomes ready"
+            )
+        if SCAFFOLD_READINESS_TASK_ID not in dependencies["tasks"]:
+            errors.append(
+                f"{task_id}: ready implementation must directly depend on "
+                f"{SCAFFOLD_READINESS_TASK_ID}"
+            )
 
     try:
         if selectors:
@@ -726,31 +955,189 @@ def validate_evidence(root: Path, task: dict[str, Any]) -> list[str]:
     try:
         evidence = read_yaml(path)
         require_keys(evidence, EVIDENCE_REQUIRED_KEYS, str(path))
-        if evidence["schema_version"] != 1:
-            errors.append(f"{path}: schema_version must be 1")
+        if evidence["schema_version"] != EVIDENCE_SCHEMA_VERSION:
+            errors.append(
+                f"{path}: schema_version must be {EVIDENCE_SCHEMA_VERSION}"
+            )
         if evidence["task_id"] != task["task_id"]:
             errors.append(f"{path}: task_id does not match card")
         for key in (
             "selectors",
+            "triggers",
             "impact_tags",
             "changed_paths",
             "changed_contracts",
-            "tests",
             "unresolved_decisions",
         ):
+            value = evidence[key]
+            if not isinstance(value, list):
+                errors.append(f"{path}.{key}: list required")
+            else:
+                for position, item in enumerate(value):
+                    if not isinstance(item, str) or not item.strip():
+                        errors.append(
+                            f"{path}.{key}[{position}]: non-empty string required"
+                        )
+        for key in ("tests", "acceptance_evidence"):
             if not isinstance(evidence[key], list):
                 errors.append(f"{path}.{key}: list required")
-        if not isinstance(evidence["document_hashes"], dict):
+        document_hashes = evidence["document_hashes"]
+        if not isinstance(document_hashes, dict):
             errors.append(f"{path}.document_hashes: mapping required")
+        else:
+            for doc_id, digest in document_hashes.items():
+                if not isinstance(doc_id, str) or not doc_id.strip():
+                    errors.append(
+                        f"{path}.document_hashes: non-empty string keys required"
+                    )
+                if not isinstance(digest, str) or not digest.strip():
+                    errors.append(
+                        f"{path}.document_hashes[{doc_id!r}]: "
+                        "non-empty string hash required"
+                    )
+        if (
+            not isinstance(evidence["context_manifest_sha256"], str)
+            or not evidence["context_manifest_sha256"].strip()
+        ):
+            errors.append(f"{path}.context_manifest_sha256: non-empty string required")
+        if not isinstance(evidence["pr_url"], str):
+            errors.append(f"{path}.pr_url: string required")
+        owner_approval = evidence["owner_approval"]
+        if not isinstance(owner_approval, dict):
+            errors.append(f"{path}.owner_approval: mapping required")
+            owner_approval = {}
+        else:
+            try:
+                require_keys(
+                    owner_approval,
+                    {"approved", "reference"},
+                    f"{path}.owner_approval",
+                )
+            except NavError as exc:
+                errors.append(str(exc))
+            if not isinstance(owner_approval.get("approved"), bool):
+                errors.append(f"{path}.owner_approval.approved: boolean required")
+            if not isinstance(owner_approval.get("reference"), str):
+                errors.append(f"{path}.owner_approval.reference: string required")
+
+        declared_tests = task["acceptance"]["tests"]
+        test_entries = evidence["tests"] if isinstance(evidence["tests"], list) else []
+        seen_tests: set[str] = set()
+        for position, test in enumerate(test_entries):
+            label = f"{path}.tests[{position}]"
+            if not isinstance(test, dict):
+                errors.append(f"{label}: mapping required")
+                continue
+            try:
+                require_keys(test, {"requirement", "command", "exit_code"}, label)
+            except NavError as exc:
+                errors.append(str(exc))
+                continue
+            requirement = test["requirement"]
+            if not isinstance(requirement, str) or not requirement:
+                errors.append(f"{label}.requirement: non-empty string required")
+                continue
+            if requirement in seen_tests:
+                errors.append(f"{label}: duplicate requirement {requirement!r}")
+            seen_tests.add(requirement)
+            if requirement not in declared_tests:
+                errors.append(f"{label}: undeclared requirement {requirement!r}")
+            if not isinstance(test["command"], str):
+                errors.append(f"{label}.command: string required")
+            exit_code = test["exit_code"]
+            if exit_code is not None and (
+                isinstance(exit_code, bool) or not isinstance(exit_code, int)
+            ):
+                errors.append(f"{label}.exit_code: integer or null required")
+
+        declared_evidence = task["acceptance"]["evidence"]
+        proof_entries = (
+            evidence["acceptance_evidence"]
+            if isinstance(evidence["acceptance_evidence"], list)
+            else []
+        )
+        seen_proofs: set[str] = set()
+        for position, proof in enumerate(proof_entries):
+            label = f"{path}.acceptance_evidence[{position}]"
+            if not isinstance(proof, dict):
+                errors.append(f"{label}: mapping required")
+                continue
+            try:
+                require_keys(proof, {"requirement", "proof"}, label)
+            except NavError as exc:
+                errors.append(str(exc))
+                continue
+            requirement = proof["requirement"]
+            if not isinstance(requirement, str) or not requirement:
+                errors.append(f"{label}.requirement: non-empty string required")
+                continue
+            if requirement in seen_proofs:
+                errors.append(f"{label}: duplicate requirement {requirement!r}")
+            seen_proofs.add(requirement)
+            if requirement not in declared_evidence:
+                errors.append(f"{label}: undeclared requirement {requirement!r}")
+            if not isinstance(proof["proof"], str):
+                errors.append(f"{label}.proof: string required")
+
         if task["state"] == "completed":
-            if not evidence["context_manifest_sha256"]:
-                errors.append(f"{path}: completed evidence requires context manifest hash")
             if not isinstance(evidence["pr_url"], str) or not evidence["pr_url"].startswith(
                 "https://github.com/"
             ):
                 errors.append(f"{path}: completed evidence requires GitHub PR URL")
             if evidence["unresolved_decisions"]:
                 errors.append(f"{path}: completed evidence has unresolved decisions")
+            missing_tests = [
+                requirement for requirement in declared_tests if requirement not in seen_tests
+            ]
+            for requirement in missing_tests:
+                errors.append(
+                    f"{path}: completed evidence is missing acceptance test {requirement!r}"
+                )
+            for position, test in enumerate(test_entries):
+                if not isinstance(test, dict):
+                    continue
+                requirement = test.get("requirement")
+                if requirement not in declared_tests:
+                    continue
+                if not isinstance(test.get("command"), str) or not test["command"]:
+                    errors.append(
+                        f"{path}.tests[{position}].command: completed evidence "
+                        "requires a non-empty command"
+                    )
+                exit_code = test.get("exit_code")
+                if isinstance(exit_code, bool) or exit_code != 0:
+                    errors.append(
+                        f"{path}.tests[{position}]: acceptance test did not exit with 0"
+                    )
+            missing_proofs = [
+                requirement
+                for requirement in declared_evidence
+                if requirement not in seen_proofs
+            ]
+            for requirement in missing_proofs:
+                errors.append(
+                    f"{path}: completed evidence is missing proof for {requirement!r}"
+                )
+            for position, proof in enumerate(proof_entries):
+                if not isinstance(proof, dict):
+                    continue
+                requirement = proof.get("requirement")
+                if requirement not in declared_evidence:
+                    continue
+                if not isinstance(proof.get("proof"), str) or not proof["proof"]:
+                    errors.append(
+                        f"{path}.acceptance_evidence[{position}].proof: "
+                        "completed evidence requires non-empty proof"
+                    )
+            owner_reference = owner_approval.get("reference")
+            if task["approval"]["owner_required"] and (
+                owner_approval.get("approved") is not True
+                or not isinstance(owner_reference, str)
+                or not owner_reference.strip()
+            ):
+                errors.append(
+                    f"{path}: completed evidence requires explicit owner approval"
+                )
     except NavError as exc:
         errors.append(str(exc))
     return errors
@@ -774,9 +1161,12 @@ def validate_repository(
     if errors:
         return errors, sorted(set(warnings)), tasks, task_paths
 
-    errors.extend(task_dependency_cycles(tasks))
     governance_errors, decisions, artifacts = validate_governance(root, index, docs)
     errors.extend(governance_errors)
+    errors.extend(ready_cardinality_errors(tasks))
+    errors.extend(artifact_provider_errors(tasks, artifacts))
+    errors.extend(task_dependency_cycles(tasks, artifacts))
+    errors.extend(bootstrap_chain_errors(tasks))
     for task in tasks.values():
         task_errors, task_warnings = validate_task_semantics(
             task, tasks, index, docs, decisions, artifacts
@@ -890,13 +1280,14 @@ def command_prepare(args: argparse.Namespace, root: Path) -> int:
     return 0
 
 
-def evidence_template(root: Path, task_id: str) -> dict[str, Any]:
+def evidence_template(root: Path, task: dict[str, Any]) -> dict[str, Any]:
+    task_id = task["task_id"]
     manifest_path = root / ".nabla" / "context" / task_id / "manifest.json"
     if not manifest_path.exists():
         raise NavError(f"{task_id}: run prepare before creating evidence")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     return {
-        "schema_version": 1,
+        "schema_version": EVIDENCE_SCHEMA_VERSION,
         "task_id": task_id,
         "context_manifest_sha256": manifest["manifest_sha256"],
         "selectors": manifest["selectors"],
@@ -904,9 +1295,18 @@ def evidence_template(root: Path, task_id: str) -> dict[str, Any]:
             doc_id: entry["sha256"] for doc_id, entry in manifest["documents"].items()
         },
         "impact_tags": manifest["impact_tags"],
+        "triggers": manifest["triggers"],
         "changed_paths": [],
         "changed_contracts": [],
-        "tests": [],
+        "tests": [
+            {"requirement": requirement, "command": "", "exit_code": None}
+            for requirement in task["acceptance"]["tests"]
+        ],
+        "acceptance_evidence": [
+            {"requirement": requirement, "proof": ""}
+            for requirement in task["acceptance"]["evidence"]
+        ],
+        "owner_approval": {"approved": False, "reference": ""},
         "unresolved_decisions": [],
         "pr_url": "",
     }
@@ -921,7 +1321,7 @@ def command_evidence(args: argparse.Namespace, root: Path) -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
             yaml.safe_dump(
-                evidence_template(root, args.task_id),
+                evidence_template(root, tasks[args.task_id]),
                 allow_unicode=True,
                 sort_keys=False,
             ),
@@ -1004,7 +1404,14 @@ def validate_pr_evidence(
     if spec_errors:
         return ["spec validation failed before PR evidence check"]
     try:
-        _, manifest = build_context_bundle(root, task, task_path, index, docs)
+        _, manifest = build_context_bundle(
+            root,
+            task,
+            task_path,
+            index,
+            docs,
+            evidence["triggers"],
+        )
     except (NavError, spec_slice.SpecError, OSError) as exc:
         return [str(exc)]
     if evidence["context_manifest_sha256"] != manifest["manifest_sha256"]:
@@ -1012,29 +1419,25 @@ def validate_pr_evidence(
             f"{task['task_id']}: evidence context manifest is stale; "
             "run prepare and update evidence"
         )
+    expected_document_hashes = {
+        doc_id: entry["sha256"] for doc_id, entry in manifest["documents"].items()
+    }
+    for field, expected in (
+        ("selectors", manifest["selectors"]),
+        ("document_hashes", expected_document_hashes),
+        ("impact_tags", manifest["impact_tags"]),
+        ("triggers", manifest["triggers"]),
+    ):
+        if evidence[field] != expected:
+            errors.append(
+                f"{task['task_id']}: evidence {field} does not match context manifest"
+            )
     normalized_changed = sorted(path.replace("\\", "/") for path in changed_paths)
     evidence_changed = sorted(path.replace("\\", "/") for path in evidence["changed_paths"])
     if evidence_changed != normalized_changed:
         errors.append(f"{task['task_id']}: evidence changed_paths does not match PR diff")
     if evidence["pr_url"] != pr_url:
         errors.append(f"{task['task_id']}: evidence pr_url does not match current PR")
-    if not evidence["tests"]:
-        errors.append(f"{task['task_id']}: evidence requires at least one test result")
-    else:
-        for position, test in enumerate(evidence["tests"]):
-            if not isinstance(test, dict):
-                errors.append(
-                    f"{task['task_id']}: evidence.tests[{position}] must be a mapping"
-                )
-                continue
-            if not isinstance(test.get("command"), str) or not test["command"]:
-                errors.append(
-                    f"{task['task_id']}: evidence.tests[{position}].command is required"
-                )
-            if test.get("exit_code") != 0:
-                errors.append(
-                    f"{task['task_id']}: evidence.tests[{position}] did not exit with 0"
-                )
     return errors
 
 

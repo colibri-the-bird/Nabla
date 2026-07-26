@@ -1,7 +1,7 @@
-# Nabla Specification Navigation v0.2
+# Nabla Specification Navigation v0.3
 
 **Статус:** утверждена владельцем проекта
-**Дата:** 2026-07-24
+**Дата:** 2026-07-26
 **Роль:** ненормативный маршрутизатор нормативного контекста  
 **Не переопределяет:** `CONSTITUTION.md`, `ARCHITECTURE.md`, ADR, contracts,
 module specifications, Data Catalog или DDL
@@ -22,8 +22,8 @@ module specifications, Data Catalog или DDL
 Настоящий документ определяет progressive-disclosure navigation layer:
 
 1. короткий `AGENTS.md` задаёт неизменяемый порядок работы;
-2. до production Roadmap файл `roadmap/BOOTSTRAP.md` маршрутизирует создание
-   самого navigation layer;
+2. до production Roadmap файл `roadmap/BOOTSTRAP.md` маршрутизирует весь
+   pre-development foundation, не разрешая implementation;
 3. `ROADMAP.md` содержит milestone/DAG, а отдельные YAML task cards являются
    исполнимыми единицами работы;
 4. generated `spec-index.json` перечисляет документы, sections и context packs;
@@ -179,20 +179,32 @@ Slicer не удаляет MUST/MUST NOT, tables, examples или acceptance con
 ## 3.1 Required shape
 
 ```yaml
+schema_version: 2
 task_id: V1-DOC-ANCHOR-001
+type: implementation
+state: blocked
 outcome: string
+router: ROADMAP:milestone
 scope:
   include: [string]
   exclude: [string]
+  paths:
+    include: [path-pattern]
+    exclude: [path-pattern]
 
 context:
-  baseline: [ContextPackRef]
+  packs:
+    - id: ContextPackId
+      version: 1
   required: [SectionSelector]
   conditional:
     - when: TriggerExpression
-      add: [SectionSelector | ContextPackRef]
+      selectors: [SectionSelector]
+      packs: [ContextPackRef]
+      impact_tags: [ImpactTag]
   impact_tags: [ImpactTag]
   full_document_reads: []
+  context_budget_justification: null
 
 contracts:
   reads: [ContractRef]
@@ -201,15 +213,22 @@ contracts:
 
 dependencies:
   tasks: [TaskId]
-  decisions: [ADRRef | SpikeRef]
+  decisions: [ADRRef]
+  artifacts: [ArtifactId]
 
 acceptance:
-  tests: [TestRef]
-  evidence: [EvidenceRequirement]
+  tests: [TestRequirement]
   invariants: [InvariantId]
+  evidence: [EvidenceRequirement]
+
+approval:
+  owner_required: true
+  required_spec_status: approved
 ```
 
-Production task без `context`, `scope`, `acceptance` или `invariants` invalid.
+Все поля верхнего уровня обязательны. Task без `context`, path scope,
+dependencies, acceptance, approval или invariants invalid; неизвестная
+`schema_version` не принимается молча.
 
 ## 3.4 Хранение и состояние task cards
 
@@ -227,12 +246,26 @@ Mutable execution evidence хранится отдельно в
 Переход в `ready` запрещён, если:
 
 - dependency task не `completed`;
-- blocking ADR, spike или artifact отсутствует;
+- blocking ADR не `accepted`, а artifact не `available`;
 - selector или pinned context pack version не разрешается;
 - implementation task зависит от неутверждённой нормативной specification;
+- production `ROADMAP.md` ещё не существует;
 - context bundle превышает 16 000 слов;
 - slice между 12 000 и 16 000 слов не имеет явного
   `context_budget_justification`.
+
+В registry одновременно может быть не более одной `ready` task. Artifact может
+объявить `provided_by: <TASK-ID>`; provider участвует в dependency graph так же,
+как явная task dependency. Неизвестный provider, self-dependency и цикл
+task → artifact → provider блокируют validation. Artifact не может стать
+`available`, пока его provider task не `completed`.
+
+`completed` означает, что outcome и локальная acceptance завершены, evidence
+полна и результат готов к PR gate. Это состояние само по себе не доказывает
+зелёный CI или merge. Закрытой task считается только после зелёных checks на
+текущем head и ручного merge владельцем. Позднейшее `superseded` решение или
+artifact не делает исторически завершённую task невалидной, но новая ready task
+обязана зависеть от актуального `accepted`/`available` состояния.
 
 Каждый Codex run получает один явный `TASK-ID`. Один task соответствует одной
 ветке `task/<TASK-ID>-<slug>` и одному PR. Начальный bootstrap MAY быть доставлен
@@ -378,12 +411,25 @@ Pack hash вычисляется из normalized selectors/dependencies, но н
 Evidence содержит:
 
 - task ID;
+- `schema_version: 2`;
+- hash подготовленного context manifest;
 - фактически использованные selectors и document hashes;
 - изменённые contract/catalog/schema IDs;
 - сработавшие impact tags;
-- tests/commands и результаты;
+- сработавшие conditional triggers;
+- по одной записи `{requirement, command, exit_code}` для каждой декларации
+  `acceptance.tests`;
+- по одной записи `{requirement, proof}` для каждой декларации
+  `acceptance.evidence`;
+- `{approved, reference}` для owner approval;
 - unresolved decisions;
-- подтверждение отсутствия изменения outside scope.
+- PR URL и подтверждение отсутствия изменения outside scope.
+
+Requirement связывается точным текстом с task card. Пропущенная, дублированная
+или незаявленная acceptance-запись invalid; для completed task каждый test имеет
+непустую command и `exit_code: 0`, каждый proof непустой, unresolved decisions
+отсутствуют, а owner-required task содержит явное одобрение. Одобрение нельзя
+вывести автоматически из состояния card или факта существования PR.
 
 Фраза «реализовано по архитектуре» без selector/test evidence недостаточна.
 
@@ -414,7 +460,11 @@ Evidence содержит:
 
 Bootstrap task MUST ссылаться на `roadmap/BOOTSTRAP.md`. Тип `implementation`
 остаётся заблокированным до утверждения применимых specifications, закрытия
-обязательных decisions/artifacts и появления production Roadmap.
+обязательных decisions/artifacts и появления production Roadmap. Валидатор
+разрешает состояние `ready` для implementation task только если
+`AUDIT-SCAFFOLD-READINESS-001` существует, завершён и указан как прямая task
+dependency. Таким образом, финальный owner checkpoint является
+машинно-проверяемым gate, а не только договорённостью в документации.
 
 ---
 
@@ -499,9 +549,11 @@ Generated values MUST NOT редактироваться как независи
 9. context budget рассчитан;
 10. changed normative section перечисляет affected packs/tasks.
 
-Task validator дополнительно проверяет YAML schema, task dependency DAG, pinned
-pack versions, blockers, draft-spec prohibition, context budget, path scope и
-согласованность evidence с context manifest.
+Task validator дополнительно проверяет YAML schema v2, единственность ready task,
+task/artifact-provider DAG, pinned pack versions, blockers, draft-spec
+prohibition, финальный scaffold-readiness gate, context budget, path scope и
+полное соответствие evidence v2 task acceptance и подготовленному context
+manifest, включая selectors, document hashes, impact tags и triggers.
 
 ## 8.3 Security
 
@@ -557,28 +609,32 @@ specification, summary слишком подробен и должен быть 
 
 # 10. Rollout order
 
-Navigation layer вводится без задержки нормативной последовательности:
+Navigation layer и pre-development router вводятся последовательно:
 
-1. утвердить selector/addressing contract v0.2;
+1. утвердить selector/addressing contract;
 2. создать bootstrap router без production tasks;
 3. укрепить generated index и read-only slicer;
 4. добавить отдельные task cards, evidence и context builder;
 5. проверить текущие документы на unique keys/references/traceability;
 6. создать короткий root `AGENTS.md`;
 7. включить selector/task/impact validation в CI;
-8. выполнить pilot tooling task;
-9. оставить production implementation закрытой до `BACKUP`, ADR, DDL и
-   production `ROADMAP.md`;
-10. не создавать вручную отдельные summaries каждого документа.
+8. починить lifecycle/evidence и создать полный pre-development DAG;
+9. выполнить pilot до strict protection, затем подтвердить protection отдельным
+   protected-head PR;
+10. последовательно закрыть measured spikes, ADR, normative baseline,
+    `BACKUP`, Data Catalog, contracts и DDL;
+11. пройти owner foundation checkpoint, создать production `ROADMAP.md` и
+    отдельно пройти scaffold-readiness checkpoint;
+12. не создавать вручную отдельные summaries каждого документа.
 
-`DOCUMENT-MODULE.md`, `BACKUP-RECOVERY.md`, ADR и DDL продолжают нормативную
-последовательность параллельно; navigation artifacts остаются support layer.
+Navigation artifacts остаются support layer. Они задают порядок и gates, но не
+владеют product semantics.
 
 ---
 
 # 11. Acceptance criteria
 
-Navigation v0.1 готова к утверждению, если:
+Navigation v0.3 готова, если:
 
 1. Roadmap остаётся главным task/context router;
 2. AGENTS остаётся коротким entrypoint;
@@ -594,9 +650,15 @@ Navigation v0.1 готова к утверждению, если:
 12. completion evidence перечисляет реально использованный context;
 13. index generated fields не становятся parallel source of truth;
 14. security model запрещает execution/network/path escape;
-15. rollout не блокирует создание следующих нормативных документов.
+15. rollout не блокирует создание следующих нормативных документов;
 16. Codex без `TASK-ID` не выполняет mutation;
 17. bootstrap router не разрешает production implementation;
 18. task cards и evidence хранятся отдельно;
 19. Windows и Linux создают идентичный UTF-8 context bundle;
-20. draft specifications и unresolved artifacts блокируют implementation task.
+20. draft specifications и unresolved artifacts блокируют implementation task;
+21. task/evidence v2 имеют точное acceptance mapping и explicit owner approval;
+22. одновременно существует не более одной ready task;
+23. artifact providers входят в dependency DAG и не образуют cycles;
+24. pilot и server-side protection не зависят циклически друг от друга;
+25. production implementation остаётся blocked до завершённого
+    `AUDIT-SCAFFOLD-READINESS-001` и содержит этот gate как прямую dependency.

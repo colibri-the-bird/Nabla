@@ -1,0 +1,90 @@
+schema_version: 2
+task_id: ADR-REVISION-IDENTITY-001
+type: adr
+state: blocked
+outcome: ADR-002, ADR-004, ADR-009 and ADR-012 fix revision, conflict, identity and migration semantics before DDL.
+router: BOOT:1
+scope:
+  include:
+    - Resolve revision representation, conflict format, global identity and migration policy together.
+    - Ground ADR-002, ADR-004, ADR-009 and ADR-012 in approved contracts and replay measurements.
+    - Update the decision registry only after owner approval.
+    - Activate ADR-DOCUMENT-ENGINE-001 as the sole successor.
+  exclude:
+    - Do not author DDL or implement sync, migrations or conflict resolution.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-002-*.md
+      - adr/ADR-004-*.md
+      - adr/ADR-009-*.md
+      - adr/ADR-012-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+      - roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml
+      - roadmap/evidence/ADR-REVISION-IDENTITY-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I3
+    - CON:I12
+    - ARCH:10
+    - ARCH:16
+    - ARCH:24
+    - ARCH:24.1
+    - ARCH:24.2
+    - CAP:11.6
+    - CAP:20
+    - CAP:21
+    - KNOW:26
+    - DOC:27
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - revisioned-entity
+    - offline-sync-ready
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-003
+    - REVISION-SYNC-PREPARATION-SPIKE-v1
+  writes:
+    - ADR-002
+    - ADR-004
+    - ADR-009
+    - ADR-012
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - ADR-QUERY-DSL-001
+  decisions:
+    - ADR-003
+  artifacts:
+    - REVISION-SYNC-PREPARATION-SPIKE
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I3
+    - I12
+    - I15
+  evidence:
+    - The four ADRs form one compatible identity, revision, conflict and migration model.
+    - Replay measurements are cited and unmeasured assumptions are explicit.
+    - ADR-002, ADR-004, ADR-009 and ADR-012 are accepted after owner approval.
+    - ADR-DOCUMENT-ENGINE-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

@@ -1,0 +1,76 @@
+schema_version: 2
+task_id: BOOT-PROTECT-001
+type: tooling
+state: blocked
+outcome: Main branch protection is enabled only after a green pilot and is verified by a protected-head PR.
+router: BOOT:1
+scope:
+  include:
+    - Enable the documented required checks for main after BOOT-PILOT-001 is merged.
+    - Record owner-supplied settings proof and the confirming protected-head PR.
+    - Mark GITHUB-BRANCH-PROTECTION available after the settings are visible; keep green protected-head checks as an external merge condition.
+    - Activate SPIKE-CORE-PORTABILITY-001 as the sole successor.
+  exclude:
+    - Do not weaken or bypass required checks.
+    - Do not change product specifications or application code.
+  paths:
+    include:
+      - governance/GITHUB-PROTECTION.md
+      - governance/artifacts.yaml
+      - roadmap/tasks/BOOT-PROTECT-001.yaml
+      - roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+      - roadmap/evidence/BOOT-PROTECT-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:25
+    - NAV:6
+    - BOOT:2
+    - BOOT:3
+    - BOOT:5
+  conditional: []
+  impact_tags:
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - GITHUB-GATE-v1
+    - PILOT-EVIDENCE-v1
+  writes:
+    - GITHUB-PROTECTION-EVIDENCE-v1
+  changes:
+    - GITHUB-BRANCH-PROTECTION
+dependencies:
+  tasks:
+    - BOOT-PILOT-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+  invariants:
+    - I15
+  evidence:
+    - The pilot PR URL and all five exact check context names are recorded.
+    - Branch settings proof includes repository, branch, timestamp and required check names.
+    - A confirming PR is evaluated under the documented protection; green status for its current head is an external merge condition.
+    - SPIKE-CORE-PORTABILITY-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

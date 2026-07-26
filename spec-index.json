@@ -90,7 +90,7 @@
       "canonical_path": "SPEC-NAVIGATION.md",
       "aliases": [],
       "authority_rank": 6,
-      "version": "0.2",
+      "version": "0.3",
       "depends_on": [],
       "planned": false,
       "normative": false
@@ -100,7 +100,7 @@
       "canonical_path": "roadmap/BOOTSTRAP.md",
       "aliases": [],
       "authority_rank": 6,
-      "version": "0.1",
+      "version": "0.2",
       "depends_on": ["NAV"],
       "planned": false,
       "normative": false

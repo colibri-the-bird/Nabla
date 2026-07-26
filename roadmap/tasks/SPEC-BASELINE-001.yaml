@@ -1,0 +1,124 @@
+schema_version: 2
+task_id: SPEC-BASELINE-001
+type: spec
+state: blocked
+outcome: The eight existing normative documents form one approved, internally consistent pre-development baseline with no unresolved mandatory holes.
+router: BOOT:1
+scope:
+  include:
+    - Close open parameters already resolved by accepted ADRs without changing approved product intent.
+    - Align status, authority, terminology, references, conformance matrices and acceptance criteria.
+    - Record every remaining deferred item with an owner, trigger and non-blocking rationale.
+    - Activate SPEC-BACKUP-RECOVERY-001 as the sole successor.
+  exclude:
+    - Do not add implementation details or make new architectural decisions inside specifications.
+    - Do not author BACKUP-RECOVERY.md in this task.
+    - Do not change the Constitution.
+  paths:
+    include:
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - governance/spec-lock.json
+      - spec-index.json
+      - roadmap/tasks/SPEC-BASELINE-001.yaml
+      - roadmap/tasks/SPEC-BACKUP-RECOVERY-001.yaml
+      - roadmap/evidence/SPEC-BASELINE-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - BACKUP-RECOVERY.md
+      - ROADMAP.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs:
+    - id: spec-authoring
+      version: 1
+  required:
+    - CON:7
+    - ARCH:24
+    - ARCH:28
+    - DATA:22
+    - DATA:23
+    - CAP:31
+    - CAP:32
+    - MOD:26
+    - MOD:27
+    - LOOP:25
+    - LOOP:26
+    - KNOW:34
+    - KNOW:35
+    - DOC:35
+    - DOC:36
+    - NAV:6
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: This cross-spec closure task intentionally loads each document's decision and acceptance sections while avoiding unrelated bodies.
+contracts:
+  reads:
+    - ADR-GATE-REPORT-v1
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  writes:
+    - NORMATIVE-BASELINE-v1
+  changes:
+    - ARCHITECTURE-v0.1
+    - DATA-CLASSIFICATION-v0.1
+    - CAPABILITY-CONTRACT-v0.1
+    - MODULE-MANIFEST-v0.1
+    - LOOP-SPEC-v0.1
+    - KNOWLEDGE-MODULE-v0.1
+    - DOCUMENT-MODULE-v0.1
+dependencies:
+  tasks:
+    - AUDIT-ADR-GATE-001
+  decisions:
+    - ADR-001
+    - ADR-002
+    - ADR-003
+    - ADR-004
+    - ADR-005
+    - ADR-006
+    - ADR-007
+    - ADR-008
+    - ADR-009
+    - ADR-010
+    - ADR-011
+    - ADR-012
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - Cross-spec normative consistency review
+  invariants:
+    - I1
+    - I6
+    - I15
+  evidence:
+    - Each changed normative statement cites an accepted ADR or higher-authority source.
+    - Status, authority, terms, references and conformance matrices agree across all existing specifications.
+    - No mandatory open parameter remains ownerless or silently deferred.
+    - SPEC-BACKUP-RECOVERY-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

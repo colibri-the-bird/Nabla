@@ -1,0 +1,71 @@
+schema_version: 2
+task_id: SPIKE-CORE-PORTABILITY-001
+type: spike
+state: blocked
+outcome: Measured portability evidence fixes the supported runtime boundary before ADR-001 and the production skeleton.
+router: BOOT:1
+scope:
+  include:
+    - Execute a minimal reproducible portability experiment for the candidate core boundary.
+    - Record measured platform assumptions, packaging constraints and failure modes.
+    - Publish CORE-PORTABILITY-SPIKE without creating production application code.
+    - Activate SPIKE-PDF-001 as the sole successor.
+  exclude:
+    - Do not choose the final runtime architecture in this spike.
+    - Do not create the production skeleton or add production dependencies.
+  paths:
+    include:
+      - spikes/SPIKE-CORE-PORTABILITY.md
+      - tests/spikes/core-portability/**
+      - governance/artifacts.yaml
+      - roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+      - roadmap/tasks/SPIKE-PDF-001.yaml
+      - roadmap/evidence/SPIKE-CORE-PORTABILITY-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - ARCH:5
+    - ARCH:6
+    - ARCH:24
+    - ARCH:24.3
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ARCHITECTURE-v0.1
+  writes:
+    - CORE-PORTABILITY-SPIKE-v1
+  changes:
+    - CORE-PORTABILITY-SPIKE
+dependencies:
+  tasks:
+    - BOOT-PROTECT-001
+  decisions: []
+  artifacts:
+    - GITHUB-BRANCH-PROTECTION
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - Reproducible core portability experiment
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Commands, versions, platforms and raw observations are recorded.
+    - Conclusions are separated from measurements and list unresolved risks.
+    - CORE-PORTABILITY-SPIKE is marked available with the report reference.
+    - SPIKE-PDF-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

@@ -1,0 +1,87 @@
+schema_version: 2
+task_id: ADR-DOCUMENT-ENGINE-001
+type: adr
+state: blocked
+outcome: ADR-006 and ADR-011 define stable anchors and the PDF engine boundary from measured evidence.
+router: BOOT:1
+scope:
+  include:
+    - Resolve ADR-006 and ADR-011 from the document contract and PDF spike.
+    - Define anchor identity, invalidation, parser and renderer isolation, licensing and degradation.
+    - Update the decision registry only after owner approval.
+    - Activate ADR-RETENTION-CRYPTO-001 as the sole successor.
+  exclude:
+    - Do not implement the document reader, parser or annotation schema.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-006-*.md
+      - adr/ADR-011-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml
+      - roadmap/tasks/ADR-RETENTION-CRYPTO-001.yaml
+      - roadmap/evidence/ADR-DOCUMENT-ENGINE-001.yaml
+    exclude:
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - ARCH:24
+    - ARCH:24.1
+    - ARCH:24.2
+    - DOC:10
+    - DOC:11
+    - DOC:12
+    - DOC:29
+    - DOC:30
+    - DOC:35
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - blob
+    - derived
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-002
+    - ADR-004
+    - ADR-009
+    - ADR-012
+    - PDF-SPIKE-v1
+  writes:
+    - ADR-006
+    - ADR-011
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - ADR-REVISION-IDENTITY-001
+  decisions:
+    - ADR-002
+    - ADR-004
+    - ADR-009
+    - ADR-012
+  artifacts:
+    - PDF-SPIKE
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Anchor and engine decisions cite measured fixtures and failure behavior.
+    - Licensing, isolation, invalidation and degraded-mode consequences are explicit.
+    - ADR-006 and ADR-011 are accepted in the registry after owner approval.
+    - ADR-RETENTION-CRYPTO-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

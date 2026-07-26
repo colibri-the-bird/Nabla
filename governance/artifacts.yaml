@@ -5,12 +5,14 @@ artifacts:
     status: missing
     source: ChatGPT Library or a new approved spec PR
     blocks: [production-roadmap, production-implementation]
+    provided_by: SPEC-BACKUP-RECOVERY-001
     reconstruction_policy: Do not reconstruct from chat summaries.
   - id: CORE-PORTABILITY-SPIKE
     title: SPIKE-CORE-PORTABILITY.md
     status: missing
     source: ChatGPT Library or a new approved spike PR
     blocks: [ADR-001, production-skeleton]
+    provided_by: SPIKE-CORE-PORTABILITY-001
     reconstruction_policy: Do not reconstruct from chat summaries.
   - id: BACKUP-RECOVERY-DRAFT-ARCHIVE
     title: Nabla-spec-2026-07-13-backup-recovery-draft.zip
@@ -29,22 +31,30 @@ artifacts:
     status: required
     source: New measured spike task
     blocks: [ADR-006, ADR-011]
+    provided_by: SPIKE-PDF-001
     reconstruction_policy: Must be executed, not inferred.
   - id: BACKUP-RESTORE-SPIKE
     title: SQLite and blob backup/restore spike
     status: required
     source: New measured spike task
     blocks: [backup-implementation]
+    provided_by: SPIKE-BACKUP-RESTORE-001
     reconstruction_policy: Must be executed, not inferred.
   - id: REVISION-SYNC-PREPARATION-SPIKE
     title: Offline identity, revisions, outbox and replay spike
     status: required
     source: New measured spike task
     blocks: [revision-ddl, sync-preparation]
+    provided_by: SPIKE-REVISION-REPLAY-001
     reconstruction_policy: Must be executed, not inferred.
   - id: GITHUB-BRANCH-PROTECTION
     title: Server-side protection for main
     status: missing
     source: GitHub repository settings
     blocks: [bootstrap-complete]
-    reconstruction_policy: Configure after required checks have run successfully.
+    provided_by: BOOT-PROTECT-001
+    confirmation:
+      confirmed_at: null
+      settings_reference: null
+      pilot_pr_url: null
+    reconstruction_policy: Configure in BOOT-PROTECT-001 after all five required check contexts pass on BOOT-PILOT-001; confirm only from owner-supplied settings proof.
