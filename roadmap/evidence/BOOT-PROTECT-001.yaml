@@ -1,0 +1,50 @@
+schema_version: 2
+task_id: BOOT-PROTECT-001
+context_manifest_sha256: 07fdd0d709943f72067c8e4557428713aba03e67fcf7254bf07327f4cf08ef39
+selectors:
+- CON:7
+- ARCH:25
+- NAV:6
+- BOOT:2
+- BOOT:3
+- BOOT:5
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  BOOT: 0f5abc245ab4ebb3340c3ab67f5d8c499ca44eef25494878af3ff062c7121a5d
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+- failure-domain
+triggers: []
+changed_paths: []
+changed_contracts: []
+tests:
+- requirement: python -m pytest -q
+  command: ''
+  exit_code: null
+- requirement: python tools/nabla_nav.py validate
+  command: ''
+  exit_code: null
+- requirement: python tools/nabla_nav.py check-lock
+  command: ''
+  exit_code: null
+acceptance_evidence:
+- requirement: The pilot PR URL and all five exact check context names are recorded.
+  proof: ''
+- requirement: Branch settings proof includes repository, branch, timestamp and required
+    check names.
+  proof: ''
+- requirement: A confirming PR is evaluated under the documented protection; green
+    status for its current head is an external merge condition.
+  proof: ''
+- requirement: SPIKE-CORE-PORTABILITY-001 is the only activated successor.
+  proof: ''
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions: []
+pr_url: ''

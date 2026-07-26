@@ -54,7 +54,21 @@ artifacts:
     blocks: [bootstrap-complete]
     provided_by: BOOT-PROTECT-001
     confirmation:
+      repository: colibri-the-bird/Nabla
+      branch: main
+      observed_at: '2026-07-26T17:05:20Z'
       confirmed_at: null
-      settings_reference: null
-      pilot_pr_url: null
+      settings_reference: https://api.github.com/repos/colibri-the-bird/Nabla/branches/main/protection
+      settings_page: https://github.com/colibri-the-bird/Nabla/settings/branches
+      pilot_pr_url: https://github.com/colibri-the-bird/Nabla/pull/8
+      required_checks:
+        - navigation-linux
+        - navigation-windows
+        - task-card-gate
+        - scope-and-evidence-gate
+        - spec-lock-and-traceability-gate
+      check_provider:
+        name: GitHub Actions
+        app_id: 15368
+      owner_confirmation_reference: null
     reconstruction_policy: Configure in BOOT-PROTECT-001 after all five required check contexts pass on BOOT-PILOT-001; confirm only from owner-supplied settings proof.
