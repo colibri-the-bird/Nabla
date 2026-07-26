@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: SPIKE-CORE-PORTABILITY-001
 type: spike
-state: blocked
+state: ready
 outcome: Measured portability evidence fixes the supported runtime boundary before ADR-001 and the production skeleton.
 router: BOOT:1
 scope:

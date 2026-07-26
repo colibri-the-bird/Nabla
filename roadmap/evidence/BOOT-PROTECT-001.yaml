@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: BOOT-PROTECT-001
-context_manifest_sha256: 07fdd0d709943f72067c8e4557428713aba03e67fcf7254bf07327f4cf08ef39
+context_manifest_sha256: cf3a27e0e5bcdb8c8fa97cd1ee28a35e34a76e2b56fd021bed349e155ce217bb
 selectors:
 - CON:7
 - ARCH:25
@@ -20,31 +20,60 @@ document_hashes:
 impact_tags:
 - failure-domain
 triggers: []
-changed_paths: []
-changed_contracts: []
+changed_paths:
+- governance/GITHUB-PROTECTION.md
+- governance/artifacts.yaml
+- roadmap/evidence/BOOT-PROTECT-001.yaml
+- roadmap/tasks/BOOT-PROTECT-001.yaml
+- roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+changed_contracts:
+- GITHUB-BRANCH-PROTECTION
 tests:
 - requirement: python -m pytest -q
-  command: ''
-  exit_code: null
+  command: python -m pytest -q
+  exit_code: 0
 - requirement: python tools/nabla_nav.py validate
-  command: ''
-  exit_code: null
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
 - requirement: python tools/nabla_nav.py check-lock
-  command: ''
-  exit_code: null
+  command: python tools/nabla_nav.py check-lock
+  exit_code: 0
 acceptance_evidence:
 - requirement: The pilot PR URL and all five exact check context names are recorded.
-  proof: ''
+  proof: >-
+    governance/GITHUB-PROTECTION.md and governance/artifacts.yaml record pilot
+    PR https://github.com/colibri-the-bird/Nabla/pull/8 and the exact contexts
+    navigation-linux, navigation-windows, task-card-gate,
+    scope-and-evidence-gate, and spec-lock-and-traceability-gate. All five were
+    successful on the pilot final head before merge.
 - requirement: Branch settings proof includes repository, branch, timestamp and required
     check names.
-  proof: ''
+  proof: >-
+    Authenticated GitHub API readback at 2026-07-26T17:05:20Z for repository
+    colibri-the-bird/Nabla, branch main, returned protected: true, strict: true,
+    admin enforcement, PR/linear-history/conversation gates, blocked force
+    pushes and deletions, and the five app-pinned contexts. The durable settings
+    reference is
+    https://api.github.com/repos/colibri-the-bird/Nabla/branches/main/protection.
 - requirement: A confirming PR is evaluated under the documented protection; green
     status for its current head is an external merge condition.
-  proof: ''
+  proof: >-
+    Confirming PR https://github.com/colibri-the-bird/Nabla/pull/9 is evaluated
+    under the enabled protection: gh pr checks 9 --required returned exactly the
+    five documented contexts. Success for the current final head is verified
+    externally before manual merge and is not asserted self-referentially in
+    committed evidence.
 - requirement: SPIKE-CORE-PORTABILITY-001 is the only activated successor.
-  proof: ''
+  proof: >-
+    BOOT-PROTECT-001 is completed, SPIKE-CORE-PORTABILITY-001 is ready, every
+    later bootstrap task remains blocked, and list-ready reports only
+    SPIKE-CORE-PORTABILITY-001.
 owner_approval:
-  approved: false
-  reference: ''
+  approved: true
+  reference: >-
+    Codex task 019f9f41-3c0c-7933-b9c9-bc7ffc093769, owner prompt on
+    2026-07-26: confirmed the main protection settings recorded in PR #9 and
+    approved BOOT-PROTECT-001 completion with SPIKE-CORE-PORTABILITY-001
+    activation.
 unresolved_decisions: []
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/9

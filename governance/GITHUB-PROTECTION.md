@@ -1,12 +1,11 @@
 # GitHub protection for `main`
 
-**Status:** ENABLED — OWNER CONFIRMATION PENDING
+**Status:** CONFIRMED AND ENFORCED
 
 This file records the required server-side settings. It is not evidence that they
-are accepted by the owner. GitHub API readback confirms that the settings below
-are enabled, but `GITHUB-BRANCH-PROTECTION` remains `missing` until the owner
-explicitly approves this record and the confirming PR is evaluated under the
-protection.
+remain healthy indefinitely. GitHub API readback confirms that the settings
+below are enabled, and the owner explicitly approved this record. Current-head
+checks and manual merge remain external closure gates.
 
 ## Observed server state
 
@@ -18,7 +17,10 @@ protection.
 - settings page: `https://github.com/colibri-the-bird/Nabla/settings/branches`
 - pilot PR: `https://github.com/colibri-the-bird/Nabla/pull/8`
 - check provider: GitHub Actions (`app_id: 15368`)
-- owner confirmation reference: pending
+- owner confirmed at: `2026-07-26T17:12:44Z`
+- owner confirmation reference: Codex task
+  `019f9f41-3c0c-7933-b9c9-bc7ffc093769`, owner approval prompt dated
+  `2026-07-26`
 
 Authenticated API readback reported `main.protected: true`, strict status checks,
 admin enforcement, required pull requests with zero approving reviews, linear
@@ -76,11 +78,10 @@ without treating a local convention as server-side protection.
 
 ## Confirmation record
 
-The observed timestamp, settings reference, pilot PR URL and exact check names
-are recorded above and in `governance/artifacts.yaml`. After explicit owner
-approval, the artifact becomes `available` and the approval reference is added
-to this record and `BOOT-PROTECT-001` evidence. Green checks on the current
-protection-record head and manual merge prove task closure externally; committed
-evidence does not claim to prove its own final CI state. If server-side
-protection later becomes unavailable, bootstrap becomes blocked again; do not
-replace this gate with a local convention.
+The observed timestamp, settings reference, pilot PR URL, exact check names and
+owner approval are recorded above and in `governance/artifacts.yaml`. The
+artifact is `available`. Green checks on the current protection-record head and
+manual merge prove task closure externally; committed evidence does not claim to
+prove its own final CI state. If server-side protection later becomes
+unavailable, bootstrap becomes blocked again; do not replace this gate with a
+local convention.

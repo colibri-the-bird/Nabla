@@ -49,7 +49,7 @@ artifacts:
     reconstruction_policy: Must be executed, not inferred.
   - id: GITHUB-BRANCH-PROTECTION
     title: Server-side protection for main
-    status: missing
+    status: available
     source: GitHub repository settings
     blocks: [bootstrap-complete]
     provided_by: BOOT-PROTECT-001
@@ -57,7 +57,7 @@ artifacts:
       repository: colibri-the-bird/Nabla
       branch: main
       observed_at: '2026-07-26T17:05:20Z'
-      confirmed_at: null
+      confirmed_at: '2026-07-26T17:12:44Z'
       settings_reference: https://api.github.com/repos/colibri-the-bird/Nabla/branches/main/protection
       settings_page: https://github.com/colibri-the-bird/Nabla/settings/branches
       pilot_pr_url: https://github.com/colibri-the-bird/Nabla/pull/8
@@ -70,5 +70,5 @@ artifacts:
       check_provider:
         name: GitHub Actions
         app_id: 15368
-      owner_confirmation_reference: null
+      owner_confirmation_reference: Codex task 019f9f41-3c0c-7933-b9c9-bc7ffc093769; owner approval prompt dated 2026-07-26
     reconstruction_policy: Configure in BOOT-PROTECT-001 after all five required check contexts pass on BOOT-PILOT-001; confirm only from owner-supplied settings proof.

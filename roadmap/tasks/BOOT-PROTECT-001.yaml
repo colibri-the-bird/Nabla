@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: BOOT-PROTECT-001
 type: tooling
-state: ready
+state: completed
 outcome: Main branch protection is enabled only after a green pilot and is verified by a protected-head PR.
 router: BOOT:1
 scope:
