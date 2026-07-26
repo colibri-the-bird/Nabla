@@ -1,0 +1,72 @@
+schema_version: 2
+task_id: SPIKE-CORE-PORTABILITY-001
+context_manifest_sha256: 05e2d865ce91ed1e0b73da2a1cb8d6eb74bb968179772081e7b197bc488a6079
+selectors:
+- ARCH:5
+- ARCH:6
+- ARCH:24
+- ARCH:24.3
+- NAV:6
+- CON:I6
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+- failure-domain
+triggers: []
+changed_paths:
+- roadmap/evidence/SPIKE-CORE-PORTABILITY-001.yaml
+- roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+- spikes/SPIKE-CORE-PORTABILITY.md
+- tests/spikes/core-portability/ffi_driver.py
+- tests/spikes/core-portability/probe_environment.py
+- tests/spikes/core-portability/results/windows-x86_64.json
+- tests/spikes/core-portability/run_experiment.py
+- tests/spikes/core-portability/rust-probe/.gitignore
+- tests/spikes/core-portability/rust-probe/Cargo.lock
+- tests/spikes/core-portability/rust-probe/Cargo.toml
+- tests/spikes/core-portability/rust-probe/README.md
+- tests/spikes/core-portability/rust-probe/include/nabla_core_probe.h
+- tests/spikes/core-portability/rust-probe/src/bin/service.rs
+- tests/spikes/core-portability/rust-probe/src/core.rs
+- tests/spikes/core-portability/rust-probe/src/lib.rs
+changed_contracts:
+- CORE-PORTABILITY-SPIKE
+tests:
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: Reproducible core portability experiment
+  command: python tests/spikes/core-portability/run_experiment.py --offline --output tests/spikes/core-portability/results/windows-x86_64.json
+  exit_code: 0
+acceptance_evidence:
+- requirement: Commands, versions, platforms and raw observations are recorded.
+  proof: >-
+    spikes/SPIKE-CORE-PORTABILITY.md records the canonical command, measured
+    Windows x86-64 and Android aarch64/API 21 boundaries, exact tool versions,
+    case classifications and artifact hashes. The bounded raw observations,
+    argv/cwd, durations, exit codes, complete-stream hashes, typed responses,
+    assertions and cleanup record are committed at
+    tests/spikes/core-portability/results/windows-x86_64.json with SHA-256
+    58ac966c3ceba16e06743f58daf09fda992fbba164d7304fe7c6dba8871c10ec.
+- requirement: Conclusions are separated from measurements and list unresolved risks.
+  proof: >-
+    spikes/SPIKE-CORE-PORTABILITY.md separates reproducibility and measurements
+    in sections 3-5, the narrow support boundary in section 6, evidence-backed
+    conclusions in section 7, negative/inconclusive results in section 8,
+    deferred ADR-001 inputs in section 9, and concrete residual risks with
+    required follow-up in section 10.
+- requirement: CORE-PORTABILITY-SPIKE is marked available with the report reference.
+  proof: ''
+- requirement: SPIKE-PDF-001 is the only activated successor.
+  proof: ''
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions: []
+pr_url: ''

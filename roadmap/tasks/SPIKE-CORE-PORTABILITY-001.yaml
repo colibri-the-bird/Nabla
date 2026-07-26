@@ -36,6 +36,7 @@ context:
     - ARCH:24
     - ARCH:24.3
     - NAV:6
+    - CON:I6
   conditional: []
   impact_tags:
     - failure-domain
