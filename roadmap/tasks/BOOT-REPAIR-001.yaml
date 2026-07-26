@@ -1,0 +1,118 @@
+schema_version: 2
+task_id: BOOT-REPAIR-001
+type: tooling
+state: ready
+outcome: Bootstrap workflow is non-circular, lifecycle-aware and seeds the complete pre-development task DAG.
+router: BOOT:1
+scope:
+  include:
+    - Разорвать цикл между pilot PR и server-side branch protection.
+    - Убрать snapshot-coupled проверки, блокирующие нормальные state transitions.
+    - Усилить проверку acceptance evidence и явного owner approval.
+    - Версионировать task/evidence schema и мигрировать завершённые bootstrap evidence.
+    - Зафиксировать безопасную последовательность активации следующих task cards.
+    - Создать task cards и owner checkpoints для всей подготовки к application development.
+    - Синхронизировать ненормативные onboarding/status документы с текущим состоянием.
+  exclude:
+    - Не утверждать и не менять product semantics нормативных specifications.
+    - Не принимать ADR и не выполнять platform spikes.
+    - Не создавать DDL, production ROADMAP или application code.
+    - Не изменять внешние системы и GitHub settings.
+  paths:
+    include:
+      - AGENTS.md
+      - README.md
+      - PROJECT-SETUP.md
+      - SPEC-NAVIGATION.md
+      - roadmap/BOOTSTRAP.md
+      - roadmap/tasks/**
+      - roadmap/evidence/**
+      - governance/artifacts.yaml
+      - governance/decisions.yaml
+      - governance/GITHUB-PROTECTION.md
+      - governance/spec-lock.json
+      - spec-index.json
+      - tools/nabla_nav.py
+      - tests/test_nabla_nav.py
+      - .github/pull_request_template.md
+      - .github/workflows/bootstrap-gates.yml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - BACKUP-RECOVERY.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+contracts:
+  reads:
+    - NAVIGATION
+    - TASK-CARD-v1
+    - EVIDENCE-v1
+    - GITHUB-GATE-v1
+  writes:
+    - TASK-CARD-v2
+    - EVIDENCE-v2
+    - BOOTSTRAP-DAG-v1
+  changes:
+    - BOOTSTRAP-LIFECYCLE-v2
+    - NAVIGATION-v0.3
+    - GITHUB-GATE-v1
+    - GITHUB-PROTECTION-PROTOCOL-v2
+    - ARTIFACT-REGISTRY-v1
+    - AGENT-ENTRY-v0.1
+    - SPEC-INDEX-v1
+    - SPEC-LOCK-v1
+context:
+  packs: []
+  required:
+    - CON:7
+    - ARCH:25
+    - ARCH:24
+    - NAV:3
+    - NAV:6
+    - NAV:8
+    - NAV:9
+    - NAV:10
+    - NAV:11
+    - BOOT:1
+    - BOOT:2
+    - BOOT:3
+    - BOOT:4
+    - BOOT:5
+  conditional: []
+  impact_tags: []
+  full_document_reads: []
+  context_budget_justification: null
+dependencies:
+  tasks:
+    - BOOT-CI-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q tests/test_nabla_nav.py
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - python tools/nabla_nav.py list-ready
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Bootstrap pilot no longer depends on protection that itself requires the pilot.
+    - Repository tests validate lifecycle invariants instead of freezing incomplete states.
+    - Completed tasks prove declared acceptance commands and owner approval where required.
+    - Legacy completed task evidence is migrated explicitly rather than silently grandfathered.
+    - SPEC-NAVIGATION documents the enforced task and evidence v2 lifecycle.
+    - The BOOT-REPAIR transition has exactly one successor; while repair is active it is the sole ready task, and on completion only BOOT-PILOT-001 may become ready.
+    - Production implementation remains blocked.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-TRACE-001
 context_manifest_sha256: 5d63abc839bae91c3d6c60b7ea1d72aef4171ef2d1861e73fb35d57ede33b29e
 selectors:
@@ -23,6 +23,7 @@ document_hashes:
   CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
   NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
 impact_tags: []
+triggers: []
 changed_paths:
 - governance/artifacts.yaml
 - governance/decisions.yaml
@@ -37,13 +38,25 @@ changed_contracts:
 - TRACEABILITY-v1
 - DECISION-REGISTRY-v1
 tests:
-- command: python -m pytest -q
+- requirement: python -m pytest -q
+  command: python -m pytest -q
   exit_code: 0
-- command: python tools/nabla_nav.py validate
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
   exit_code: 0
-- command: python tools/nabla_nav.py check-lock
+- requirement: python tools/nabla_nav.py check-lock
+  command: python tools/nabla_nav.py check-lock
   exit_code: 0
-- command: git diff --check
+- requirement: git diff --check
+  command: git diff --check
   exit_code: 0
+acceptance_evidence:
+- requirement: spec-lock is byte-current.
+  proof: python tools/nabla_nav.py check-lock exited with 0.
+- requirement: Missing artifacts remain explicit blockers.
+  proof: governance/artifacts.yaml retains explicit lifecycle states and blocking targets.
+owner_approval:
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/4
 unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/4

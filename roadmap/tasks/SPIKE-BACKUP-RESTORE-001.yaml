@@ -1,0 +1,77 @@
+schema_version: 2
+task_id: SPIKE-BACKUP-RESTORE-001
+type: spike
+state: blocked
+outcome: SQLite and blob backup, restore and corruption behavior is measured before the recovery specification.
+router: BOOT:1
+scope:
+  include:
+    - Execute reproducible backup, restore, interruption and corruption experiments.
+    - Measure consistency boundaries for SQLite state and blob storage.
+    - Publish BACKUP-RESTORE-SPIKE without implementing production backup.
+    - Activate SPIKE-REVISION-REPLAY-001 as the sole successor.
+  exclude:
+    - Do not reconstruct BACKUP-RECOVERY.md from chat summaries.
+    - Do not implement production backup, purge or recovery flows.
+  paths:
+    include:
+      - spikes/SPIKE-BACKUP-RESTORE.md
+      - tests/spikes/backup-restore/**
+      - governance/artifacts.yaml
+      - roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+      - roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
+      - roadmap/evidence/SPIKE-BACKUP-RESTORE-001.yaml
+    exclude:
+      - BACKUP-RECOVERY.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I16
+    - ARCH:19
+    - ARCH:24
+    - ARCH:24.3
+    - DATA:10
+    - MOD:19
+    - KNOW:24
+    - DOC:25
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - backup-recovery
+    - blob
+    - export
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - PORTABLE-EXPORT-v0.1
+  writes:
+    - BACKUP-RESTORE-SPIKE-v1
+  changes:
+    - BACKUP-RESTORE-SPIKE
+dependencies:
+  tasks:
+    - SPIKE-PDF-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - Reproducible backup restore and corruption experiment
+  invariants:
+    - I11
+    - I15
+    - I16
+  evidence:
+    - Backup and restore commands, fixtures, versions and raw observations are recorded.
+    - Crash, corruption and partial-blob cases have explicit outcomes.
+    - BACKUP-RESTORE-SPIKE is marked available with the report reference.
+    - SPIKE-REVISION-REPLAY-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

@@ -1,0 +1,146 @@
+schema_version: 2
+task_id: BOOT-REPAIR-001
+context_manifest_sha256: 00e96dcd6ae50d21e43dc695357cd5b89d5e1b2b64c5fd9e1c16668fac921d78
+selectors:
+- CON:7
+- ARCH:25
+- ARCH:24
+- NAV:3
+- NAV:6
+- NAV:8
+- NAV:9
+- NAV:10
+- NAV:11
+- BOOT:1
+- BOOT:2
+- BOOT:3
+- BOOT:4
+- BOOT:5
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  BOOT: 0f5abc245ab4ebb3340c3ab67f5d8c499ca44eef25494878af3ff062c7121a5d
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags: []
+triggers: []
+changed_paths:
+- .github/pull_request_template.md
+- .github/workflows/bootstrap-gates.yml
+- AGENTS.md
+- PROJECT-SETUP.md
+- README.md
+- SPEC-NAVIGATION.md
+- governance/GITHUB-PROTECTION.md
+- governance/artifacts.yaml
+- governance/spec-lock.json
+- roadmap/BOOTSTRAP.md
+- roadmap/evidence/BOOT-AGENTS-001.yaml
+- roadmap/evidence/BOOT-CARDS-001.yaml
+- roadmap/evidence/BOOT-CI-001.yaml
+- roadmap/evidence/BOOT-NAV-001.yaml
+- roadmap/evidence/BOOT-REPAIR-001.yaml
+- roadmap/evidence/BOOT-SLICE-001.yaml
+- roadmap/evidence/BOOT-TRACE-001.yaml
+- roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml
+- roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+- roadmap/tasks/ADR-QUERY-DSL-001.yaml
+- roadmap/tasks/ADR-RETENTION-CRYPTO-001.yaml
+- roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+- roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+- roadmap/tasks/AUDIT-ADR-GATE-001.yaml
+- roadmap/tasks/AUDIT-FOUNDATION-CONFORMANCE-001.yaml
+- roadmap/tasks/AUDIT-SCAFFOLD-READINESS-001.yaml
+- roadmap/tasks/BOOT-AGENTS-001.yaml
+- roadmap/tasks/BOOT-CARDS-001.yaml
+- roadmap/tasks/BOOT-CI-001.yaml
+- roadmap/tasks/BOOT-NAV-001.yaml
+- roadmap/tasks/BOOT-PILOT-001.yaml
+- roadmap/tasks/BOOT-PROTECT-001.yaml
+- roadmap/tasks/BOOT-REPAIR-001.yaml
+- roadmap/tasks/BOOT-SLICE-001.yaml
+- roadmap/tasks/BOOT-TRACE-001.yaml
+- roadmap/tasks/PREP-ROADMAP-PROD-001.yaml
+- roadmap/tasks/SPEC-BACKUP-RECOVERY-001.yaml
+- roadmap/tasks/SPEC-BASELINE-001.yaml
+- roadmap/tasks/SPEC-CONTRACTS-CONTENT-V1-001.yaml
+- roadmap/tasks/SPEC-CONTRACTS-CORE-V1-001.yaml
+- roadmap/tasks/SPEC-DATA-CATALOG-V1-001.yaml
+- roadmap/tasks/SPEC-DDL-CONTENT-V1-001.yaml
+- roadmap/tasks/SPEC-DDL-CORE-V1-001.yaml
+- roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+- roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+- roadmap/tasks/SPIKE-PDF-001.yaml
+- roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
+- spec-index.json
+- tests/test_nabla_nav.py
+- tools/nabla_nav.py
+changed_contracts:
+- TASK-CARD-v2
+- EVIDENCE-v2
+- BOOTSTRAP-DAG-v1
+- BOOTSTRAP-LIFECYCLE-v2
+- NAVIGATION-v0.3
+- GITHUB-GATE-v1
+- GITHUB-PROTECTION-PROTOCOL-v2
+- ARTIFACT-REGISTRY-v1
+- AGENT-ENTRY-v0.1
+- SPEC-INDEX-v1
+- SPEC-LOCK-v1
+tests:
+- requirement: python -m pytest -q tests/test_nabla_nav.py
+  command: python -m pytest -q tests/test_nabla_nav.py
+  exit_code: 0
+- requirement: python tools/spec_slice.py validate
+  command: python tools/spec_slice.py validate
+  exit_code: 0
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: python tools/nabla_nav.py check-lock
+  command: python tools/nabla_nav.py check-lock
+  exit_code: 0
+- requirement: python tools/nabla_nav.py list-ready
+  command: python tools/nabla_nav.py list-ready
+  exit_code: 0
+acceptance_evidence:
+- requirement: Bootstrap pilot no longer depends on protection that itself requires
+    the pilot.
+  proof: BOOT-PILOT-001 depends on BOOT-REPAIR-001, BOOT-PROTECT-001 depends
+    on the pilot, and GITHUB-BRANCH-PROTECTION is provided only by the protection
+    task. The combined task/artifact-provider DAG validator passes.
+- requirement: Repository tests validate lifecycle invariants instead of freezing
+    incomplete states.
+  proof: Tests use baseline subsets and recomputed hashes, accept valid lifecycle
+    evolution, enforce one ready card, and verify the complete successor chain.
+    The targeted suite passes without relying on a frozen test count.
+- requirement: Completed tasks prove declared acceptance commands and owner approval
+    where required.
+  proof: validate_evidence requires exact test/proof requirement coverage, successful
+    exit codes, a current manifest, PR URL, no unresolved decisions, and explicit
+    owner approval for owner-required completed tasks. The PR gate rebuilds triggered
+    context and compares selectors, document hashes, impact tags and triggers.
+- requirement: Legacy completed task evidence is migrated explicitly rather than silently
+    grandfathered.
+  proof: All six completed BOOT evidence files are schema v2 and map each declared
+    acceptance test and evidence requirement explicitly.
+- requirement: SPEC-NAVIGATION documents the enforced task and evidence v2 lifecycle.
+  proof: SPEC-NAVIGATION v0.3 documents the full task shape, artifact providers,
+    one-ready lifecycle, exact evidence mapping, owner approval, and PR-ready versus
+    merged semantics.
+- requirement: The BOOT-REPAIR transition has exactly one successor; while repair
+    is active it is the sole ready task, and on completion only BOOT-PILOT-001 may
+    become ready.
+  proof: list-ready reports only BOOT-REPAIR-001. A generic repository test derives
+    the complete bootstrap chain and verifies a single mutable successor path,
+    the blocked frontier, and predecessor scope authority without freezing future
+    task IDs.
+- requirement: Production implementation remains blocked.
+  proof: No implementation task card exists. PREP-ROADMAP-PROD-001 may create a
+    blocked scaffold card only after foundation conformance, and the final owner
+    audit is the only task allowed to activate it.
+owner_approval:
+  approved: true
+  reference: User instructions in this task on 2026-07-26 explicitly approve the
+    documents, authorize BOOT-REPAIR-001, and request the preparation fixes.
+unresolved_decisions: []
+pr_url: ''

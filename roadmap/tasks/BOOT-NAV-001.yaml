@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-NAV-001
 type: spec
 state: completed
@@ -58,6 +58,7 @@ acceptance:
   tests:
     - python tools/spec_slice.py validate
     - python -m pytest -q
+    - git diff --check
   invariants:
     - I6
     - I15

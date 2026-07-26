@@ -1,0 +1,69 @@
+schema_version: 2
+task_id: SPIKE-PDF-001
+type: spike
+state: blocked
+outcome: Measured PDF rendering and anchor behavior is known before document-engine decisions.
+router: BOOT:1
+scope:
+  include:
+    - Measure candidate PDF rendering and stable-anchor approaches with representative fixtures.
+    - Record platform behavior, limits, licensing and failure modes.
+    - Publish PDF-SPIKE without implementing the document module.
+    - Activate SPIKE-BACKUP-RESTORE-001 as the sole successor.
+  exclude:
+    - Do not build reader UI or production document ingestion.
+    - Do not approve ADR-006 or ADR-011 in this spike.
+  paths:
+    include:
+      - spikes/SPIKE-PDF.md
+      - tests/spikes/pdf/**
+      - governance/artifacts.yaml
+      - roadmap/tasks/SPIKE-PDF-001.yaml
+      - roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+      - roadmap/evidence/SPIKE-PDF-001.yaml
+    exclude:
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - ARCH:24
+    - ARCH:24.3
+    - DOC:35
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - blob
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - DOCUMENT-MODULE-v0.1
+  writes:
+    - PDF-SPIKE-v1
+  changes:
+    - PDF-SPIKE
+dependencies:
+  tasks:
+    - SPIKE-CORE-PORTABILITY-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - Reproducible PDF and anchor experiment
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - Fixtures, commands, versions and raw observations are recorded.
+    - Anchor stability and degraded behavior are measured, not inferred.
+    - PDF-SPIKE is marked available with the report reference.
+    - SPIKE-BACKUP-RESTORE-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: draft-allowed

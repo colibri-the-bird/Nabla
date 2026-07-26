@@ -1,0 +1,112 @@
+schema_version: 2
+task_id: SPEC-DDL-CONTENT-V1-001
+type: spec
+state: blocked
+outcome: Knowledge and Documents v1 DDL extends the core schema with validated identity, revision, blob, relation and lifecycle rules.
+router: BOOT:1
+scope:
+  include:
+    - Define Knowledge and Documents tables, constraints, indexes and migrations.
+    - Trace every persistent column to the catalog and content contract bundle.
+    - Validate cross-module references without transferring canonical ownership.
+    - Activate AUDIT-FOUNDATION-CONFORMANCE-001 as the sole successor.
+  exclude:
+    - Do not create repositories, services, importers, readers or UI.
+    - Do not implement synchronization, backup or purge workflows.
+  paths:
+    include:
+      - db/ddl/knowledge/**
+      - db/ddl/documents/**
+      - db/migrations/knowledge/**
+      - db/migrations/documents/**
+      - tests/ddl/knowledge/**
+      - tests/ddl/documents/**
+      - tools/validate_ddl.py
+      - roadmap/tasks/SPEC-DDL-CONTENT-V1-001.yaml
+      - roadmap/tasks/AUDIT-FOUNDATION-CONFORMANCE-001.yaml
+      - roadmap/evidence/SPEC-DDL-CONTENT-V1-001.yaml
+    exclude:
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I1
+    - CON:I2
+    - CON:I3
+    - CON:I11
+    - CON:I12
+    - ARCH:10
+    - ARCH:11
+    - DATA:4.1
+    - DATA:4.3
+    - DATA:4.4
+    - DATA:11
+    - KNOW:16
+    - KNOW:26
+    - KNOW:27
+    - DOC:18
+    - DOC:27
+    - DOC:28
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - canonical-write
+    - immutable-fact
+    - revisioned-entity
+    - relation
+    - blob
+    - offline-sync-ready
+    - purge
+  full_document_reads: []
+  context_budget_justification: This schema task needs both content data baselines and their shared lifecycle boundaries.
+contracts:
+  reads:
+    - DATA-CATALOG-v1
+    - CONTENT-CONTRACT-BUNDLE-v1
+    - CORE-DDL-v1
+    - ADR-002
+    - ADR-004
+    - ADR-006
+    - ADR-008
+    - ADR-009
+    - ADR-012
+  writes:
+    - CONTENT-DDL-v1
+    - CONTENT-MIGRATION-BASELINE-v1
+  changes: []
+dependencies:
+  tasks:
+    - SPEC-DDL-CORE-V1-001
+  decisions:
+    - ADR-002
+    - ADR-004
+    - ADR-006
+    - ADR-008
+    - ADR-009
+    - ADR-012
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/validate_ddl.py
+    - Content schema create migrate integrity and rollback tests
+    - python tools/nabla_nav.py validate
+  invariants:
+    - I1
+    - I2
+    - I3
+    - I11
+    - I12
+  evidence:
+    - Every persistent content column traces to one catalog field and canonical owner.
+    - Revisions, relations, blobs, tombstones and cross-module references enforce approved semantics.
+    - Clean creation, migration, integrity, rollback and purge-related constraints are reproducible.
+    - AUDIT-FOUNDATION-CONFORMANCE-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

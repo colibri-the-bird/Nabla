@@ -1,0 +1,76 @@
+schema_version: 2
+task_id: SPIKE-REVISION-REPLAY-001
+type: spike
+state: blocked
+outcome: Offline identity, revision, outbox and replay assumptions are measured before schema decisions.
+router: BOOT:1
+scope:
+  include:
+    - Exercise identity generation, optimistic concurrency, outbox replay and duplicate delivery.
+    - Record ordering, idempotency, crash recovery and conflict observations.
+    - Publish REVISION-SYNC-PREPARATION-SPIKE without implementing synchronization.
+    - Activate ADR-RUNTIME-BOUNDARY-001 as the sole successor.
+  exclude:
+    - Do not implement network synchronization or production persistence.
+    - Do not finalize revision DDL in this spike.
+  paths:
+    include:
+      - spikes/SPIKE-REVISION-REPLAY.md
+      - tests/spikes/revision-replay/**
+      - governance/artifacts.yaml
+      - roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
+      - roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+      - roadmap/evidence/SPIKE-REVISION-REPLAY-001.yaml
+    exclude:
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I3
+    - CON:I12
+    - ARCH:10
+    - ARCH:16
+    - ARCH:24
+    - ARCH:24.3
+    - CAP:11.6
+    - CAP:21
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - revisioned-entity
+    - offline-sync-ready
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - REVISION-MODEL-v0.1
+    - IDEMPOTENCY-v0.1
+  writes:
+    - REVISION-SYNC-PREPARATION-SPIKE-v1
+  changes:
+    - REVISION-SYNC-PREPARATION-SPIKE
+dependencies:
+  tasks:
+    - SPIKE-BACKUP-RESTORE-001
+  decisions: []
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - Reproducible revision outbox and replay experiment
+  invariants:
+    - I3
+    - I12
+    - I15
+  evidence:
+    - Identity, conflict, duplicate and crash cases have reproducible observations.
+    - Conclusions identify which properties belong in ADR and which remain deferred.
+    - REVISION-SYNC-PREPARATION-SPIKE is marked available with the report reference.
+    - ADR-RUNTIME-BOUNDARY-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

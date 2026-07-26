@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-SLICE-001
 type: tooling
 state: completed
@@ -50,6 +50,7 @@ acceptance:
   tests:
     - python -m pytest -q tests/test_spec_slice.py
     - python tools/spec_slice.py validate
+    - git diff --check
   invariants:
     - I15
   evidence:

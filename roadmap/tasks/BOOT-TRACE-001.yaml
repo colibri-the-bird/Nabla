@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-TRACE-001
 type: audit
 state: completed
@@ -53,8 +53,10 @@ dependencies:
   artifacts: []
 acceptance:
   tests:
+    - python -m pytest -q
     - python tools/nabla_nav.py validate
     - python tools/nabla_nav.py check-lock
+    - git diff --check
   invariants:
     - I1
     - I2

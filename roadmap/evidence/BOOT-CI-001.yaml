@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 task_id: BOOT-CI-001
 context_manifest_sha256: 13536ff8dbc21e27d33a1d47ad621a824e026bfbab38578eb156f7bf6bbf60e9
 selectors:
@@ -19,6 +19,7 @@ document_hashes:
   NAV: 5eef048d7aa52fa93c1ba5cebd242685ebfc195073e6f3a339dec2cd5aff5f13
 impact_tags:
 - failure-domain
+triggers: []
 changed_paths:
 - .gitattributes
 - .github/CODEOWNERS
@@ -33,13 +34,28 @@ changed_paths:
 changed_contracts:
 - GITHUB-GATE-v1
 tests:
-- command: python -m pytest -q
+- requirement: python -m pytest -q
+  command: python -m pytest -q
   exit_code: 0
-- command: python tools/nabla_nav.py validate
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
   exit_code: 0
-- command: python tools/nabla_nav.py check-lock
+- requirement: python tools/nabla_nav.py check-lock
+  command: python tools/nabla_nav.py check-lock
   exit_code: 0
-- command: git diff --check
+- requirement: git diff --check
+  command: git diff --check
   exit_code: 0
+acceptance_evidence:
+- requirement: Required check names are unique.
+  proof: .github/workflows/bootstrap-gates.yml and workflow structure test.
+- requirement: Server-side protection status is recorded.
+  proof: governance/GITHUB-PROTECTION.md records NOT CONFIRMED without claiming availability.
+- requirement: Pilot and server-side protection closure remain outside BOOT-CI-001.
+  proof: BOOT-PILOT-001 owns pilot CI, and BOOT-PROTECT-001 separately owns
+    server-side settings proof.
+owner_approval:
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/6
 unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/6

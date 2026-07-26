@@ -1,0 +1,81 @@
+schema_version: 2
+task_id: ADR-MODULE-TRUST-001
+type: adr
+state: blocked
+outcome: ADR-007 fixes module packaging, trust and activation boundaries before module contracts are frozen.
+router: BOOT:1
+scope:
+  include:
+    - Resolve ADR-007 from approved module and capability contracts.
+    - Define packaging identity, trust levels, activation validation and failure isolation.
+    - Update the decision registry only after owner approval.
+    - Activate ADR-QUERY-DSL-001 as the sole successor.
+  exclude:
+    - Do not implement module loading or runtime code execution.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-007-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+      - roadmap/tasks/ADR-QUERY-DSL-001.yaml
+      - roadmap/evidence/ADR-MODULE-TRUST-001.yaml
+    exclude:
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I6
+    - ARCH:24
+    - ARCH:24.1
+    - CAP:5
+    - MOD:4
+    - MOD:5
+    - MOD:8
+    - MOD:9
+    - MOD:13
+    - MOD:26
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - module-contract
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-001
+    - ADR-010
+    - MODULE-MANIFEST-v0.1
+  writes:
+    - ADR-007
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - ADR-RUNTIME-BOUNDARY-001
+  decisions:
+    - ADR-001
+    - ADR-010
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I6
+    - I15
+  evidence:
+    - ADR-007 assigns authority and failure isolation for packaging and activation.
+    - Alternatives, rejected options, consequences and compatibility risks are explicit.
+    - ADR-007 is accepted in the registry after owner approval.
+    - ADR-QUERY-DSL-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

@@ -1,0 +1,79 @@
+schema_version: 2
+task_id: ADR-QUERY-DSL-001
+type: adr
+state: blocked
+outcome: ADR-003 defines a bounded safe query DSL before layouts and saved queries are designed.
+router: BOOT:1
+scope:
+  include:
+    - Resolve ADR-003 from the capability query and data-classification contracts.
+    - Define grammar, binding, limits, authorization, versioning and rejection behavior.
+    - Update the decision registry only after owner approval.
+    - Activate ADR-REVISION-IDENTITY-001 as the sole successor.
+  exclude:
+    - Do not implement a parser, query engine, layout or saved-query feature.
+    - Do not change normative specifications in the ADR PR.
+  paths:
+    include:
+      - adr/ADR-003-*.md
+      - governance/decisions.yaml
+      - roadmap/tasks/ADR-QUERY-DSL-001.yaml
+      - roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+      - roadmap/evidence/ADR-QUERY-DSL-001.yaml
+    exclude:
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - ARCH:24
+    - ARCH:24.1
+    - DATA:6
+    - DATA:12
+    - CAP:9
+    - CAP:12
+    - CAP:12.8
+    - CAP:24
+    - CAP:31
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - sensitive
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - ADR-007
+    - QUERY-CONTRACT-v0.1
+  writes:
+    - ADR-003
+  changes:
+    - DECISION-REGISTRY-v1
+dependencies:
+  tasks:
+    - ADR-MODULE-TRUST-001
+  decisions:
+    - ADR-007
+  artifacts: []
+acceptance:
+  tests:
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - ADR decision record review
+  invariants:
+    - I6
+    - I13
+    - I15
+  evidence:
+    - ADR-003 defines bounded grammar, authority, limits and deterministic rejection.
+    - Injection, sensitive-output and compatibility risks have explicit treatment.
+    - ADR-003 is accepted in the registry after owner approval.
+    - ADR-REVISION-IDENTITY-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

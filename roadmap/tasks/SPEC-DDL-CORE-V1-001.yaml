@@ -1,0 +1,96 @@
+schema_version: 2
+task_id: SPEC-DDL-CORE-V1-001
+type: spec
+state: blocked
+outcome: Core v1 DDL and migrations are specified, executable and traceable without creating application runtime code.
+router: BOOT:1
+scope:
+  include:
+    - Define Kernel and Platform tables, constraints, indexes and migration metadata.
+    - Trace every persistent column to Data Catalog and machine-readable contracts.
+    - Add isolated schema creation, migration, integrity and rollback tests.
+    - Activate SPEC-DDL-CONTENT-V1-001 as the sole successor.
+  exclude:
+    - Do not create repositories, services, handlers or application startup code.
+    - Do not select a new database engine or alter accepted persistence decisions.
+  paths:
+    include:
+      - db/ddl/core/**
+      - db/migrations/core/**
+      - tests/ddl/core/**
+      - tools/validate_ddl.py
+      - roadmap/tasks/SPEC-DDL-CORE-V1-001.yaml
+      - roadmap/tasks/SPEC-DDL-CONTENT-V1-001.yaml
+      - roadmap/evidence/SPEC-DDL-CORE-V1-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs: []
+  required:
+    - CON:I1
+    - CON:I2
+    - CON:I3
+    - CON:I12
+    - ARCH:6
+    - ARCH:10
+    - ARCH:16
+    - DATA:2
+    - DATA:14
+    - DATA:15
+    - MOD:6
+    - MOD:12
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - canonical-write
+    - immutable-fact
+    - revisioned-entity
+    - offline-sync-ready
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - DATA-CATALOG-v1
+    - CORE-CONTRACT-BUNDLE-v1
+    - CONTENT-CONTRACT-BUNDLE-v1
+    - ADR-002
+    - ADR-008
+    - ADR-009
+    - ADR-012
+  writes:
+    - CORE-DDL-v1
+    - CORE-MIGRATION-BASELINE-v1
+  changes: []
+dependencies:
+  tasks:
+    - SPEC-CONTRACTS-CONTENT-V1-001
+  decisions:
+    - ADR-002
+    - ADR-008
+    - ADR-009
+    - ADR-012
+  artifacts: []
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/validate_ddl.py
+    - Core schema create migrate integrity and rollback tests
+    - python tools/nabla_nav.py validate
+  invariants:
+    - I1
+    - I2
+    - I3
+    - I12
+  evidence:
+    - Every persistent core column traces to one catalog field and one owner.
+    - Constraints enforce immutable facts, revisions, identity and lifecycle rules.
+    - Clean creation, forward migration, failed migration and integrity checks are reproducible.
+    - SPEC-DDL-CONTENT-V1-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved

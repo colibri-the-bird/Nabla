@@ -1,0 +1,104 @@
+schema_version: 2
+task_id: SPEC-BACKUP-RECOVERY-001
+type: spec
+state: blocked
+outcome: BACKUP-RECOVERY.md is an approved normative contract grounded in the baseline, accepted ADRs and measured restore behavior.
+router: BOOT:1
+scope:
+  include:
+    - Author BACKUP-RECOVERY.md from approved repository sources and measured backup evidence.
+    - Define authority, consistency, encryption, restore, verification, retention, purge and failure behavior.
+    - Register and lock the new normative document after owner approval.
+    - Activate SPEC-DATA-CATALOG-V1-001 as the sole successor.
+  exclude:
+    - Do not reconstruct text from chat summaries or missing archive recollections.
+    - Do not implement backup, restore, encryption or purge.
+    - Do not change unrelated normative specifications.
+  paths:
+    include:
+      - BACKUP-RECOVERY.md
+      - governance/artifacts.yaml
+      - governance/spec-lock.json
+      - spec-index.json
+      - tests/test_spec_slice.py
+      - roadmap/tasks/SPEC-BACKUP-RECOVERY-001.yaml
+      - roadmap/tasks/SPEC-DATA-CATALOG-V1-001.yaml
+      - roadmap/evidence/SPEC-BACKUP-RECOVERY-001.yaml
+    exclude:
+      - CONSTITUTION.md
+      - ARCHITECTURE.md
+      - DATA-CLASSIFICATION.md
+      - CAPABILITY-CONTRACT.md
+      - MODULE-MANIFEST.md
+      - LOOP-SPEC.md
+      - KNOWLEDGE-MODULE.md
+      - DOCUMENT-MODULE.md
+      - src/**
+      - app/**
+      - core/**
+      - modules/**
+context:
+  packs:
+    - id: portable-export
+      version: 1
+  required:
+    - CON:I11
+    - CON:I15
+    - CON:I16
+    - ARCH:19
+    - DATA:9
+    - DATA:10
+    - DATA:11
+    - CAP:17
+    - MOD:19
+    - KNOW:24
+    - KNOW:27
+    - DOC:25
+    - DOC:28
+    - NAV:6
+  conditional: []
+  impact_tags:
+    - backup-recovery
+    - export
+    - purge
+    - sensitive
+    - failure-domain
+  full_document_reads: []
+  context_budget_justification: null
+contracts:
+  reads:
+    - NORMATIVE-BASELINE-v1
+    - ADR-005
+    - ADR-008
+    - BACKUP-RESTORE-SPIKE-v1
+  writes:
+    - BACKUP-RECOVERY-v1
+  changes:
+    - BACKUP-RECOVERY-SPEC
+dependencies:
+  tasks:
+    - SPEC-BASELINE-001
+  decisions:
+    - ADR-005
+    - ADR-008
+  artifacts:
+    - BACKUP-RESTORE-SPIKE
+acceptance:
+  tests:
+    - python -m pytest -q
+    - python tools/spec_slice.py validate
+    - python tools/nabla_nav.py validate
+    - python tools/nabla_nav.py check-lock
+    - Backup and recovery scenario review
+  invariants:
+    - I11
+    - I15
+    - I16
+  evidence:
+    - Every normative recovery guarantee traces to an approved source or measured result.
+    - Crash, corruption, unavailable-key, partial-blob and destructive paths are explicit.
+    - BACKUP-RECOVERY-SPEC is available and the new document is indexed and locked.
+    - SPEC-DATA-CATALOG-V1-001 is the only activated successor.
+approval:
+  owner_required: true
+  required_spec_status: approved
