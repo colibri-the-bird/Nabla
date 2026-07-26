@@ -59,10 +59,17 @@ def test_ready_tasks_have_completed_dependencies() -> None:
 def test_validator_rejects_more_than_one_ready_task() -> None:
     _, _, tasks, _ = repository_state()
     scenario = copy.deepcopy(tasks)
-    scenario["BOOT-PILOT-001"]["state"] = "ready"
+    ready_id = next(
+        task_id for task_id, task in scenario.items() if task["state"] == "ready"
+    )
+    blocked_id = next(
+        task_id for task_id, task in scenario.items() if task["state"] == "blocked"
+    )
+    scenario[blocked_id]["state"] = "ready"
+    active = ", ".join(sorted((ready_id, blocked_id)))
 
     assert nabla_nav.ready_cardinality_errors(scenario) == [
-        "more than one task is ready: BOOT-PILOT-001, BOOT-REPAIR-001"
+        f"more than one task is ready: {active}"
     ]
 
 

@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: BOOT-REPAIR-001
-context_manifest_sha256: 00e96dcd6ae50d21e43dc695357cd5b89d5e1b2b64c5fd9e1c16668fac921d78
+context_manifest_sha256: a4c590714b4f6639dfd91b78f56a779fe860d78b734d3af5e145c3550c0c4cf9
 selectors:
 - CON:7
 - ARCH:25
@@ -130,7 +130,8 @@ acceptance_evidence:
 - requirement: The BOOT-REPAIR transition has exactly one successor; while repair
     is active it is the sole ready task, and on completion only BOOT-PILOT-001 may
     become ready.
-  proof: list-ready reports only BOOT-REPAIR-001. A generic repository test derives
+  proof: Before completion list-ready reported only BOOT-REPAIR-001; after the
+    transition it reports only BOOT-PILOT-001. A generic repository test derives
     the complete bootstrap chain and verifies a single mutable successor path,
     the blocked frontier, and predecessor scope authority without freezing future
     task IDs.
@@ -143,4 +144,4 @@ owner_approval:
   reference: User instructions in this task on 2026-07-26 explicitly approve the
     documents, authorize BOOT-REPAIR-001, and request the preparation fixes.
 unresolved_decisions: []
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/7
