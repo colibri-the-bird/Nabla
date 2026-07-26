@@ -1,0 +1,42 @@
+schema_version: 2
+task_id: BOOT-PILOT-001
+context_manifest_sha256: 218a31a0deeac6cd7161dd3809a8332b9e64da9b08775530511f33c63c144494
+selectors:
+- NAV:6
+- NAV:7
+- BOOT:2
+- BOOT:3
+- BOOT:4
+- BOOT:5
+document_hashes:
+  BOOT: 0f5abc245ab4ebb3340c3ab67f5d8c499ca44eef25494878af3ff062c7121a5d
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags: []
+triggers: []
+changed_paths: []
+changed_contracts: []
+tests:
+- requirement: python -m pytest -q
+  command: ''
+  exit_code: null
+- requirement: python tools/nabla_nav.py validate
+  command: ''
+  exit_code: null
+- requirement: python tools/nabla_nav.py check-lock
+  command: ''
+  exit_code: null
+acceptance_evidence:
+- requirement: Agent did not read full specifications.
+  proof: ''
+- requirement: Context stayed within budget.
+  proof: ''
+- requirement: The pilot PR exposes all five required check contexts; green status
+    for its current head is an external merge condition.
+  proof: ''
+- requirement: BOOT-PROTECT-001 is the only activated successor.
+  proof: ''
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions: []
+pr_url: ''
