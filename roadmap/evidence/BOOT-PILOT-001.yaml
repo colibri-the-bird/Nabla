@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: BOOT-PILOT-001
-context_manifest_sha256: 218a31a0deeac6cd7161dd3809a8332b9e64da9b08775530511f33c63c144494
+context_manifest_sha256: 661f393ce1f5947b51fd77463dc6404907d8b930450fe1c81042dd7d64f48cd6
 selectors:
 - NAV:6
 - NAV:7
@@ -13,30 +13,50 @@ document_hashes:
   NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
 impact_tags: []
 triggers: []
-changed_paths: []
+changed_paths:
+- roadmap/evidence/BOOT-PILOT-001.yaml
+- roadmap/tasks/BOOT-PILOT-001.yaml
+- roadmap/tasks/BOOT-PROTECT-001.yaml
+- tests/pilot/test_tooling_pilot.py
 changed_contracts: []
 tests:
 - requirement: python -m pytest -q
-  command: ''
-  exit_code: null
+  command: python -m pytest -q
+  exit_code: 0
 - requirement: python tools/nabla_nav.py validate
-  command: ''
-  exit_code: null
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
 - requirement: python tools/nabla_nav.py check-lock
-  command: ''
-  exit_code: null
+  command: python tools/nabla_nav.py check-lock
+  exit_code: 0
 acceptance_evidence:
 - requirement: Agent did not read full specifications.
-  proof: ''
+  proof: >-
+    Only the task card, generated manifest/context bundle, the allowed successor
+    card, and files under tests/pilot were read. The task declares
+    full_document_reads: [] and the prepared selectors contain no :full selector.
 - requirement: Context stayed within budget.
-  proof: ''
+  proof: >-
+    The prepared manifest reports context_words: 1046 and
+    budget_warning: false against the 16000-word error threshold.
 - requirement: The pilot PR exposes all five required check contexts; green status
     for its current head is an external merge condition.
-  proof: ''
+  proof: >-
+    PR https://github.com/colibri-the-bird/Nabla/pull/8 exposed
+    navigation-linux, navigation-windows, task-card-gate,
+    scope-and-evidence-gate, and spec-lock-and-traceability-gate on pilot head
+    517b9e305cdc85c0b36ca1d4c74fc72c7874f952. Success for the current PR head is
+    verified externally before merge and is not asserted self-referentially in
+    committed evidence.
 - requirement: BOOT-PROTECT-001 is the only activated successor.
-  proof: ''
+  proof: >-
+    BOOT-PILOT-001 is completed, BOOT-PROTECT-001 is ready, every later bootstrap
+    task remains blocked, and list-ready reports only BOOT-PROTECT-001.
 owner_approval:
-  approved: false
-  reference: ''
+  approved: true
+  reference: >-
+    Codex task 019f9f41-3c0c-7933-b9c9-bc7ffc093769, owner prompt on 2026-07-26:
+    explicit TASK-ID BOOT-PILOT-001 and instruction to complete the preparation
+    workflow.
 unresolved_decisions: []
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/8
