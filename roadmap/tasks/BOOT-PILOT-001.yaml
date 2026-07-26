@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: BOOT-PILOT-001
 type: tooling
-state: ready
+state: completed
 outcome: Безопасная tooling-задача проходит полный Codex context/evidence/CI workflow.
 router: BOOT:1
 scope:
