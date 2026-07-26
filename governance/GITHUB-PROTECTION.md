@@ -1,11 +1,35 @@
 # GitHub protection for `main`
 
-**Status:** NOT CONFIRMED
+**Status:** ENABLED — OWNER CONFIRMATION PENDING
 
 This file records the required server-side settings. It is not evidence that they
-are enabled. Keep `GITHUB-BRANCH-PROTECTION` in `governance/artifacts.yaml` as
-`missing` until the settings below are visible on GitHub and the owner supplies
-the confirmation record described below.
+are accepted by the owner. GitHub API readback confirms that the settings below
+are enabled, but `GITHUB-BRANCH-PROTECTION` remains `missing` until the owner
+explicitly approves this record and the confirming PR is evaluated under the
+protection.
+
+## Observed server state
+
+- repository: `colibri-the-bird/Nabla`
+- branch: `main`
+- observed at: `2026-07-26T17:05:20Z`
+- settings reference:
+  `https://api.github.com/repos/colibri-the-bird/Nabla/branches/main/protection`
+- settings page: `https://github.com/colibri-the-bird/Nabla/settings/branches`
+- pilot PR: `https://github.com/colibri-the-bird/Nabla/pull/8`
+- check provider: GitHub Actions (`app_id: 15368`)
+- owner confirmation reference: pending
+
+Authenticated API readback reported `main.protected: true`, strict status checks,
+admin enforcement, required pull requests with zero approving reviews, linear
+history, required conversation resolution, blocked force pushes and deletions,
+and disabled auto-merge. The five app-pinned checks are:
+
+1. `navigation-linux`
+2. `navigation-windows`
+3. `task-card-gate`
+4. `scope-and-evidence-gate`
+5. `spec-lock-and-traceability-gate`
 
 ## Required rules
 
@@ -52,12 +76,11 @@ without treating a local convention as server-side protection.
 
 ## Confirmation record
 
-Record the date, GitHub ruleset URL or screenshot reference, and pilot PR URL
-both in `governance/artifacts.yaml` and `BOOT-PROTECT-001` evidence. Artifact
-`available` proves the settings are visible; green checks on the current
-protection-record head and manual merge prove task closure externally. Evidence
-records the settings reference, confirmation date, PR URL and exact check names,
-without claiming a committed snapshot proves its own final CI state. If the
-repository plan does not support server-side protection for this private
-repository, bootstrap remains blocked; do not replace this gate with a local
-convention.
+The observed timestamp, settings reference, pilot PR URL and exact check names
+are recorded above and in `governance/artifacts.yaml`. After explicit owner
+approval, the artifact becomes `available` and the approval reference is added
+to this record and `BOOT-PROTECT-001` evidence. Green checks on the current
+protection-record head and manual merge prove task closure externally; committed
+evidence does not claim to prove its own final CI state. If server-side
+protection later becomes unavailable, bootstrap becomes blocked again; do not
+replace this gate with a local convention.
