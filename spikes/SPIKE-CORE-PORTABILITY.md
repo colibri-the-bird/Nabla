@@ -275,4 +275,4 @@ ADR-001 must still decide:
 | Android build-only artifact | Raw result `/cases/ANDROID-BUILD-001/artifacts/0` | `8a211e7f0f3cd9babd53ff728abe6bb53bc82bff21e1d15e395ae18bb7b4a85f` |
 | Prepared context | `.nabla/context/SPIKE-CORE-PORTABILITY-001/manifest.json` (generated, not committed) | `05e2d865ce91ed1e0b73da2a1cb8d6eb74bb968179772081e7b197bc488a6079` |
 | Owner approval | Pending explicit owner review of this measured report | Pending |
-| Pull request | Pending publication | Pending |
+| Pull request | [#10](https://github.com/colibri-the-bird/Nabla/pull/10) | Published as draft |
