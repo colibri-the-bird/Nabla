@@ -1,0 +1,1215 @@
+{
+  "anchor_target": {
+    "base_version": "anchor-v0",
+    "coordinate_space": "unrotated_pdf_user_space_points",
+    "expected_box": [
+      96.0,
+      476.877,
+      335.2241,
+      489.877
+    ],
+    "prefix": "Context before: archive lantern.",
+    "quote": "The amber compass points to Nabla.",
+    "suffix": "Context after: granite harbor.",
+    "target_page": 1
+  },
+  "anchor_versions": [
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23580,
+      "controlled_change": "baseline",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": true,
+      "expected_page_visual_fingerprint_match_to_v0": true,
+      "expected_resolution": "exact",
+      "fixture_id": "anchor-v0",
+      "id": "anchor-v0",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "baseline_exact_page",
+      "path": "anchor-v0.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "7c16fe739454fe7dba79ddb9625ae43cb21f6df18e395e9ec989b913202fbfa3",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23653,
+      "controlled_change": "insert_text_before_target_same_page",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v1",
+      "id": "anchor-v1",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "inserted_text_changes_raw_page_text",
+      "path": "anchor-v1.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "e3fcdecd4bb5798d740c4cf4558221ab80122fb5d2032640fff76045726e476a",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 24228,
+      "controlled_change": "insert_page_before_target_page",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": true,
+      "expected_page_visual_fingerprint_match_to_v0": true,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v2",
+      "id": "anchor-v2",
+      "page_count": 4,
+      "page_text_fingerprint_oracle_rationale": "inserted_page_leaves_target_page_text_unchanged",
+      "path": "anchor-v2.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 2,
+      "sha256": "4d8fc77359298f5f9fcc7c4b12bd2c9faf8ac9d69ceccc7e3f297bafce9c7513",
+      "target_page": 2,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 0,
+      "bytes": 23582,
+      "controlled_change": "mutate_target_quote",
+      "expected_box": null,
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unresolved",
+      "fixture_id": "anchor-v3",
+      "id": "anchor-v3",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "target_quote_mutation_changes_raw_page_text",
+      "path": "anchor-v3.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points past Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "b1d7292a1760b0d61072598ebea9d27bfd736e7ffa8a8173dca3506bee34ad6d",
+      "target_page": null,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 2,
+      "bytes": 23640,
+      "controlled_change": "duplicate_target_quote_with_different_context",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "context_disambiguated",
+      "fixture_id": "anchor-v4",
+      "id": "anchor-v4",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "duplicate_quote_changes_raw_page_text",
+      "path": "anchor-v4.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "4f1af4b74109a3efeb12a266293a80533c22f137c8d542858972a1ebf8064b83",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23579,
+      "controlled_change": "mutate_target_prefix",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v5",
+      "id": "anchor-v5",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "prefix_mutation_changes_raw_page_text",
+      "path": "anchor-v5.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: altered lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "3eb1ad0c4ed7fc7330dfcbdcf8c82a835b5b35abcab73fd5fab0d5781224a056",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23579,
+      "controlled_change": "mutate_target_suffix",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v6",
+      "id": "anchor-v6",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "suffix_mutation_changes_raw_page_text",
+      "path": "anchor-v6.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: altered harbor.",
+      "rendered_target_page": 1,
+      "sha256": "cf035624f0974932f58f3d5d9cd3dddced93c04105b88640af0316367efcc724",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23579,
+      "controlled_change": "move_target_geometry_same_page",
+      "expected_box": [
+        96.0,
+        326.877,
+        335.2241,
+        339.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": true,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v7",
+      "id": "anchor-v7",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "geometry_only_move_preserves_raw_page_text_order",
+      "path": "anchor-v7.pdf",
+      "rendered_box": [
+        96.0,
+        326.877,
+        335.2241,
+        339.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "7abfa2b11f0dd49650102a0b5248ad707f37177df7ff8743033950e2447038c0",
+      "target_page": 1,
+      "target_page_rotation_degrees": 0
+    },
+    {
+      "base_quote_occurrences": 1,
+      "bytes": 23491,
+      "controlled_change": "rotate_target_page_90_degrees",
+      "expected_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unique_quote",
+      "fixture_id": "anchor-v8",
+      "id": "anchor-v8",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "rotation_changes_candidate_raw_extraction_order",
+      "path": "anchor-v8.pdf",
+      "rendered_box": [
+        96.0,
+        476.877,
+        335.2241,
+        489.877
+      ],
+      "rendered_prefix": "Context before: archive lantern.",
+      "rendered_quote": "The amber compass points to Nabla.",
+      "rendered_suffix": "Context after: granite harbor.",
+      "rendered_target_page": 1,
+      "sha256": "a2742f04eed34f20f48e6f63b22ef329aa4b2051b4c8dea4886f9a81f67030be",
+      "target_page": 1,
+      "target_page_rotation_degrees": 90
+    },
+    {
+      "base_quote_occurrences": 0,
+      "bytes": 23515,
+      "controlled_change": "remove_target_block",
+      "expected_box": null,
+      "expected_page_text_fingerprint_match_to_v0": false,
+      "expected_page_visual_fingerprint_match_to_v0": false,
+      "expected_resolution": "unresolved",
+      "fixture_id": "anchor-v9",
+      "id": "anchor-v9",
+      "page_count": 3,
+      "page_text_fingerprint_oracle_rationale": "target_removal_changes_raw_page_text",
+      "path": "anchor-v9.pdf",
+      "rendered_box": null,
+      "rendered_prefix": null,
+      "rendered_quote": null,
+      "rendered_suffix": null,
+      "rendered_target_page": 1,
+      "sha256": "a4954ef6bf16a22f60c644c90ec2920873b99beffa9823341c92b097d09683f3",
+      "target_page": null,
+      "target_page_rotation_degrees": 0
+    }
+  ],
+  "dependencies": {
+    "pillow": "12.2.0",
+    "pypdf": "6.10.0",
+    "python": "3.12+",
+    "reportlab": "4.4.9"
+  },
+  "determinism": {
+    "fixed_pdf_date": "D:20000101000000Z",
+    "font": {
+      "copied_to_fixtures": false,
+      "package_relative_path": "reportlab/fonts/Vera.ttf",
+      "registered_name": "NablaVera",
+      "sha256": "c4c45690b345435b2cba52ecabe275f05e49b389b39fe68ad03afbb551288d3d"
+    },
+    "json_sort_keys": true,
+    "reportlab_invariant": true,
+    "seed": 20260727
+  },
+  "fixtures": [
+    {
+      "bytes": 23580,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "baseline",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v0",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v0.pdf",
+      "sha256": "7c16fe739454fe7dba79ddb9625ae43cb21f6df18e395e9ec989b913202fbfa3"
+    },
+    {
+      "bytes": 23653,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "insert_text_before_target_same_page",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v1",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v1.pdf",
+      "sha256": "e3fcdecd4bb5798d740c4cf4558221ab80122fb5d2032640fff76045726e476a"
+    },
+    {
+      "bytes": 24228,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "insert_page_before_target_page",
+        "page_count": 4,
+        "valid_pdf": true
+      },
+      "id": "anchor-v2",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v2.pdf",
+      "sha256": "4d8fc77359298f5f9fcc7c4b12bd2c9faf8ac9d69ceccc7e3f297bafce9c7513"
+    },
+    {
+      "bytes": 23582,
+      "expectations": {
+        "base_quote_occurrences": 0,
+        "controlled_change": "mutate_target_quote",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v3",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v3.pdf",
+      "sha256": "b1d7292a1760b0d61072598ebea9d27bfd736e7ffa8a8173dca3506bee34ad6d"
+    },
+    {
+      "bytes": 23640,
+      "expectations": {
+        "base_quote_occurrences": 2,
+        "controlled_change": "duplicate_target_quote_with_different_context",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v4",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v4.pdf",
+      "sha256": "4f1af4b74109a3efeb12a266293a80533c22f137c8d542858972a1ebf8064b83"
+    },
+    {
+      "bytes": 23579,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "mutate_target_prefix",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v5",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v5.pdf",
+      "sha256": "3eb1ad0c4ed7fc7330dfcbdcf8c82a835b5b35abcab73fd5fab0d5781224a056"
+    },
+    {
+      "bytes": 23579,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "mutate_target_suffix",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v6",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v6.pdf",
+      "sha256": "cf035624f0974932f58f3d5d9cd3dddced93c04105b88640af0316367efcc724"
+    },
+    {
+      "bytes": 23579,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "move_target_geometry_same_page",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v7",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v7.pdf",
+      "sha256": "7abfa2b11f0dd49650102a0b5248ad707f37177df7ff8743033950e2447038c0"
+    },
+    {
+      "bytes": 23491,
+      "expectations": {
+        "base_quote_occurrences": 1,
+        "controlled_change": "rotate_target_page_90_degrees",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v8",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v8.pdf",
+      "sha256": "a2742f04eed34f20f48e6f63b22ef329aa4b2051b4c8dea4886f9a81f67030be"
+    },
+    {
+      "bytes": 23515,
+      "expectations": {
+        "base_quote_occurrences": 0,
+        "controlled_change": "remove_target_block",
+        "page_count": 3,
+        "valid_pdf": true
+      },
+      "id": "anchor-v9",
+      "kind": "controlled_anchor_version",
+      "path": "anchor-v9.pdf",
+      "sha256": "a4954ef6bf16a22f60c644c90ec2920873b99beffa9823341c92b097d09683f3"
+    },
+    {
+      "bytes": 43884,
+      "expectations": {
+        "contains_raster_image": true,
+        "contains_vector_graphics": true,
+        "embedded_font": "NablaVera",
+        "glyph_mapping": {
+          "declared_missing_or_unmappable": [
+            {
+              "assertion_policy": "record_observed_glyph_and_text_mapping",
+              "codepoint": "U+0301",
+              "expected_font_mapping": ".notdef",
+              "input_sequence": "\u0301"
+            },
+            {
+              "assertion_policy": "record_observed_glyph_and_text_mapping",
+              "codepoint": "U+0416",
+              "expected_font_mapping": ".notdef",
+              "input_sequence": "\u0416",
+              "script": "Cyrillic"
+            },
+            {
+              "assertion_policy": "record_observed_glyph_and_text_mapping",
+              "codepoint": "U+1F642",
+              "expected_font_mapping": ".notdef_or_renderer_fallback",
+              "input_sequence": "\ud83d\ude42"
+            }
+          ],
+          "supported_codepoints": [
+            "U+00E9",
+            "U+03A9",
+            "U+20AC"
+          ]
+        },
+        "glyph_sequences": [
+          "Caf\u00e9",
+          "Cafe\u0301",
+          "\u03a9",
+          "\u0416",
+          "\u20ac"
+        ],
+        "page_count": 4,
+        "reading_order_oracle": {
+          "columns": {
+            "left_x": 72.0,
+            "right_x": 326.0
+          },
+          "draw_sequence": [
+            "LEFT-COLUMN-01",
+            "LEFT-COLUMN-02",
+            "REPEATED-SEARCH-PHRASE",
+            "LEFT-COLUMN-04",
+            "RIGHT-COLUMN-01",
+            "RIGHT-COLUMN-02",
+            "REPEATED-SEARCH-PHRASE",
+            "RIGHT-COLUMN-04"
+          ],
+          "page": 1
+        },
+        "text_layer_oracle": [
+          {
+            "expected_extracted_count": 0,
+            "kind": "raster_only",
+            "page": 2,
+            "visible_text": "SCAN-ONLY-IMAGE-TEXT"
+          },
+          {
+            "expected_extracted_count": 1,
+            "kind": "invisible_text_over_raster",
+            "page": 3,
+            "visible_text": "HIDDEN-TEXT-LAYER-NEEDLE"
+          }
+        ],
+        "text_search": [
+          {
+            "case": "upper",
+            "expected_count": 1,
+            "expected_pages": [
+              0
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "text": "NABLA-SEARCH-ALPHA"
+          },
+          {
+            "case": "mixed",
+            "expected_count": 1,
+            "expected_pages": [
+              1
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "text": "CaseSensitiveNeedle"
+          },
+          {
+            "case": "lower",
+            "expected_count": 1,
+            "expected_pages": [
+              1
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "text": "casesensitiveneedle"
+          },
+          {
+            "expected_count": 1,
+            "expected_pages": [
+              0
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "normalization": "NFC",
+            "text": "Caf\u00e9"
+          },
+          {
+            "expected_count": 0,
+            "expected_mapping": "combining_mark_not_in_vera_cmap",
+            "expected_pages": [],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "normalization": "decomposed_sequence",
+            "source_occurrences": 1,
+            "text": "Cafe\u0301"
+          },
+          {
+            "expected_count": 1,
+            "expected_mapping": "mapped",
+            "expected_pages": [
+              0
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "source_occurrences": 1,
+            "text": "\u03a9"
+          },
+          {
+            "expected_count": 0,
+            "expected_mapping": "cyrillic_codepoint_not_in_vera_cmap",
+            "expected_pages": [],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "source_occurrences": 1,
+            "text": "\u0416"
+          },
+          {
+            "expected_count": 1,
+            "expected_pages": [
+              1
+            ],
+            "fixture_id": "basic",
+            "hyphenation": "same_line",
+            "match_mode": "exact",
+            "text": "HYPHENATED-SEARCH-TERM"
+          },
+          {
+            "expected_count": 0,
+            "expected_pages": [],
+            "fixture_id": "basic",
+            "hyphenation": "split_across_drawn_lines",
+            "match_mode": "exact",
+            "text": "CROSS-LINE-HYPHEN-CONTINUATION"
+          },
+          {
+            "expected_count": 2,
+            "expected_pages": [
+              1
+            ],
+            "fixture_id": "basic",
+            "match_mode": "exact",
+            "repeated": true,
+            "text": "REPEATED-SEARCH-PHRASE"
+          },
+          {
+            "expected_count": 0,
+            "expected_pages": [],
+            "fixture_id": "basic",
+            "layer": "raster_only",
+            "match_mode": "exact_extracted_text",
+            "text": "SCAN-ONLY-IMAGE-TEXT",
+            "visible_pages": [
+              2
+            ]
+          },
+          {
+            "expected_count": 1,
+            "expected_pages": [
+              3
+            ],
+            "fixture_id": "basic",
+            "layer": "invisible_text_over_raster",
+            "match_mode": "exact_extracted_text",
+            "text": "HIDDEN-TEXT-LAYER-NEEDLE",
+            "visible_pages": [
+              3
+            ]
+          }
+        ],
+        "valid_pdf": true,
+        "visual_oracle": {
+          "coordinate_space": "unrotated_pdf_user_space_points",
+          "pages": [
+            {
+              "color_regions": [
+                {
+                  "box": [
+                    100.0,
+                    420.0,
+                    120.0,
+                    440.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    47,
+                    111,
+                    237
+                  ],
+                  "id": "blue_rectangle_interior"
+                },
+                {
+                  "box": [
+                    325.0,
+                    431.0,
+                    335.0,
+                    441.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    242,
+                    177,
+                    52
+                  ],
+                  "id": "amber_circle_center"
+                }
+              ],
+              "crop_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 0,
+              "rotation_degrees": 0
+            },
+            {
+              "color_regions": [
+                {
+                  "box": [
+                    80.0,
+                    438.0,
+                    88.0,
+                    446.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    47,
+                    133,
+                    90
+                  ],
+                  "id": "green_rectangle_interior"
+                },
+                {
+                  "box": [
+                    334.0,
+                    438.0,
+                    342.0,
+                    446.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    124,
+                    58,
+                    237
+                  ],
+                  "id": "purple_rectangle_interior"
+                }
+              ],
+              "crop_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 1,
+              "rotation_degrees": 0
+            },
+            {
+              "color_regions": [
+                {
+                  "box": [
+                    10.0,
+                    742.0,
+                    20.0,
+                    752.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    180,
+                    35,
+                    24
+                  ],
+                  "id": "scan_only_red_banner"
+                }
+              ],
+              "crop_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 2,
+              "rotation_degrees": 0
+            },
+            {
+              "color_regions": [
+                {
+                  "box": [
+                    10.0,
+                    742.0,
+                    20.0,
+                    752.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    4,
+                    120,
+                    87
+                  ],
+                  "id": "hidden_layer_green_banner"
+                }
+              ],
+              "crop_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 3,
+              "rotation_degrees": 0
+            }
+          ]
+        }
+      },
+      "id": "basic",
+      "kind": "fidelity_text_vector_raster",
+      "path": "basic.pdf",
+      "sha256": "5035f0fe0cbab14b5bc5cb977a8d7d8334321b5b506930a9b7343b82fb5150f5"
+    },
+    {
+      "bytes": 22925,
+      "expectations": {
+        "page_count": 2,
+        "text_search": [
+          {
+            "expected_occurrences": 1,
+            "needle": "BOXES-PAGE-ZERO",
+            "pages": [
+              0
+            ]
+          },
+          {
+            "expected_occurrences": 1,
+            "needle": "ROTATED-PAGE-ONE",
+            "pages": [
+              1
+            ]
+          }
+        ],
+        "valid_pdf": true,
+        "visual_oracle": {
+          "coordinate_space": "unrotated_pdf_user_space_points",
+          "pages": [
+            {
+              "art_box": [
+                54.0,
+                72.0,
+                558.0,
+                720.0
+              ],
+              "bleed_box": [
+                40.0,
+                58.0,
+                572.0,
+                734.0
+              ],
+              "color_regions": [
+                {
+                  "box": [
+                    100.0,
+                    340.0,
+                    110.0,
+                    350.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    14,
+                    116,
+                    144
+                  ],
+                  "id": "cyan_rectangle_interior"
+                }
+              ],
+              "crop_box": [
+                36.0,
+                54.0,
+                576.0,
+                738.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 0,
+              "rotation_degrees": 0,
+              "trim_box": [
+                45.0,
+                63.0,
+                567.0,
+                729.0
+              ]
+            },
+            {
+              "art_box": [
+                90.0,
+                54.0,
+                522.0,
+                738.0
+              ],
+              "bleed_box": [
+                76.0,
+                40.0,
+                536.0,
+                752.0
+              ],
+              "color_regions": [
+                {
+                  "box": [
+                    100.0,
+                    340.0,
+                    110.0,
+                    350.0
+                  ],
+                  "channel_tolerance": 4,
+                  "expected_rgb": [
+                    194,
+                    65,
+                    12
+                  ],
+                  "id": "orange_rectangle_interior"
+                }
+              ],
+              "crop_box": [
+                72.0,
+                36.0,
+                540.0,
+                756.0
+              ],
+              "media_box": [
+                0.0,
+                0.0,
+                612.0,
+                792.0
+              ],
+              "page_index": 1,
+              "rotation_degrees": 90,
+              "trim_box": [
+                81.0,
+                45.0,
+                531.0,
+                747.0
+              ]
+            }
+          ]
+        }
+      },
+      "id": "boxes-rotation",
+      "kind": "page_boxes_rotation",
+      "path": "boxes-rotation.pdf",
+      "sha256": "620d11b3de1a424ea63d4cfbaa367de53c4066126523ffd98ec2377cb5e22ee8"
+    },
+    {
+      "bytes": 44254,
+      "expectations": {
+        "algorithm": "RC4-128",
+        "encrypted": true,
+        "page_count_after_decrypt": 4,
+        "password_env": "NABLA_PDF_PASSWORD",
+        "password_is_public_test_sentinel": true,
+        "password_sha256": "c4a0e196760a4727661923d9239a94f345a9fb82b7ee9b7e5c28d1b7d335d248",
+        "source_fixture_id": "basic",
+        "valid_pdf": true,
+        "without_password": "locked"
+      },
+      "id": "encrypted-basic",
+      "kind": "encrypted_pdf",
+      "path": "encrypted-basic.pdf",
+      "sha256": "14017e1f22cc650db3241f0f901365e31f8e13aab0d7a071a2317b70ce290c7b"
+    },
+    {
+      "bytes": 22030,
+      "expectations": {
+        "candidate_outcome": "measure_bounded_rejection_or_scaled_render",
+        "media_box": [
+          0.0,
+          0.0,
+          14400.0,
+          14400.0
+        ],
+        "must_remain_in_worker_failure_domain": true,
+        "page_count": 1,
+        "preflight_dimensions_before_render": true,
+        "valid_pdf": true
+      },
+      "id": "extreme-page",
+      "kind": "extreme_page_dimensions",
+      "path": "extreme-page.pdf",
+      "sha256": "a43498e7c2db20446547aaf4772a2bd3294bf4a1765e2987be2928e740434690"
+    },
+    {
+      "bytes": 43884,
+      "expectations": {
+        "candidate_outcome": "measure_rejection_or_recovery",
+        "fault_class": "corrupt_xref",
+        "must_remain_in_worker_failure_domain": true,
+        "source_fixture_id": "basic",
+        "source_sha256": "5035f0fe0cbab14b5bc5cb977a8d7d8334321b5b506930a9b7343b82fb5150f5",
+        "valid_pdf": false
+      },
+      "id": "malformed-corrupt-xref",
+      "kind": "malformed_corrupt_xref",
+      "path": "malformed-corrupt-xref.pdf",
+      "sha256": "305dc46e31851af3729d1f4c4cbf5d58d764ab30989a773d17f8d97c722dba7c"
+    },
+    {
+      "bytes": 1010,
+      "expectations": {
+        "candidate_outcome": "measure_rejection",
+        "fault_class": "invalid_header",
+        "must_remain_in_worker_failure_domain": true,
+        "valid_pdf": false
+      },
+      "id": "malformed-invalid-header",
+      "kind": "malformed_invalid_header",
+      "path": "malformed-invalid-header.pdf",
+      "sha256": "5f261a30453512c5eb15aa2ae8a06fb38d79a1e832467685ec79b95a2aaee4b0"
+    },
+    {
+      "bytes": 42860,
+      "expectations": {
+        "candidate_outcome": "measure_rejection_or_recovery",
+        "fault_class": "truncated_tail",
+        "must_remain_in_worker_failure_domain": true,
+        "removed_tail_bytes": 1024,
+        "source_fixture_id": "basic",
+        "source_sha256": "5035f0fe0cbab14b5bc5cb977a8d7d8334321b5b506930a9b7343b82fb5150f5",
+        "valid_pdf": false
+      },
+      "id": "malformed-truncated",
+      "kind": "malformed_truncated",
+      "path": "malformed-truncated.pdf",
+      "sha256": "fc55bfd270e262d2478d6d87fe8971dba1b166aa67e0f4068874399e63dd065c"
+    },
+    {
+      "bytes": 149324,
+      "expectations": {
+        "bounded_page_count": 128,
+        "lines_per_page": 42,
+        "page_count": 128,
+        "text_search": [
+          {
+            "expected_occurrences": 8,
+            "needle": "STRESS-NEEDLE-",
+            "pages": [
+              15,
+              31,
+              47,
+              63,
+              79,
+              95,
+              111,
+              127
+            ]
+          }
+        ],
+        "valid_pdf": true
+      },
+      "id": "stress-128",
+      "kind": "bounded_large_document",
+      "path": "stress-128.pdf",
+      "sha256": "204f71976f5d78f0573905b5d2e97d31ae18d38300b83693de4c3c51220ee35e"
+    }
+  ],
+  "generator": "tests/spikes/pdf/generate_fixtures.py",
+  "schema_version": 1,
+  "search_oracle": [
+    {
+      "case": "upper",
+      "expected_count": 1,
+      "expected_pages": [
+        0
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "text": "NABLA-SEARCH-ALPHA"
+    },
+    {
+      "case": "mixed",
+      "expected_count": 1,
+      "expected_pages": [
+        1
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "text": "CaseSensitiveNeedle"
+    },
+    {
+      "case": "lower",
+      "expected_count": 1,
+      "expected_pages": [
+        1
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "text": "casesensitiveneedle"
+    },
+    {
+      "expected_count": 1,
+      "expected_pages": [
+        0
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "normalization": "NFC",
+      "text": "Caf\u00e9"
+    },
+    {
+      "expected_count": 0,
+      "expected_mapping": "combining_mark_not_in_vera_cmap",
+      "expected_pages": [],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "normalization": "decomposed_sequence",
+      "source_occurrences": 1,
+      "text": "Cafe\u0301"
+    },
+    {
+      "expected_count": 1,
+      "expected_mapping": "mapped",
+      "expected_pages": [
+        0
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "source_occurrences": 1,
+      "text": "\u03a9"
+    },
+    {
+      "expected_count": 0,
+      "expected_mapping": "cyrillic_codepoint_not_in_vera_cmap",
+      "expected_pages": [],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "source_occurrences": 1,
+      "text": "\u0416"
+    },
+    {
+      "expected_count": 1,
+      "expected_pages": [
+        1
+      ],
+      "fixture_id": "basic",
+      "hyphenation": "same_line",
+      "match_mode": "exact",
+      "text": "HYPHENATED-SEARCH-TERM"
+    },
+    {
+      "expected_count": 0,
+      "expected_pages": [],
+      "fixture_id": "basic",
+      "hyphenation": "split_across_drawn_lines",
+      "match_mode": "exact",
+      "text": "CROSS-LINE-HYPHEN-CONTINUATION"
+    },
+    {
+      "expected_count": 2,
+      "expected_pages": [
+        1
+      ],
+      "fixture_id": "basic",
+      "match_mode": "exact",
+      "repeated": true,
+      "text": "REPEATED-SEARCH-PHRASE"
+    },
+    {
+      "expected_count": 0,
+      "expected_pages": [],
+      "fixture_id": "basic",
+      "layer": "raster_only",
+      "match_mode": "exact_extracted_text",
+      "text": "SCAN-ONLY-IMAGE-TEXT",
+      "visible_pages": [
+        2
+      ]
+    },
+    {
+      "expected_count": 1,
+      "expected_pages": [
+        3
+      ],
+      "fixture_id": "basic",
+      "layer": "invisible_text_over_raster",
+      "match_mode": "exact_extracted_text",
+      "text": "HIDDEN-TEXT-LAYER-NEEDLE",
+      "visible_pages": [
+        3
+      ]
+    }
+  ]
+}

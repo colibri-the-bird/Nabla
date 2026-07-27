@@ -1,0 +1,98 @@
+schema_version: 2
+task_id: SPIKE-PDF-001
+context_manifest_sha256: 83080ffe04524aa412efd5a43ef7e2e5cde754ba29e5006ffdc5d904e0e07ddc
+selectors:
+- ARCH:24
+- ARCH:24.3
+- DOC:35
+- NAV:6
+- CON:I6
+- ARCH:11
+- DATA:4.4
+- MOD:18
+- MOD:19
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
+  DOC: d35289539a86cbbd6f2373adc7ed3f3f96398380938a4df80cd06269331d0555
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+- blob
+- failure-domain
+triggers: []
+changed_paths:
+- roadmap/tasks/SPIKE-PDF-001.yaml
+- roadmap/evidence/SPIKE-PDF-001.yaml
+- spikes/SPIKE-PDF.md
+- tests/spikes/pdf/README.md
+- tests/spikes/pdf/.gitattributes
+- tests/spikes/pdf/requirements.lock.txt
+- tests/spikes/pdf/generate_fixtures.py
+- tests/spikes/pdf/run_experiment.py
+- tests/spikes/pdf/worker.py
+- tests/spikes/pdf/fixtures/manifest.json
+- tests/spikes/pdf/fixtures/anchor-v0.pdf
+- tests/spikes/pdf/fixtures/anchor-v1.pdf
+- tests/spikes/pdf/fixtures/anchor-v2.pdf
+- tests/spikes/pdf/fixtures/anchor-v3.pdf
+- tests/spikes/pdf/fixtures/anchor-v4.pdf
+- tests/spikes/pdf/fixtures/anchor-v5.pdf
+- tests/spikes/pdf/fixtures/anchor-v6.pdf
+- tests/spikes/pdf/fixtures/anchor-v7.pdf
+- tests/spikes/pdf/fixtures/anchor-v8.pdf
+- tests/spikes/pdf/fixtures/anchor-v9.pdf
+- tests/spikes/pdf/fixtures/basic.pdf
+- tests/spikes/pdf/fixtures/boxes-rotation.pdf
+- tests/spikes/pdf/fixtures/encrypted-basic.pdf
+- tests/spikes/pdf/fixtures/extreme-page.pdf
+- tests/spikes/pdf/fixtures/malformed-corrupt-xref.pdf
+- tests/spikes/pdf/fixtures/malformed-invalid-header.pdf
+- tests/spikes/pdf/fixtures/malformed-truncated.pdf
+- tests/spikes/pdf/fixtures/stress-128.pdf
+- tests/spikes/pdf/artifacts/contact-sheet.png
+- tests/spikes/pdf/artifacts/anchor-v0-highlight.png
+- tests/spikes/pdf/results/windows-x86_64.json
+changed_contracts:
+- PDF-SPIKE-v1
+tests:
+- requirement: python tools/nabla_nav.py validate
+  command: .\.venv\Scripts\python.exe tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: Reproducible PDF and anchor experiment
+  command: python tests/spikes/pdf/run_experiment.py --offline --output tests/spikes/pdf/results/windows-x86_64.json
+  exit_code: 0
+acceptance_evidence:
+- requirement: Fixtures, commands, versions and raw observations are recorded.
+  proof: >-
+    spikes/SPIKE-PDF.md sections 2-11 and
+    tests/spikes/pdf/results/windows-x86_64.json SHA-256
+    5a727c8cb608fab55d8965b0d86c77abf6b8d7e09ae577ab7118def88810684f;
+    18-fixture manifest SHA-256
+    feec58ffc96a04b6effbff00e421a806026f9b4e7eec6659e2e83ada5dd2701d;
+    full semantic regeneration matched and 17/17 required assertions passed.
+- requirement: Anchor stability and degraded behavior are measured, not inferred.
+  proof: >-
+    spikes/SPIKE-PDF.md sections 7-8 and raw result measurements.anchors;
+    A09-A12 passed against independent resolution, page, box, text-fingerprint
+    and visual-fingerprint oracles for V0-V9.
+- requirement: PDF-SPIKE is marked available with the report reference.
+  proof: >-
+    Pending owner approval: governance/artifacts.yaml intentionally remains
+    status required; proposed report is spikes/SPIKE-PDF.md.
+- requirement: SPIKE-BACKUP-RESTORE-001 is the only activated successor.
+  proof: >-
+    Pending owner approval: roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+    intentionally remains blocked and no successor is activated.
+owner_approval:
+  approved: false
+  reference: Pending review of the draft PR and measured report.
+unresolved_decisions:
+- Owner approval is required before PDF-SPIKE publication and successor activation.
+- ADR-006 and ADR-011 remain intentionally unresolved downstream decisions.
+pr_url: ''
