@@ -1,0 +1,12 @@
+# SPIKE-PDF-001 measurement environment.
+# This is a spike-local lock, not a production dependency declaration.
+charset-normalizer==3.4.9
+cffi==2.1.0
+cryptography==49.0.0
+pdfminer.six==20251230
+pdfplumber==0.11.9
+Pillow==12.2.0
+pycparser==3.0
+pypdf==6.10.0
+pypdfium2==5.11.0
+reportlab==4.4.9
