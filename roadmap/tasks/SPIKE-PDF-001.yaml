@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: SPIKE-PDF-001
 type: spike
-state: ready
+state: completed
 outcome: Measured PDF rendering and anchor behavior is known before document-engine decisions.
 router: BOOT:1
 scope:

@@ -34,10 +34,16 @@ artifacts:
     reconstruction_policy: Preserve original bytes if recovered.
   - id: PDF-SPIKE
     title: PDF renderer and anchor spike
-    status: required
-    source: New measured spike task
+    status: available
+    source: spikes/SPIKE-PDF.md
     blocks: [ADR-006, ADR-011]
     provided_by: SPIKE-PDF-001
+    confirmation:
+      report_path: spikes/SPIKE-PDF.md
+      raw_result_path: tests/spikes/pdf/results/windows-x86_64.json
+      raw_result_sha256: 5a727c8cb608fab55d8965b0d86c77abf6b8d7e09ae577ab7118def88810684f
+      pr_url: https://github.com/colibri-the-bird/Nabla/pull/11
+      owner_approval_reference: https://github.com/colibri-the-bird/Nabla/pull/11#issuecomment-5092782019
     reconstruction_policy: Must be executed, not inferred.
   - id: BACKUP-RESTORE-SPIKE
     title: SQLite and blob backup/restore spike
