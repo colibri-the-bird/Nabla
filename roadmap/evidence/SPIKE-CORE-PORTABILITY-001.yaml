@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: SPIKE-CORE-PORTABILITY-001
-context_manifest_sha256: 05e2d865ce91ed1e0b73da2a1cb8d6eb74bb968179772081e7b197bc488a6079
+context_manifest_sha256: 1ce7b196a9d84a6eb43e77b4e1fd90fca168b3717999344a7d3f7c9b516e00f5
 selectors:
 - ARCH:5
 - ARCH:6
@@ -20,8 +20,10 @@ impact_tags:
 - failure-domain
 triggers: []
 changed_paths:
+- governance/artifacts.yaml
 - roadmap/evidence/SPIKE-CORE-PORTABILITY-001.yaml
 - roadmap/tasks/SPIKE-CORE-PORTABILITY-001.yaml
+- roadmap/tasks/SPIKE-PDF-001.yaml
 - spikes/SPIKE-CORE-PORTABILITY.md
 - tests/spikes/core-portability/ffi_driver.py
 - tests/spikes/core-portability/probe_environment.py
@@ -62,11 +64,17 @@ acceptance_evidence:
     deferred ADR-001 inputs in section 9, and concrete residual risks with
     required follow-up in section 10.
 - requirement: CORE-PORTABILITY-SPIKE is marked available with the report reference.
-  proof: ''
+  proof: >-
+    governance/artifacts.yaml marks CORE-PORTABILITY-SPIKE available and
+    references spikes/SPIKE-CORE-PORTABILITY.md, the committed raw result and
+    its SHA-256, PR #10, and the explicit owner-approval comment.
 - requirement: SPIKE-PDF-001 is the only activated successor.
-  proof: ''
+  proof: >-
+    roadmap/tasks/SPIKE-PDF-001.yaml is the sole successor changed from blocked
+    to ready by this task, and python tools/nabla_nav.py list-ready returns only
+    SPIKE-PDF-001 after the current card is completed.
 owner_approval:
-  approved: false
-  reference: ''
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/10#issuecomment-5090647252
 unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/10
