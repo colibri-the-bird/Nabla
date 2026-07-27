@@ -4,9 +4,9 @@
 |---|---|
 | Task | `SPIKE-CORE-PORTABILITY-001` |
 | Artifact | `CORE-PORTABILITY-SPIKE-v1` |
-| Report status | Measurements complete — owner approval pending |
+| Report status | Measurements complete; owner-approved |
 | Candidate under measurement | Rust |
-| Prepared context manifest | `05e2d865ce91ed1e0b73da2a1cb8d6eb74bb968179772081e7b197bc488a6079` |
+| Prepared context manifest | `1ce7b196a9d84a6eb43e77b4e1fd90fca168b3717999344a7d3f7c9b516e00f5` |
 | Raw result | `tests/spikes/core-portability/results/windows-x86_64.json` |
 | Raw result SHA-256 | `58ac966c3ceba16e06743f58daf09fda992fbba164d7304fe7c6dba8871c10ec` |
 
@@ -273,6 +273,6 @@ ADR-001 must still decide:
 | Host service artifact | Raw result `/cases/PACKAGE-001/artifacts/0` | `96c32abfd669426d0a674115f56014b1eaf8c322609393a8bb7af297d5426893` |
 | Host C ABI artifact | Raw result `/cases/PACKAGE-001/artifacts/1` | `2c3ac2e2fe415e6ac49f939bb396194708158f86f2c150e40a810f3f829180b5` |
 | Android build-only artifact | Raw result `/cases/ANDROID-BUILD-001/artifacts/0` | `8a211e7f0f3cd9babd53ff728abe6bb53bc82bff21e1d15e395ae18bb7b4a85f` |
-| Prepared context | `.nabla/context/SPIKE-CORE-PORTABILITY-001/manifest.json` (generated, not committed) | `05e2d865ce91ed1e0b73da2a1cb8d6eb74bb968179772081e7b197bc488a6079` |
-| Owner approval | Pending explicit owner review of this measured report | Pending |
+| Prepared context | `.nabla/context/SPIKE-CORE-PORTABILITY-001/manifest.json` (generated, not committed) | `1ce7b196a9d84a6eb43e77b4e1fd90fca168b3717999344a7d3f7c9b516e00f5` |
+| Owner approval | [PR #10 comment](https://github.com/colibri-the-bird/Nabla/pull/10#issuecomment-5090647252) | Explicitly approved by project owner |
 | Pull request | [#10](https://github.com/colibri-the-bird/Nabla/pull/10) | Published as draft |

@@ -9,10 +9,16 @@ artifacts:
     reconstruction_policy: Do not reconstruct from chat summaries.
   - id: CORE-PORTABILITY-SPIKE
     title: SPIKE-CORE-PORTABILITY.md
-    status: missing
-    source: ChatGPT Library or a new approved spike PR
+    status: available
+    source: spikes/SPIKE-CORE-PORTABILITY.md
     blocks: [ADR-001, production-skeleton]
     provided_by: SPIKE-CORE-PORTABILITY-001
+    confirmation:
+      report_path: spikes/SPIKE-CORE-PORTABILITY.md
+      raw_result_path: tests/spikes/core-portability/results/windows-x86_64.json
+      raw_result_sha256: 58ac966c3ceba16e06743f58daf09fda992fbba164d7304fe7c6dba8871c10ec
+      pr_url: https://github.com/colibri-the-bird/Nabla/pull/10
+      owner_approval_reference: https://github.com/colibri-the-bird/Nabla/pull/10#issuecomment-5090647252
     reconstruction_policy: Do not reconstruct from chat summaries.
   - id: BACKUP-RECOVERY-DRAFT-ARCHIVE
     title: Nabla-spec-2026-07-13-backup-recovery-draft.zip
