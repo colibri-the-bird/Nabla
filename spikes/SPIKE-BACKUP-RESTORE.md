@@ -11,7 +11,7 @@
 | Context manifest | `a467a76c8fa87cf5d9a807dfb5668dc8279ec646739d86291d0fff4757f1690a` |
 | Raw result | `tests/spikes/backup-restore/results/windows_x86_64.json` |
 | Raw result SHA-256 | `d4eceb03e436eb607b8144fd6cbf8e3250cd98da3f9b196c91a66667ff9c6710` |
-| Pull request | Pending draft publication |
+| Pull request | [#12](https://github.com/colibri-the-bird/Nabla/pull/12) |
 | Owner approval | Pending |
 
 This report is measured input to later specification and ADR work. The

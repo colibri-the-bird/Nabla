@@ -82,8 +82,8 @@ acceptance_evidence:
     and no successor is activated.
 owner_approval:
   approved: false
-  reference: Awaiting explicit owner approval in the task pull request.
+  reference: Awaiting explicit owner approval in PR #12.
 unresolved_decisions:
 - Owner approval is required before artifact publication, task completion and
   sole-successor activation.
-pr_url: Pending draft pull request publication.
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/12
