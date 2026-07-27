@@ -6,13 +6,13 @@
 |---|---|
 | Task | `SPIKE-BACKUP-RESTORE-001` |
 | Artifact | `BACKUP-RESTORE-SPIKE-v1` |
-| Status | Measured draft for owner approval |
+| Status | Available (owner-approved) |
 | Execution time | 2026-07-27T19:31:08Z (2026-07-28 local) |
-| Context manifest | `a467a76c8fa87cf5d9a807dfb5668dc8279ec646739d86291d0fff4757f1690a` |
+| Context manifest | `674b74d95b6d793200375a9970ebeb38acaee531d148f170667e3b7948540468` |
 | Raw result | `tests/spikes/backup-restore/results/windows_x86_64.json` |
 | Raw result SHA-256 | `d4eceb03e436eb607b8144fd6cbf8e3250cd98da3f9b196c91a66667ff9c6710` |
 | Pull request | [#12](https://github.com/colibri-the-bird/Nabla/pull/12) |
-| Owner approval | Pending |
+| Owner approval | [PR #12 approval record](https://github.com/colibri-the-bird/Nabla/pull/12#issuecomment-5096188470) |
 
 This report is measured input to later specification and ADR work. The
 experimental directory bundle and versioned activation pointer used by the
@@ -284,15 +284,10 @@ Primary references:
 - [SQLite causes of corruption](https://www.sqlite.org/howtocorrupt.html);
 - [SQLite `PRAGMA integrity_check`](https://www.sqlite.org/pragma.html#pragma_integrity_check).
 
-## Owner gate
+## Owner approval
 
-Until explicit owner approval:
-
-- this report remains a measured draft;
-- `BACKUP-RESTORE-SPIKE` remains `required`;
-- `SPIKE-BACKUP-RESTORE-001` remains `ready`;
-- `SPIKE-REVISION-REPLAY-001` remains `blocked`.
-
-Owner approval must explicitly confirm the measurements and conclusions,
-authorize publication of `BACKUP-RESTORE-SPIKE`, completion of this task, and
-activation of `SPIKE-REVISION-REPLAY-001` as the sole successor.
+The project owner explicitly approved the measurements and conclusions in
+[PR #12](https://github.com/colibri-the-bird/Nabla/pull/12#issuecomment-5096188470)
+and authorized publication of `BACKUP-RESTORE-SPIKE`, completion of
+`SPIKE-BACKUP-RESTORE-001`, and activation of
+`SPIKE-REVISION-REPLAY-001` as the sole successor.

@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: SPIKE-BACKUP-RESTORE-001
-context_manifest_sha256: a467a76c8fa87cf5d9a807dfb5668dc8279ec646739d86291d0fff4757f1690a
+context_manifest_sha256: 674b74d95b6d793200375a9970ebeb38acaee531d148f170667e3b7948540468
 selectors:
 - CON:I16
 - ARCH:19
@@ -35,7 +35,10 @@ impact_tags:
 - failure-domain
 triggers: []
 changed_paths:
+- governance/artifacts.yaml
 - roadmap/evidence/SPIKE-BACKUP-RESTORE-001.yaml
+- roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+- roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
 - spikes/SPIKE-BACKUP-RESTORE.md
 - tests/spikes/backup-restore/README.md
 - tests/spikes/backup-restore/_spike_harness.py
@@ -72,18 +75,15 @@ acceptance_evidence:
     typed outcomes, exact checkpoints and preservation checks.
 - requirement: BACKUP-RESTORE-SPIKE is marked available with the report reference.
   proof: >-
-    Pending owner approval: governance/artifacts.yaml intentionally keeps
-    BACKUP-RESTORE-SPIKE required; the proposed measured report is
-    spikes/SPIKE-BACKUP-RESTORE.md.
+    governance/artifacts.yaml marks BACKUP-RESTORE-SPIKE available and
+    references spikes/SPIKE-BACKUP-RESTORE.md, the canonical raw result and
+    its SHA-256, PR #12, and the durable owner-approval comment.
 - requirement: SPIKE-REVISION-REPLAY-001 is the only activated successor.
   proof: >-
-    Pending owner approval:
-    roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml intentionally remains blocked
-    and no successor is activated.
+    roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml is the sole successor changed
+    from blocked to ready; no other successor task card is changed.
 owner_approval:
-  approved: false
-  reference: Awaiting explicit owner approval in PR #12.
-unresolved_decisions:
-- Owner approval is required before artifact publication, task completion and
-  sole-successor activation.
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/12#issuecomment-5096188470
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/12

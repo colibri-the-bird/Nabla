@@ -47,10 +47,16 @@ artifacts:
     reconstruction_policy: Must be executed, not inferred.
   - id: BACKUP-RESTORE-SPIKE
     title: SQLite and blob backup/restore spike
-    status: required
-    source: New measured spike task
+    status: available
+    source: spikes/SPIKE-BACKUP-RESTORE.md
     blocks: [backup-implementation]
     provided_by: SPIKE-BACKUP-RESTORE-001
+    confirmation:
+      report_path: spikes/SPIKE-BACKUP-RESTORE.md
+      raw_result_path: tests/spikes/backup-restore/results/windows_x86_64.json
+      raw_result_sha256: d4eceb03e436eb607b8144fd6cbf8e3250cd98da3f9b196c91a66667ff9c6710
+      pr_url: https://github.com/colibri-the-bird/Nabla/pull/12
+      owner_approval_reference: https://github.com/colibri-the-bird/Nabla/pull/12#issuecomment-5096188470
     reconstruction_policy: Must be executed, not inferred.
   - id: REVISION-SYNC-PREPARATION-SPIKE
     title: Offline identity, revisions, outbox and replay spike
