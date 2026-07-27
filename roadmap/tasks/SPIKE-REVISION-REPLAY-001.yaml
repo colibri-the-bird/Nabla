@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: SPIKE-REVISION-REPLAY-001
 type: spike
-state: blocked
+state: ready
 outcome: Offline identity, revision, outbox and replay assumptions are measured before schema decisions.
 router: BOOT:1
 scope:
