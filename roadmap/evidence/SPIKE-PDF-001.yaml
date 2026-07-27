@@ -91,8 +91,8 @@ acceptance_evidence:
     intentionally remains blocked and no successor is activated.
 owner_approval:
   approved: false
-  reference: Pending review of the draft PR and measured report.
+  reference: Awaiting explicit owner approval in PR #11.
 unresolved_decisions:
 - Owner approval is required before PDF-SPIKE publication and successor activation.
 - ADR-006 and ADR-011 remain intentionally unresolved downstream decisions.
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/11
