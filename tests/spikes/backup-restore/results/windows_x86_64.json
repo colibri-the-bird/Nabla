@@ -1,0 +1,814 @@
+{
+  "artifact_id": "BACKUP-RESTORE-SPIKE-v1",
+  "cases": [
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "quiescent_snapshot_generation",
+          "layer": "sqlite",
+          "observed": 1,
+          "passed": true
+        },
+        {
+          "expected": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "id": "snapshot_matches_source",
+          "layer": "semantic",
+          "observed": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "passed": true
+        },
+        {
+          "expected": {
+            "foreign_key_violations": [],
+            "integrity_check": [
+              "ok"
+            ]
+          },
+          "id": "snapshot_derived_bundle_verifies",
+          "layer": "bundle",
+          "observed": {
+            "foreign_key_violations": [],
+            "integrity_check": [
+              "ok"
+            ]
+          },
+          "passed": true
+        }
+      ],
+      "diagnostics": [],
+      "duration_ms": 328,
+      "expected_outcome": "A quiescent online backup and snapshot-derived blob bundle verify.",
+      "failure_domain": "sqlite-snapshot",
+      "id": "QUIESCENT_ONLINE_SNAPSHOT",
+      "observations": {
+        "backup": {
+          "duration_ms": 47,
+          "generation": 1,
+          "page_count": 826,
+          "page_size": 4096,
+          "semantic_sha256": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "sqlite_bytes": 3383296
+        },
+        "bundle": {
+          "blob_bytes": 1056768,
+          "blob_count": 3,
+          "generation": 1,
+          "record_count": 2
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "source_generation": 2,
+            "writer_errors": []
+          },
+          "id": "writer_committed_generation_two",
+          "layer": "concurrency",
+          "observed": {
+            "source_generation": 2,
+            "writer_errors": []
+          },
+          "passed": true
+        },
+        {
+          "expected": "exact semantic state of fixture generation 1 or 2",
+          "id": "snapshot_is_one_complete_generation",
+          "layer": "sqlite",
+          "observed": {
+            "blob_count": 4,
+            "generation": 2,
+            "record_count": 3,
+            "reference_count": 6,
+            "semantic_sha256": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6"
+          },
+          "passed": true
+        },
+        {
+          "expected": {
+            "generation": 2,
+            "semantic_sha256": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6"
+          },
+          "id": "bundle_matches_captured_snapshot",
+          "layer": "bundle",
+          "observed": {
+            "generation": 2,
+            "semantic_sha256": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6"
+          },
+          "passed": true
+        }
+      ],
+      "diagnostics": [],
+      "duration_ms": 390,
+      "expected_outcome": "A bounded concurrent commit may change the captured generation but cannot tear it.",
+      "failure_domain": "sqlite-snapshot",
+      "id": "CONCURRENT_WAL_ONLINE_SNAPSHOT",
+      "observations": {
+        "backup": {
+          "duration_ms": 46,
+          "generation": 2,
+          "page_count": 826,
+          "page_size": 4096,
+          "semantic_sha256": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "sqlite_bytes": 3383296
+        },
+        "captured_generation": 2,
+        "progress_sample": [
+          {
+            "remaining_pages": 825,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 825,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 824,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 823,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 822,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 821,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 820,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 819,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 818,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 817,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 816,
+            "status": 0,
+            "total_pages": 826
+          },
+          {
+            "remaining_pages": 815,
+            "status": 0,
+            "total_pages": 826
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "copy_generation": 1,
+            "live_generation": 2
+          },
+          "id": "main_file_copy_loses_committed_wal_generation",
+          "layer": "negative-control",
+          "observed": {
+            "copy_generation": 1,
+            "live_generation": 2
+          },
+          "passed": true
+        },
+        {
+          "expected": [
+            "ok"
+          ],
+          "id": "stale_copy_can_still_pass_integrity_check",
+          "layer": "sqlite",
+          "observed": [
+            "ok"
+          ],
+          "passed": true
+        }
+      ],
+      "diagnostics": [],
+      "duration_ms": 187,
+      "expected_outcome": "Copying only the live DB main file is detected as stale despite structural integrity.",
+      "failure_domain": "sqlite-snapshot",
+      "id": "LIVE_WAL_MAIN_FILE_COPY_NEGATIVE_CONTROL",
+      "observations": {
+        "semantic_digests_differ": true,
+        "wal_bytes": 32992
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": "DB_MANIFEST_GENERATION_MISMATCH",
+          "id": "live_manifest_rejected_for_older_snapshot",
+          "layer": "closure",
+          "observed": "DB_MANIFEST_GENERATION_MISMATCH",
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "DB_MANIFEST_GENERATION_MISMATCH",
+          "detail": "db=1;manifest=2"
+        }
+      ],
+      "duration_ms": 47,
+      "expected_outcome": "A blob manifest from a newer live DB is rejected against the snapshot.",
+      "failure_domain": "db-blob-generation",
+      "id": "LIVE_MANIFEST_NEGATIVE_CONTROL",
+      "observations": {
+        "live_manifest_generation": 2,
+        "snapshot_generation": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": null,
+          "id": "active_pointer_absent_before_restore",
+          "layer": "activation",
+          "observed": null,
+          "passed": true
+        },
+        {
+          "expected": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "id": "restored_semantics_match_snapshot",
+          "layer": "restore",
+          "observed": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "passed": true
+        },
+        {
+          "expected": {
+            "blob_count": 4,
+            "generation": 2
+          },
+          "id": "restored_generation_and_blobs_complete",
+          "layer": "restore",
+          "observed": {
+            "blob_count": 4,
+            "generation": 2
+          },
+          "passed": true
+        }
+      ],
+      "diagnostics": [],
+      "duration_ms": 280,
+      "expected_outcome": "A fully verified generation-two bundle restores into an empty installation.",
+      "failure_domain": "restore",
+      "id": "CLEAN_INSTALL_RESTORE",
+      "observations": {
+        "active_pointer": "generation-two",
+        "bundle": {
+          "blob_bytes": 1318912,
+          "blob_count": 4,
+          "foreign_key_violations": [],
+          "generation": 2,
+          "integrity_check": [
+            "ok"
+          ],
+          "record_count": 3,
+          "semantic_sha256": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "sqlite_bytes": 3383296
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "id": "exact_database_backup_checkpoint_reached",
+          "layer": "fault-injection",
+          "observed": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "passed": true
+        },
+        {
+          "expected": {
+            "complete_marker": false,
+            "returncode": "non-zero",
+            "verification": "BUNDLE_INCOMPLETE"
+          },
+          "id": "interrupted_database_backup_not_published",
+          "layer": "publication",
+          "observed": {
+            "complete_marker": false,
+            "returncode": 1,
+            "verification": "BUNDLE_INCOMPLETE"
+          },
+          "passed": true
+        },
+        {
+          "expected": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "id": "source_unchanged_after_worker_termination",
+          "layer": "source-safety",
+          "observed": "bf8cf1069ff93eba90f5a43f8c2efff7c33fdf53c53c61937f69e40492fb9ba6",
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "BUNDLE_INCOMPLETE",
+          "detail": "missing completeness marker"
+        }
+      ],
+      "duration_ms": 219,
+      "expected_outcome": "Termination during SQLite backup leaves no published bundle and does not alter the source.",
+      "failure_domain": "backup-job",
+      "id": "INTERRUPTED_DATABASE_BACKUP",
+      "observations": {
+        "partial_database_bytes": 0,
+        "process": {
+          "checkpoint": {
+            "callbacks": 3,
+            "checkpoint": "during_database_backup",
+            "remaining_pages": 823,
+            "status": 0,
+            "total_pages": 826
+          },
+          "checkpoint_reached": true,
+          "returncode": 1,
+          "stderr": "",
+          "stdout": "",
+          "timed_out": false
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "id": "exact_blob_copy_checkpoint_reached",
+          "layer": "fault-injection",
+          "observed": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "passed": true
+        },
+        {
+          "expected": {
+            "final_exists": false,
+            "partial_bytes": 131072,
+            "verification": "BUNDLE_INCOMPLETE"
+          },
+          "id": "partial_blob_never_promoted",
+          "layer": "blob",
+          "observed": {
+            "final_exists": false,
+            "partial_bytes": 131072,
+            "verification": "BUNDLE_INCOMPLETE"
+          },
+          "passed": true
+        },
+        {
+          "expected": 2,
+          "id": "source_bundle_remains_verified",
+          "layer": "source-safety",
+          "observed": 2,
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "BUNDLE_INCOMPLETE",
+          "detail": "missing completeness marker"
+        }
+      ],
+      "duration_ms": 202,
+      "expected_outcome": "Termination after finite blob chunks leaves only an incomplete staging file.",
+      "failure_domain": "blob",
+      "id": "INTERRUPTED_BLOB_COPY",
+      "observations": {
+        "process": {
+          "checkpoint": {
+            "checkpoint": "during_blob_copy",
+            "chunks_written": 2,
+            "partial_bytes": 131072
+          },
+          "checkpoint_reached": true,
+          "returncode": 1,
+          "stderr": "",
+          "stdout": "",
+          "timed_out": false
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "id": "restore_pre_activation_checkpoint_reached",
+          "layer": "fault-injection",
+          "observed": {
+            "checkpoint_reached": true,
+            "timed_out": false
+          },
+          "passed": true
+        },
+        {
+          "expected": {
+            "candidate_final": false,
+            "candidate_staging": true,
+            "pointer": "baseline-g1"
+          },
+          "id": "active_generation_unchanged_after_termination",
+          "layer": "activation",
+          "observed": {
+            "candidate_final": false,
+            "candidate_staging": true,
+            "pointer": "baseline-g1"
+          },
+          "passed": true
+        },
+        {
+          "expected": {
+            "generation": 2
+          },
+          "id": "fresh_staging_retry_succeeds",
+          "layer": "retry",
+          "observed": {
+            "generation": 2
+          },
+          "passed": true
+        }
+      ],
+      "diagnostics": [],
+      "duration_ms": 437,
+      "expected_outcome": "Termination after staging verification preserves the active generation; a fresh retry succeeds.",
+      "failure_domain": "restore",
+      "id": "INTERRUPTED_RESTORE_BEFORE_ACTIVATION",
+      "observations": {
+        "process": {
+          "checkpoint": {
+            "checkpoint": "before_restore_activation",
+            "staging_name": "candidate-g2.staging"
+          },
+          "checkpoint_reached": true,
+          "returncode": 1,
+          "stderr": "",
+          "stdout": "",
+          "timed_out": false
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": "MEMBER_CHECKSUM_MISMATCH",
+          "id": "database_corruption_detected_by_member_checksum",
+          "layer": "outer-checksum",
+          "observed": "MEMBER_CHECKSUM_MISMATCH",
+          "passed": true
+        },
+        {
+          "expected": "SQLITE_CORRUPT",
+          "id": "database_corruption_detected_after_outer_checksum_refresh",
+          "layer": "sqlite",
+          "observed": "SQLITE_CORRUPT",
+          "passed": true
+        },
+        {
+          "expected": {
+            "pointer": "baseline-g1",
+            "semantic_sha256": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0"
+          },
+          "id": "corrupt_database_does_not_replace_active_generation",
+          "layer": "activation",
+          "observed": {
+            "pointer": "baseline-g1",
+            "semantic_sha256": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0"
+          },
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "MEMBER_CHECKSUM_MISMATCH",
+          "detail": "database/snapshot.sqlite3"
+        },
+        {
+          "code": "SQLITE_CORRUPT",
+          "detail": "DatabaseError: file is not a database"
+        }
+      ],
+      "duration_ms": 250,
+      "expected_outcome": "Outer checksums and SQLite structural preflight independently reject a corrupt database.",
+      "failure_domain": "sqlite",
+      "id": "DATABASE_HEADER_CORRUPTION",
+      "observations": {},
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": "MISSING_MEMBER",
+          "id": "missing_blob_rejected",
+          "layer": "blob",
+          "observed": "MISSING_MEMBER",
+          "passed": true
+        },
+        {
+          "expected": 3,
+          "id": "unaffected_blobs_remain_verifiable",
+          "layer": "failure-localization",
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "expected": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "id": "missing_blob_does_not_replace_active_generation",
+          "layer": "activation",
+          "observed": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "MISSING_MEMBER",
+          "detail": "blobs/sha256/8d/8d2f8339bfe9410f4d25377e4e97afce9ee9f97fb2f113118badac3cf051c9df"
+        }
+      ],
+      "duration_ms": 125,
+      "expected_outcome": "A missing required blob is rejected without harming intact blobs or the active generation.",
+      "failure_domain": "blob",
+      "id": "MISSING_BLOB_IN_BUNDLE",
+      "observations": {},
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": "BLOB_SIZE_MISMATCH",
+          "id": "partial_blob_rejected_by_manifest_size",
+          "layer": "blob",
+          "observed": "BLOB_SIZE_MISMATCH",
+          "passed": true
+        },
+        {
+          "expected": 3,
+          "id": "other_blobs_intact_after_partial_fault",
+          "layer": "failure-localization",
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "expected": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "id": "partial_blob_does_not_replace_active_generation",
+          "layer": "activation",
+          "observed": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "BLOB_SIZE_MISMATCH",
+          "detail": "8d2f8339bfe9410f4d25377e4e97afce9ee9f97fb2f113118badac3cf051c9df"
+        }
+      ],
+      "duration_ms": 187,
+      "expected_outcome": "A truncated blob is rejected by manifest size after outer checksum refresh.",
+      "failure_domain": "blob",
+      "id": "PARTIAL_BLOB_IN_BUNDLE",
+      "observations": {
+        "sizes": {
+          "expected_bytes": 1048576,
+          "partial_bytes": 524288
+        }
+      },
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "code": "BLOB_CONTENT_HASH_MISMATCH",
+            "size_bytes": 1048576
+          },
+          "id": "same_size_corruption_rejected_by_content_hash",
+          "layer": "blob",
+          "observed": {
+            "code": "BLOB_CONTENT_HASH_MISMATCH",
+            "size_bytes": 1048576
+          },
+          "passed": true
+        },
+        {
+          "expected": 3,
+          "id": "other_blobs_intact_after_corruption",
+          "layer": "failure-localization",
+          "observed": 3,
+          "passed": true
+        },
+        {
+          "expected": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "id": "corrupt_blob_does_not_replace_active_generation",
+          "layer": "activation",
+          "observed": "8a8aca3fe3b9162c747bbdb338405572e3bd8ff0040b1f662928a7016e4797b0",
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "BLOB_CONTENT_HASH_MISMATCH",
+          "detail": "8d2f8339bfe9410f4d25377e4e97afce9ee9f97fb2f113118badac3cf051c9df"
+        }
+      ],
+      "duration_ms": 172,
+      "expected_outcome": "A same-size byte flip is rejected by content identity, not merely size.",
+      "failure_domain": "blob",
+      "id": "SAME_SIZE_BLOB_CORRUPTION",
+      "observations": {},
+      "passed": true
+    },
+    {
+      "checks": [
+        {
+          "expected": {
+            "complete_marker": false,
+            "error": "SOURCE_BLOB_MISSING",
+            "published": false
+          },
+          "id": "missing_source_blob_blocks_publication",
+          "layer": "blob-lifetime",
+          "observed": {
+            "complete_marker": false,
+            "error": "SOURCE_BLOB_MISSING",
+            "published": false
+          },
+          "passed": true
+        },
+        {
+          "expected": "BUNDLE_INCOMPLETE",
+          "id": "residual_stage_is_explicitly_incomplete",
+          "layer": "publication",
+          "observed": "BUNDLE_INCOMPLETE",
+          "passed": true
+        },
+        {
+          "expected": [
+            "ok"
+          ],
+          "id": "snapshot_remains_healthy_after_copy_failure",
+          "layer": "sqlite",
+          "observed": [
+            "ok"
+          ],
+          "passed": true
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "SOURCE_BLOB_MISSING",
+          "detail": "8d2f8339bfe9410f4d25377e4e97afce9ee9f97fb2f113118badac3cf051c9df"
+        },
+        {
+          "code": "BUNDLE_INCOMPLETE",
+          "detail": "missing completeness marker"
+        }
+      ],
+      "duration_ms": 62,
+      "expected_outcome": "A source blob lost after the DB snapshot prevents publication and leaves an incomplete stage.",
+      "failure_domain": "db-blob-generation",
+      "id": "SOURCE_BLOB_DISAPPEARS_AFTER_SNAPSHOT",
+      "observations": {},
+      "passed": true
+    }
+  ],
+  "command": "python tests/spikes/backup-restore/run_experiment.py --output tests/spikes/backup-restore/results/windows_x86_64.json",
+  "environment": {
+    "journal_mode": "WAL",
+    "machine": "AMD64",
+    "os": "Windows-11-10.0.22631-SP0",
+    "python": "3.12.7",
+    "sqlite_compile_options": [
+      "ATOMIC_INTRINSICS=0",
+      "COMPILER=msvc-1916",
+      "DEFAULT_AUTOVACUUM",
+      "DEFAULT_CACHE_SIZE=-2000",
+      "DEFAULT_FILE_FORMAT=4",
+      "DEFAULT_JOURNAL_SIZE_LIMIT=-1",
+      "DEFAULT_MMAP_SIZE=0",
+      "DEFAULT_PAGE_SIZE=4096",
+      "DEFAULT_PCACHE_INITSZ=20",
+      "DEFAULT_RECURSIVE_TRIGGERS",
+      "DEFAULT_SECTOR_SIZE=4096",
+      "DEFAULT_SYNCHRONOUS=2",
+      "DEFAULT_WAL_AUTOCHECKPOINT=1000",
+      "DEFAULT_WAL_SYNCHRONOUS=2",
+      "DEFAULT_WORKER_THREADS=0",
+      "DIRECT_OVERFLOW_READ",
+      "ENABLE_COLUMN_METADATA",
+      "ENABLE_FTS5",
+      "ENABLE_GEOPOLY",
+      "ENABLE_RTREE",
+      "MALLOC_SOFT_LIMIT=1024",
+      "MAX_ATTACHED=10",
+      "MAX_COLUMN=2000",
+      "MAX_COMPOUND_SELECT=500",
+      "MAX_DEFAULT_PAGE_SIZE=8192",
+      "MAX_EXPR_DEPTH=1000",
+      "MAX_FUNCTION_ARG=127",
+      "MAX_LENGTH=1000000000",
+      "MAX_LIKE_PATTERN_LENGTH=50000",
+      "MAX_MMAP_SIZE=0x7fff0000",
+      "MAX_PAGE_COUNT=0xfffffffe",
+      "MAX_PAGE_SIZE=65536",
+      "MAX_SQL_LENGTH=1000000000",
+      "MAX_TRIGGER_DEPTH=1000",
+      "MAX_VARIABLE_NUMBER=250000",
+      "MAX_VDBE_OP=250000000",
+      "MAX_WORKER_THREADS=8",
+      "MUTEX_W32",
+      "SYSTEM_MALLOC",
+      "TEMP_STORE=1",
+      "THREADSAFE=1"
+    ],
+    "sqlite_runtime": "3.45.3",
+    "synchronous": "FULL",
+    "wal_autocheckpoint": 0
+  },
+  "experimental_bundle": {
+    "format_id": "nabla.backup-restore-spike.bundle",
+    "format_version": 1,
+    "normative": false
+  },
+  "fixture": {
+    "generations": [
+      1,
+      2
+    ],
+    "id": "nabla-backup-restore-generation-fixture-v1",
+    "path": "tests/spikes/backup-restore/fixtures/generation-v1.json",
+    "sha256": "ceb09e9e2feb523f211f734e040d2405040a6b474d585abfe65b53703d93620a"
+  },
+  "limitations": [
+    "The bundle and activation pointer are experimental and non-normative.",
+    "No production encryption, key recovery, retention, purge, migration, or GC pin mechanism is implemented.",
+    "The captured generation during a concurrent commit and backup progress callback counts are observations, not portable assertions.",
+    "Process-level pointer replacement is not a claim of power-loss durability for directory metadata on Windows.",
+    "SQLite 3.45.3 predates later WAL-reset fixes; automatic checkpoints are disabled and concurrent checkpoint/write stress is excluded.",
+    "Exact SQLite corruption messages and residual partial-file shapes are version-dependent observations."
+  ],
+  "run": {
+    "duration_ms": 2968,
+    "limits": {
+      "backup_pages_per_step": 1,
+      "blob_copy_chunk_bytes": 65536,
+      "crash_after_backup_callbacks": 3,
+      "crash_after_blob_chunks": 2,
+      "subprocess_timeout_seconds": 20
+    },
+    "observed_at_utc": "2026-07-27T19:31:08Z",
+    "temporary_cleanup_completed": true,
+    "temporary_paths_recorded": false
+  },
+  "schema_version": 1,
+  "summary": {
+    "assertions_failed": 0,
+    "assertions_passed": 36,
+    "case_count": 13,
+    "cases_failed": 0,
+    "cases_passed": 13,
+    "passed": true,
+    "required_assertions": 36
+  },
+  "task_id": "SPIKE-BACKUP-RESTORE-001"
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "fixture_id": "nabla-backup-restore-generation-fixture-v1",
+  "database": {
+    "page_size": 4096,
+    "user_version": 1001,
+    "journal_mode": "WAL",
+    "synchronous": "FULL",
+    "wal_autocheckpoint": 0,
+    "busy_timeout_ms": 5000,
+    "padding_rows": 384,
+    "padding_bytes_per_row": 8192
+  },
+  "limits": {
+    "backup_pages_per_step": 1,
+    "subprocess_timeout_seconds": 20,
+    "blob_copy_chunk_bytes": 65536,
+    "crash_after_blob_chunks": 2,
+    "crash_after_backup_callbacks": 3
+  },
+  "blobs": [
+    {
+      "key": "empty",
+      "seed": "nabla-empty",
+      "size_bytes": 0,
+      "mime": "application/octet-stream",
+      "introduced_generation": 1
+    },
+    {
+      "key": "shared-small",
+      "seed": "nabla-shared-small",
+      "size_bytes": 8192,
+      "mime": "text/plain",
+      "introduced_generation": 1
+    },
+    {
+      "key": "large",
+      "seed": "nabla-large",
+      "size_bytes": 1048576,
+      "mime": "application/pdf",
+      "introduced_generation": 1
+    },
+    {
+      "key": "generation-two",
+      "seed": "nabla-generation-two",
+      "size_bytes": 262144,
+      "mime": "image/png",
+      "introduced_generation": 2
+    }
+  ],
+  "generations": [
+    {
+      "generation": 1,
+      "committed_at": "2026-01-01T00:00:00Z",
+      "records": [
+        {
+          "record_id": "document-alpha",
+          "title": "Alpha",
+          "blob_keys": ["empty", "shared-small", "large"]
+        },
+        {
+          "record_id": "document-beta",
+          "title": "Beta",
+          "blob_keys": ["shared-small"]
+        }
+      ]
+    },
+    {
+      "generation": 2,
+      "committed_at": "2026-01-02T00:00:00Z",
+      "records": [
+        {
+          "record_id": "document-gamma",
+          "title": "Gamma",
+          "blob_keys": ["generation-two", "shared-small"]
+        }
+      ]
+    }
+  ]
+}

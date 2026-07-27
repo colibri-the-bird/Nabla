@@ -1,0 +1,89 @@
+schema_version: 2
+task_id: SPIKE-BACKUP-RESTORE-001
+context_manifest_sha256: a467a76c8fa87cf5d9a807dfb5668dc8279ec646739d86291d0fff4757f1690a
+selectors:
+- CON:I16
+- ARCH:19
+- ARCH:24
+- ARCH:24.3
+- DATA:10
+- MOD:19
+- KNOW:24
+- DOC:25
+- NAV:6
+- ARCH:11
+- DATA:4.4
+- MOD:18
+- DATA:9
+- CAP:17
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
+  DOC: d35289539a86cbbd6f2373adc7ed3f3f96398380938a4df80cd06269331d0555
+  KNOW: 42fda7eed2f0d34bbb56e9b0516c86d5d1ff37dc11044b9f62330a8c1c93a581
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+- backup-recovery
+- blob
+- export
+- failure-domain
+triggers: []
+changed_paths:
+- roadmap/evidence/SPIKE-BACKUP-RESTORE-001.yaml
+- spikes/SPIKE-BACKUP-RESTORE.md
+- tests/spikes/backup-restore/README.md
+- tests/spikes/backup-restore/_spike_harness.py
+- tests/spikes/backup-restore/fixtures/generation-v1.json
+- tests/spikes/backup-restore/results/windows_x86_64.json
+- tests/spikes/backup-restore/run_experiment.py
+- tests/spikes/backup-restore/worker.py
+changed_contracts:
+- BACKUP-RESTORE-SPIKE-v1
+tests:
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: Reproducible backup restore and corruption experiment
+  command: >-
+    python tests/spikes/backup-restore/run_experiment.py --output
+    tests/spikes/backup-restore/results/windows_x86_64.json
+  exit_code: 0
+acceptance_evidence:
+- requirement: Backup and restore commands, fixtures, versions and raw observations
+    are recorded.
+  proof: >-
+    spikes/SPIKE-BACKUP-RESTORE.md records the canonical command, deterministic
+    fixture, Python 3.12.7, SQLite 3.45.3, Windows environment, limits and
+    conclusions. tests/spikes/backup-restore/results/windows_x86_64.json is the
+    second consecutive passing raw run (13/13 cases, 36/36 assertions; SHA-256
+    d4eceb03e436eb607b8144fd6cbf8e3250cd98da3f9b196c91a66667ff9c6710).
+- requirement: Crash, corruption and partial-blob cases have explicit outcomes.
+  proof: >-
+    Raw cases INTERRUPTED_DATABASE_BACKUP, INTERRUPTED_BLOB_COPY,
+    INTERRUPTED_RESTORE_BEFORE_ACTIVATION, DATABASE_HEADER_CORRUPTION,
+    MISSING_BLOB_IN_BUNDLE, PARTIAL_BLOB_IN_BUNDLE,
+    SAME_SIZE_BLOB_CORRUPTION and SOURCE_BLOB_DISAPPEARS_AFTER_SNAPSHOT record
+    typed outcomes, exact checkpoints and preservation checks.
+- requirement: BACKUP-RESTORE-SPIKE is marked available with the report reference.
+  proof: >-
+    Pending owner approval: governance/artifacts.yaml intentionally keeps
+    BACKUP-RESTORE-SPIKE required; the proposed measured report is
+    spikes/SPIKE-BACKUP-RESTORE.md.
+- requirement: SPIKE-REVISION-REPLAY-001 is the only activated successor.
+  proof: >-
+    Pending owner approval:
+    roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml intentionally remains blocked
+    and no successor is activated.
+owner_approval:
+  approved: false
+  reference: Awaiting explicit owner approval in the task pull request.
+unresolved_decisions:
+- Owner approval is required before artifact publication, task completion and
+  sole-successor activation.
+pr_url: Pending draft pull request publication.
