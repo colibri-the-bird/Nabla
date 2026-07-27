@@ -2,12 +2,13 @@
 
 - **Artifact:** `PDF-SPIKE-v1`
 - **Task:** `SPIKE-PDF-001`
-- **Status:** measured draft for owner approval
+- **Status:** available (owner-approved)
 - **Execution date:** 2026-07-27
 - **Measurement context manifest:** `83080ffe04524aa412efd5a43ef7e2e5cde754ba29e5006ffdc5d904e0e07ddc`
 - **Fixture manifest:** `feec58ffc96a04b6effbff00e421a806026f9b4e7eec6659e2e83ada5dd2701d`
 - **Raw result:** `tests/spikes/pdf/results/windows-x86_64.json`
 - **Raw result SHA-256:** `5a727c8cb608fab55d8965b0d86c77abf6b8d7e09ae577ab7118def88810684f`
+- **Owner approval:** [PR #11 approval record](https://github.com/colibri-the-bird/Nabla/pull/11#issuecomment-5092782019)
 
 ## 1. Outcome
 

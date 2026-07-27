@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: SPIKE-BACKUP-RESTORE-001
 type: spike
-state: blocked
+state: ready
 outcome: SQLite and blob backup, restore and corruption behavior is measured before the recovery specification.
 router: BOOT:1
 scope:

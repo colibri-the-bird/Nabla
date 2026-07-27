@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: SPIKE-PDF-001
-context_manifest_sha256: 83080ffe04524aa412efd5a43ef7e2e5cde754ba29e5006ffdc5d904e0e07ddc
+context_manifest_sha256: bec776960e3223a9095472571be15e769a45afe6c85ca5fb1642bdac3c2cd6b7
 selectors:
 - ARCH:24
 - ARCH:24.3
@@ -27,7 +27,9 @@ impact_tags:
 - failure-domain
 triggers: []
 changed_paths:
+- governance/artifacts.yaml
 - roadmap/tasks/SPIKE-PDF-001.yaml
+- roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
 - roadmap/evidence/SPIKE-PDF-001.yaml
 - spikes/SPIKE-PDF.md
 - tests/spikes/pdf/README.md
@@ -83,16 +85,15 @@ acceptance_evidence:
     and visual-fingerprint oracles for V0-V9.
 - requirement: PDF-SPIKE is marked available with the report reference.
   proof: >-
-    Pending owner approval: governance/artifacts.yaml intentionally remains
-    status required; proposed report is spikes/SPIKE-PDF.md.
+    governance/artifacts.yaml marks PDF-SPIKE available, references
+    spikes/SPIKE-PDF.md and the canonical raw result SHA-256, and records the
+    PR plus durable owner-approval reference.
 - requirement: SPIKE-BACKUP-RESTORE-001 is the only activated successor.
   proof: >-
-    Pending owner approval: roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
-    intentionally remains blocked and no successor is activated.
+    roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml is ready; it is the sole
+    successor declared by SPIKE-PDF-001 and no other task was activated.
 owner_approval:
-  approved: false
-  reference: Awaiting explicit owner approval in PR #11.
-unresolved_decisions:
-- Owner approval is required before PDF-SPIKE publication and successor activation.
-- ADR-006 and ADR-011 remain intentionally unresolved downstream decisions.
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/11#issuecomment-5092782019
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/11
