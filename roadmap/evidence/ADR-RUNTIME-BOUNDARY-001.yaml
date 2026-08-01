@@ -1,0 +1,86 @@
+schema_version: 2
+task_id: ADR-RUNTIME-BOUNDARY-001
+context_manifest_sha256: 4def2994c972deaa9750ea850b6ad2ac58f63f2e22549078a8b6bfacf0ab139d
+selectors:
+  - CON:7
+  - ARCH:5
+  - ARCH:6
+  - ARCH:24
+  - ARCH:24.3
+  - NAV:6
+  - CON:I6
+  - MOD:4
+  - MOD:5
+  - MOD:8
+  - MOD:9
+  - MOD:13
+  - CON:I15
+  - ARCH:20
+  - CAP:24
+  - CON:4.2
+  - ARCH:18
+  - DATA:6
+  - DATA:12
+  - CAP:9
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+  - failure-domain
+  - module-contract
+  - sensitive
+triggers: []
+changed_paths:
+  - adr/ADR-001-rust-core-runtime.md
+  - adr/ADR-010-local-ipc-lifecycle.md
+  - roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+  - roadmap/evidence/ADR-RUNTIME-BOUNDARY-001.yaml
+changed_contracts:
+  - ADR-001 (proposed decision record; acceptance pending)
+  - ADR-010 (proposed decision record; acceptance pending)
+tests:
+  - requirement: python tools/nabla_nav.py validate
+    command: python tools/nabla_nav.py validate
+    exit_code: 0
+  - requirement: python tools/nabla_nav.py check-lock
+    command: python tools/nabla_nav.py check-lock
+    exit_code: 0
+  - requirement: ADR decision record review
+    command: "ADR decision record review: three independent read-only audits"
+    exit_code: 0
+acceptance_evidence:
+  - requirement: ADR-001 and ADR-010 cite measured portability evidence and approved sources.
+    proof: >-
+      Both proposed records cite owner-approved CORE-PORTABILITY-SPIKE-v1,
+      its raw-result SHA-256 and approval reference, plus the approved
+      Constitution. They also explicitly record that ARCHITECTURE.md,
+      CAPABILITY-CONTRACT.md, DATA-CLASSIFICATION.md and MODULE-MANIFEST.md
+      remain project-for-approval sources; this requirement is therefore
+      pending authoritative source-status correction.
+  - requirement: Alternatives, rejected options, consequences and compatibility risks are explicit.
+    proof: >-
+      Each proposed ADR contains Decision, Compatibility constraints,
+      Consequences, Alternatives considered, Validation obligations, Deferred
+      decisions, and Supersession rules sections. Three independent read-only
+      audits passed after all actionable findings were resolved.
+  - requirement: Both decisions are accepted in the registry after owner approval.
+    proof: >-
+      Pending both prerequisite gates. governance/decisions.yaml intentionally
+      keeps ADR-001 and ADR-010 required; the proposed ADRs state that they
+      cannot become accepted before authoritative source-status correction and
+      explicit owner approval.
+  - requirement: ADR-MODULE-TRUST-001 is the only activated successor.
+    proof: >-
+      Pending both prerequisite gates. roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+      intentionally remains blocked, and no other successor has been activated.
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions:
+  - ARCHITECTURE.md, CAPABILITY-CONTRACT.md, DATA-CLASSIFICATION.md and MODULE-MANIFEST.md require authoritative approved status outside this ADR task's scope.
+  - The owner must explicitly approve proposed ADR-001 and ADR-010 after the normative source-status gate is resolved.
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/14
