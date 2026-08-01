@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: ADR-RUNTIME-BOUNDARY-001
 type: adr
-state: blocked
+state: ready
 outcome: ADR-001 and ADR-010 define the runtime, portability and extension boundary from measured evidence.
 router: BOOT:1
 scope:

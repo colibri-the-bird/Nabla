@@ -60,10 +60,16 @@ artifacts:
     reconstruction_policy: Must be executed, not inferred.
   - id: REVISION-SYNC-PREPARATION-SPIKE
     title: Offline identity, revisions, outbox and replay spike
-    status: required
-    source: New measured spike task
+    status: available
+    source: spikes/SPIKE-REVISION-REPLAY.md
     blocks: [revision-ddl, sync-preparation]
     provided_by: SPIKE-REVISION-REPLAY-001
+    confirmation:
+      report_path: spikes/SPIKE-REVISION-REPLAY.md
+      raw_result_path: tests/spikes/revision-replay/results/windows_x86_64.json
+      raw_result_sha256: b9ea6908f265440f36add96ac2f8123ea37e50610e3e6360dd81a75e1e0a3b9c
+      pr_url: https://github.com/colibri-the-bird/Nabla/pull/13
+      owner_approval_reference: https://github.com/colibri-the-bird/Nabla/pull/13#issuecomment-5151065579
     reconstruction_policy: Must be executed, not inferred.
   - id: GITHUB-BRANCH-PROTECTION
     title: Server-side protection for main

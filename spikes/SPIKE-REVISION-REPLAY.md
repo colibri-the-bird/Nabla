@@ -4,9 +4,10 @@
 | --- | --- |
 | Task | `SPIKE-REVISION-REPLAY-001` |
 | Artifact | `REVISION-SYNC-PREPARATION-SPIKE-v1` |
-| Report state | Measured publication candidate; owner approval pending |
+| Report state | Published; owner approved |
 | Measurement date | 2026-08-01 |
-| Prepared context manifest | `878d7770560e6eb7fc61ec5a8353f47e2a68ed6fc37ef08636aae2b25a40ab94` |
+| Owner approval | `https://github.com/colibri-the-bird/Nabla/pull/13#issuecomment-5151065579` |
+| Prepared context manifest | `8b2734c702174f1816e4928c9619c28b7a572131c4944e30fd58636543def64c` |
 | Raw result | `tests/spikes/revision-replay/results/windows_x86_64.json` |
 | Raw result SHA-256 | `b9ea6908f265440f36add96ac2f8123ea37e50610e3e6360dd81a75e1e0a3b9c` |
 | Semantic result digest | `f60a38c640d5b8c7bdd9b3f6bdbf727f3ebf9932746c04494421790495223771` |
@@ -233,15 +234,15 @@ Process termination at three named checkpoints is narrower than power loss or
 an arbitrary instruction-boundary crash. SQLite results do not select SQLite as
 the production backend or establish behavior for another adapter.
 
-## Publication and successor gate
+## Publication and successor transition
 
-This report is a measured publication candidate. Until explicit owner approval:
+Owner approval is recorded at
+`https://github.com/colibri-the-bird/Nabla/pull/13#issuecomment-5151065579`.
+The approved transition is complete:
 
-- `REVISION-SYNC-PREPARATION-SPIKE` remains `required`;
-- `SPIKE-REVISION-REPLAY-001` remains `ready`;
-- `ADR-RUNTIME-BOUNDARY-001` remains `blocked`.
+- `REVISION-SYNC-PREPARATION-SPIKE` is `available` with this report and raw
+  result recorded in `governance/artifacts.yaml`;
+- `SPIKE-REVISION-REPLAY-001` is `completed` as a PR-ready result;
+- `ADR-RUNTIME-BOUNDARY-001` is `ready` as the sole activated successor.
 
-After owner approval is recorded, the intended final transition is to mark the
-artifact available with this report reference, complete this spike card, and
-activate `ADR-RUNTIME-BOUNDARY-001` as the sole successor. No other successor is
-authorized by this task.
+No other successor was activated by this task.
