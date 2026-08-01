@@ -1,0 +1,46 @@
+{
+  "actor": "actor-owner",
+  "capability": {
+    "contract_hash": "sha256:revision-replay-fixture-contract-v1",
+    "exact_version": "1.0.0",
+    "id": "nabla.entity.update",
+    "major_version": 1
+  },
+  "consumer_id": "projection-v1",
+  "devices": {
+    "a": "device-alpha",
+    "b": "device-beta",
+    "c": "device-gamma"
+  },
+  "fixture_version": "revision-replay-v1",
+  "identity": {
+    "candidate_encoding": "test-sha256-prefix-v1",
+    "sample_per_device": 256
+  },
+  "payloads": {
+    "branch_a": {
+      "resolution": null,
+      "title": "Offline branch A",
+      "value": 1
+    },
+    "branch_b": {
+      "resolution": null,
+      "title": "Offline branch B",
+      "value": 2
+    },
+    "merged": {
+      "resolution": "explicit-fixture-choice",
+      "title": "Resolved state",
+      "value": 3
+    },
+    "root": {
+      "resolution": null,
+      "title": "Shared ancestor",
+      "value": 0
+    },
+    "tombstone": {
+      "deleted": true,
+      "reason": "fixture-only"
+    }
+  }
+}
