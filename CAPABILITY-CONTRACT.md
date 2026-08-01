@@ -1,6 +1,6 @@
 # Nabla Capability Contract v0.1
 
-**Статус:** проект к утверждению  
+**Статус:** утвержден  
 **Дата:** 2026-07-11  
 **Нормативная основа:** `CONSTITUTION.md` v0.1, `ARCHITECTURE.md` v0.1, `DATA-CLASSIFICATION.md` v0.1  
 **Следующий зависимый документ:** `MODULE-MANIFEST.md`
