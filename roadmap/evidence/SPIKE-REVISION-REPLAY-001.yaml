@@ -1,0 +1,81 @@
+schema_version: 2
+task_id: SPIKE-REVISION-REPLAY-001
+context_manifest_sha256: 878d7770560e6eb7fc61ec5a8353f47e2a68ed6fc37ef08636aae2b25a40ab94
+selectors:
+- CON:I3
+- CON:I12
+- ARCH:10
+- ARCH:16
+- ARCH:24
+- ARCH:24.3
+- CAP:11.6
+- CAP:21
+- NAV:6
+- ARCH:10.3
+- ARCH:10.4
+- CAP:20
+- MOD:18
+- CON:I15
+- ARCH:20
+- CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+impact_tags:
+- failure-domain
+- offline-sync-ready
+- revisioned-entity
+triggers: []
+changed_paths:
+- roadmap/evidence/SPIKE-REVISION-REPLAY-001.yaml
+- spikes/SPIKE-REVISION-REPLAY.md
+- tests/spikes/revision-replay/README.md
+- tests/spikes/revision-replay/_spike_harness.py
+- tests/spikes/revision-replay/fixtures/scenario-v1.json
+- tests/spikes/revision-replay/results/windows_x86_64.json
+- tests/spikes/revision-replay/run_experiment.py
+- tests/spikes/revision-replay/worker.py
+changed_contracts:
+- REVISION-SYNC-PREPARATION-SPIKE-v1 (measured publication candidate; owner approval pending)
+tests:
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: Reproducible revision outbox and replay experiment
+  command: python -B tests/spikes/revision-replay/run_experiment.py --verify tests/spikes/revision-replay/results/windows_x86_64.json
+  exit_code: 0
+acceptance_evidence:
+- requirement: Identity, conflict, duplicate and crash cases have reproducible observations.
+  proof: >-
+    tests/spikes/revision-replay/results/windows_x86_64.json records 7/7 passing
+    cases and 124 assertions with semantic digest
+    f60a38c640d5b8c7bdd9b3f6bdbf727f3ebf9932746c04494421790495223771;
+    the independent verifier returned verification=match.
+- requirement: Conclusions identify which properties belong in ADR and which remain
+    deferred.
+  proof: >-
+    spikes/SPIKE-REVISION-REPLAY.md separates active normative properties,
+    seven measured inputs for ADR-RUNTIME-BOUNDARY-001, and explicit deferred
+    decisions/unmeasured claims; the same split is present in the raw result.
+- requirement: REVISION-SYNC-PREPARATION-SPIKE is marked available with the report
+    reference.
+  proof: >-
+    Pending owner approval. The publication candidate is
+    spikes/SPIKE-REVISION-REPLAY.md; governance/artifacts.yaml intentionally
+    remains required until the approval gate is recorded.
+- requirement: ADR-RUNTIME-BOUNDARY-001 is the only activated successor.
+  proof: >-
+    Pending owner approval. roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+    intentionally remains blocked; the task card and report identify it as the
+    sole successor to activate after approval.
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions:
+- Owner approval is required before artifact publication, task completion, and successor activation.
+- ADR-RUNTIME-BOUNDARY-001 must decide the runtime, persistence-port, portability, and extension boundary.
+- Production ID encoding, revision DDL/representation, network synchronization, external-effect semantics, retention, and production limits remain deferred.
+pr_url: ''

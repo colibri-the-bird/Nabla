@@ -1,0 +1,764 @@
+{
+  "artifact_id": "REVISION-SYNC-PREPARATION-SPIKE",
+  "artifact_version": 1,
+  "bounds": {
+    "crash_checkpoint_timeout_seconds": 10,
+    "identity_candidates_per_device": 256,
+    "replay_max_passes": 6,
+    "replay_permutation_schedules": 24
+  },
+  "cases": [
+    {
+      "checks": [
+        "all bounded candidate IDs are unique",
+        "reordered generation preserves every fixture ID",
+        "reordered generation preserves the candidate-set digest",
+        "fixture ID function has no wall-clock input",
+        "same local sequence differs across devices"
+      ],
+      "id": "IDENTITY-01",
+      "measurements": {
+        "candidate_encoding": "test-sha256-prefix-v1",
+        "collisions": 0,
+        "devices": 2,
+        "generated": 512,
+        "per_device": 256,
+        "reordered_set_digest": "7e65fca00c1f52aaec0493ebaf18f51c17d32154d69043b4fbaf7a68ad11c735",
+        "set_digest": "7e65fca00c1f52aaec0493ebaf18f51c17d32154d69043b4fbaf7a68ad11c735",
+        "stable_id_inputs": [
+          "kind",
+          "origin_device",
+          "local_sequence"
+        ],
+        "unique": 512
+      },
+      "observations": [
+        "The bounded fixture had no collision and was independent of generation interleaving.",
+        "The deterministic fixture encoding measures device-plus-sequence mechanics; it is not a production ID selection or a proof of global collision freedom."
+      ],
+      "status": "pass",
+      "title": "bounded offline identity generation"
+    },
+    {
+      "checks": [
+        "root event applies",
+        "branch_a event applies",
+        "branch_b event applies",
+        "stale expected revision returns all current heads",
+        "stale conflict adds no source row or outbox effect",
+        "stale conflict preserves the source semantic digest",
+        "immutable revision trigger rejects update",
+        "rejected update preserves ancestor payload",
+        "immutable parentage trigger rejects delete",
+        "rejected parentage delete preserves graph digest",
+        "sealed parentage rejects post-commit insert",
+        "rejected parentage insert preserves graph digest",
+        "independent offline descendants produce two heads",
+        "both concurrent branches remain in history",
+        "partial merge intent is rejected with the full frontier",
+        "partial merge conflict adds no source row or outbox effect",
+        "partial merge conflict preserves the source semantic digest",
+        "explicit merge event applies",
+        "explicit merge leaves one head",
+        "explicit merge records both branch parents",
+        "tombstone is applied as a revision",
+        "tombstone becomes the head",
+        "tombstone retains all prior history",
+        "tombstone flag is replayed",
+        "root remains an ancestor in the recorded graph",
+        "logical sequence follows parent depth",
+        "concurrent branches do not gain a sequence winner",
+        "device sequence is monotonic only inside each origin"
+      ],
+      "id": "REVISION-01",
+      "measurements": {
+        "concurrent_head_count": 2,
+        "concurrent_heads": [
+          "revision_1077fc85526d194a149c6edf69b50966",
+          "revision_dd17a204c29bf2703e6b9873262d9cb4"
+        ],
+        "conflict_code": "REVISION_CONFLICT",
+        "device_sequences": {
+          "branch_a": 2,
+          "branch_b": 1,
+          "merge": 1,
+          "root": 1,
+          "tombstone": 2
+        },
+        "final_effects": 5,
+        "final_history_revisions": 5,
+        "final_semantic_digest": "5591daa57f657d9c24c121825fbb408f2218b920dc9425ab8825ff4a573e5cd9",
+        "heads_after_merge": [
+          "revision_8039145978d52c0534b74b6422f6c32e"
+        ],
+        "heads_after_tombstone": [
+          "revision_67c5dea60a99bf4af84a9332263833cd"
+        ],
+        "logical_sequences": {
+          "branch_a": 2,
+          "branch_b": 2,
+          "merge": 3,
+          "root": 1,
+          "tombstone": 4
+        },
+        "merge_parent_count": 2,
+        "origin_devices": {
+          "branch_a": "device-alpha",
+          "branch_b": "device-beta",
+          "merge": "device-gamma",
+          "root": "device-alpha",
+          "tombstone": "device-gamma"
+        },
+        "partial_merge_conflict_heads": [
+          "revision_1077fc85526d194a149c6edf69b50966",
+          "revision_dd17a204c29bf2703e6b9873262d9cb4"
+        ],
+        "partial_merge_effect_delta": {
+          "command_receipts": 0,
+          "heads": 0,
+          "outbox": 0,
+          "revisions": 0
+        },
+        "stale_conflict_heads": [
+          "revision_1077fc85526d194a149c6edf69b50966"
+        ],
+        "stale_effect_delta": {
+          "command_receipts": 0,
+          "heads": 0,
+          "outbox": 0,
+          "revisions": 0
+        }
+      },
+      "observations": [
+        "A stale ordinary command was rejected without overwrite or outbox append.",
+        "Concurrent heads arose only from independently accepted offline descendants of one ancestor.",
+        "The merge payload was an explicit fixture choice; no automatic conflict-resolution policy was measured.",
+        "A tombstone remained an immutable revision; purge and retention were not exercised."
+      ],
+      "status": "pass",
+      "title": "immutable graph conflict merge and tombstone"
+    },
+    {
+      "checks": [
+        "same scope key and fingerprint returns a replay",
+        "retry returns the original committed receipt",
+        "retry with a new command ID returns original command ID",
+        "retry adds no command revision or outbox row",
+        "all fingerprint mismatches are typed conflicts",
+        "every named fingerprint variant was rejected",
+        "fingerprint conflicts add no effect",
+        "same literal key is independent in every complete scope",
+        "initial request ID is distinct and remains pinned",
+        "exact version and contract hash are stored with the committed intent",
+        "one semantic effect has one revision and outbox event"
+      ],
+      "id": "IDEMPOTENCY-01",
+      "measurements": {
+        "conflicting_fingerprint_variants": 6,
+        "conflicting_variants": [
+          "entity_id",
+          "payload",
+          "expected_revisions",
+          "exact_version",
+          "contract_hash",
+          "stable_options"
+        ],
+        "fingerprint_fields": [
+          "entity_id",
+          "exact_version",
+          "contract_hash",
+          "canonical_payload",
+          "expected_revisions",
+          "merge_intent",
+          "tombstone_intent",
+          "stable_options"
+        ],
+        "idempotency_conflict_code": "IDEMPOTENCY_CONFLICT",
+        "independent_scope_count": 5,
+        "literal_key": "same-literal-key",
+        "request_ids_exercised": 2,
+        "retry_effect_delta": {
+          "command_receipts": 0,
+          "heads": 0,
+          "outbox": 0,
+          "revisions": 0
+        },
+        "stored_command_count": 5
+      },
+      "observations": [
+        "Command ID, scoped idempotency key, and per-attempt request ID remained distinct.",
+        "The first committed exact version and contract hash remained attached to the stored receipt.",
+        "Unknown external effects and retention of failed first intents were not exercised."
+      ],
+      "status": "pass",
+      "title": "scoped committed-result replay"
+    },
+    {
+      "checks": [
+        "worker reached before-commit checkpoint and was killed",
+        "kill before commit leaves no command revision head or outbox row",
+        "kill before commit leaves no committed device counter",
+        "worker reached after-commit checkpoint and was killed",
+        "kill after commit exposes command revision head and outbox atomically",
+        "same-key retry after commit-before-response returns stored receipt",
+        "same-key retry after commit-before-response adds no effect",
+        "next committed device sequence is strictly greater"
+      ],
+      "diagnostics": {
+        "after_commit_worker": {
+          "checkpoint": "after_commit",
+          "killed": true,
+          "stderr_empty": true,
+          "stdout_empty": true
+        },
+        "before_commit_worker": {
+          "checkpoint": "before_commit",
+          "killed": true,
+          "stderr_empty": true,
+          "stdout_empty": true
+        }
+      },
+      "id": "ATOMICITY-01",
+      "measurements": {
+        "after_commit_counts": {
+          "command_receipts": 1,
+          "heads": 1,
+          "outbox": 1,
+          "revisions": 1
+        },
+        "before_commit_counts": {
+          "command_receipts": 0,
+          "heads": 0,
+          "outbox": 0,
+          "revisions": 0
+        },
+        "before_commit_persisted_counter_rows": 0,
+        "crash_checkpoints": [
+          "before_commit",
+          "after_commit"
+        ],
+        "next_committed_device_sequence": 2,
+        "retry_effect_delta": {
+          "command_receipts": 0,
+          "heads": 0,
+          "outbox": 0,
+          "revisions": 0
+        }
+      },
+      "observations": [
+        "At the selected process-kill checkpoints, command receipt, revision, head, counter, and outbox had one local transaction boundary.",
+        "Commit-before-response was recoverable by retrying the same scoped idempotency key."
+      ],
+      "status": "pass",
+      "title": "producer crash before and after commit"
+    },
+    {
+      "checks": [
+        "first local consumer delivery applies",
+        "second delivery is typed duplicate suppression",
+        "duplicate deliveries create one consumer effect",
+        "delivery receipt counts both transport attempts",
+        "worker reached post-effect pre-ack checkpoint and was killed",
+        "consumer effect and receipt are durable before producer ack",
+        "redelivery after consumer crash is duplicate suppression",
+        "redelivery after consumer crash does not repeat effect",
+        "producer outbox is acknowledged after safe retry"
+      ],
+      "diagnostics": {
+        "consumer_worker": {
+          "checkpoint": "after_effect_before_ack",
+          "killed": true,
+          "stderr_empty": true,
+          "stdout_empty": true
+        }
+      },
+      "id": "DELIVERY-01",
+      "measurements": {
+        "crash_checkpoint": "after_effect_before_ack",
+        "delivery_code_first": "APPLIED",
+        "delivery_code_retry": "DUPLICATE_SUPPRESSED",
+        "duplicate_delivery_count": 2,
+        "duplicate_effect_count": 1,
+        "final_consumer_effect_count": 1,
+        "final_consumer_semantic_digest": "860cc47ba1f4a7d166842cd3706f87917219f182d561920bb20ee49b9c44eba3",
+        "final_outbox_attempts": 2,
+        "final_outbox_status": "acknowledged",
+        "outbox_status_after_kill": "pending"
+      },
+      "observations": [
+        "The measured handoff was at-least-once; a transactional local inbox/effect ledger produced one local effect for duplicate deliveries.",
+        "The result does not claim exactly-once external effects or a distributed transaction."
+      ],
+      "status": "pass",
+      "title": "duplicate delivery and consumer crash gap"
+    },
+    {
+      "checks": [
+        "child before parent returns typed missing-parent result",
+        "blocked child creates no partial consumer effect",
+        "blocked child is durably typed pending",
+        "parent then child apply causally",
+        "resolved dependency clears pending row",
+        "resolved child becomes the head",
+        "unresolvable dependency reaches a bounded fixed point",
+        "unresolvable event remains typed pending",
+        "unresolvable event does not block independent root"
+      ],
+      "id": "DEPENDENCY-01",
+      "measurements": {
+        "blocked_effect_count": 0,
+        "child_first_code": "MISSING_PARENT",
+        "fixed_point_passes": 2,
+        "independent_effect_count": 1,
+        "pending_after_parent": 0,
+        "unresolved_code": "MISSING_PARENT",
+        "unresolved_count": 1,
+        "unresolved_missing_parents": [
+          "revision_c63a6ed1e77754836c4755f392440f65"
+        ]
+      },
+      "observations": [
+        "Parent availability, not arrival time, gated revision application.",
+        "A bounded fixed point retained an unresolved dependency without blocking an independent event."
+      ],
+      "status": "pass",
+      "title": "missing-parent causal buffering"
+    },
+    {
+      "checks": [
+        "schedule 01 drains all causal dependencies",
+        "schedule 01 preserves merge as sole head",
+        "schedule 02 drains all causal dependencies",
+        "schedule 02 preserves merge as sole head",
+        "schedule 03 drains all causal dependencies",
+        "schedule 03 preserves merge as sole head",
+        "schedule 04 drains all causal dependencies",
+        "schedule 04 preserves merge as sole head",
+        "schedule 05 drains all causal dependencies",
+        "schedule 05 preserves merge as sole head",
+        "schedule 06 drains all causal dependencies",
+        "schedule 06 preserves merge as sole head",
+        "schedule 07 drains all causal dependencies",
+        "schedule 07 preserves merge as sole head",
+        "schedule 08 drains all causal dependencies",
+        "schedule 08 preserves merge as sole head",
+        "schedule 09 drains all causal dependencies",
+        "schedule 09 preserves merge as sole head",
+        "schedule 10 drains all causal dependencies",
+        "schedule 10 preserves merge as sole head",
+        "schedule 11 drains all causal dependencies",
+        "schedule 11 preserves merge as sole head",
+        "schedule 12 drains all causal dependencies",
+        "schedule 12 preserves merge as sole head",
+        "schedule 13 drains all causal dependencies",
+        "schedule 13 preserves merge as sole head",
+        "schedule 14 drains all causal dependencies",
+        "schedule 14 preserves merge as sole head",
+        "schedule 15 drains all causal dependencies",
+        "schedule 15 preserves merge as sole head",
+        "schedule 16 drains all causal dependencies",
+        "schedule 16 preserves merge as sole head",
+        "schedule 17 drains all causal dependencies",
+        "schedule 17 preserves merge as sole head",
+        "schedule 18 drains all causal dependencies",
+        "schedule 18 preserves merge as sole head",
+        "schedule 19 drains all causal dependencies",
+        "schedule 19 preserves merge as sole head",
+        "schedule 20 drains all causal dependencies",
+        "schedule 20 preserves merge as sole head",
+        "schedule 21 drains all causal dependencies",
+        "schedule 21 preserves merge as sole head",
+        "schedule 22 drains all causal dependencies",
+        "schedule 22 preserves merge as sole head",
+        "schedule 23 drains all causal dependencies",
+        "schedule 23 preserves merge as sole head",
+        "schedule 24 drains all causal dependencies",
+        "schedule 24 preserves merge as sole head",
+        "all 24 arrival permutations were exercised",
+        "all complete schedules converge to one semantic digest",
+        "replay terminates inside the explicit pass bound",
+        "repeat graph construction yields the same event digest",
+        "event envelopes contain no wall-clock causal field",
+        "fixture events carry one explicit type and version"
+      ],
+      "id": "REPLAY-01",
+      "measurements": {
+        "distinct_final_digests": 1,
+        "event_set_digest": "59c4732de9bf3b7a4350a12091dc99e1d6012269acae6a28f8e052ee44161dbe",
+        "event_types": [
+          "nabla.entity.revision-committed"
+        ],
+        "event_versions": [
+          1
+        ],
+        "final_semantic_digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+        "injected_duplicates_per_schedule": 2,
+        "max_passes_bound": 6,
+        "max_passes_observed": 3,
+        "repeat_event_set_digest": "59c4732de9bf3b7a4350a12091dc99e1d6012269acae6a28f8e052ee44161dbe",
+        "schedule_count": 24,
+        "schedules": [
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 2,
+            "missing_parent_observations": 0,
+            "order": [
+              "root",
+              "branch_a",
+              "branch_b",
+              "merge"
+            ],
+            "passes": 1
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 7,
+            "missing_parent_observations": 1,
+            "order": [
+              "root",
+              "branch_a",
+              "merge",
+              "branch_b"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 2,
+            "missing_parent_observations": 0,
+            "order": [
+              "root",
+              "branch_b",
+              "branch_a",
+              "merge"
+            ],
+            "passes": 1
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 7,
+            "missing_parent_observations": 1,
+            "order": [
+              "root",
+              "branch_b",
+              "merge",
+              "branch_a"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 7,
+            "missing_parent_observations": 1,
+            "order": [
+              "root",
+              "merge",
+              "branch_a",
+              "branch_b"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 7,
+            "missing_parent_observations": 1,
+            "order": [
+              "root",
+              "merge",
+              "branch_b",
+              "branch_a"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 4,
+            "missing_parent_observations": 4,
+            "order": [
+              "branch_a",
+              "root",
+              "branch_b",
+              "merge"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 5,
+            "missing_parent_observations": 3,
+            "order": [
+              "branch_a",
+              "root",
+              "merge",
+              "branch_b"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 3,
+            "missing_parent_observations": 5,
+            "order": [
+              "branch_a",
+              "branch_b",
+              "root",
+              "merge"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 4,
+            "missing_parent_observations": 4,
+            "order": [
+              "branch_a",
+              "branch_b",
+              "merge",
+              "root"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 5,
+            "missing_parent_observations": 3,
+            "order": [
+              "branch_a",
+              "merge",
+              "root",
+              "branch_b"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 9,
+            "missing_parent_observations": 5,
+            "order": [
+              "branch_a",
+              "merge",
+              "branch_b",
+              "root"
+            ],
+            "passes": 3
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 4,
+            "missing_parent_observations": 4,
+            "order": [
+              "branch_b",
+              "root",
+              "branch_a",
+              "merge"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 5,
+            "missing_parent_observations": 3,
+            "order": [
+              "branch_b",
+              "root",
+              "merge",
+              "branch_a"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 3,
+            "missing_parent_observations": 5,
+            "order": [
+              "branch_b",
+              "branch_a",
+              "root",
+              "merge"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 4,
+            "missing_parent_observations": 4,
+            "order": [
+              "branch_b",
+              "branch_a",
+              "merge",
+              "root"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 5,
+            "missing_parent_observations": 3,
+            "order": [
+              "branch_b",
+              "merge",
+              "root",
+              "branch_a"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 9,
+            "missing_parent_observations": 5,
+            "order": [
+              "branch_b",
+              "merge",
+              "branch_a",
+              "root"
+            ],
+            "passes": 3
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 6,
+            "missing_parent_observations": 2,
+            "order": [
+              "merge",
+              "root",
+              "branch_a",
+              "branch_b"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 6,
+            "missing_parent_observations": 2,
+            "order": [
+              "merge",
+              "root",
+              "branch_b",
+              "branch_a"
+            ],
+            "passes": 2
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 9,
+            "missing_parent_observations": 5,
+            "order": [
+              "merge",
+              "branch_a",
+              "root",
+              "branch_b"
+            ],
+            "passes": 3
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 8,
+            "missing_parent_observations": 6,
+            "order": [
+              "merge",
+              "branch_a",
+              "branch_b",
+              "root"
+            ],
+            "passes": 3
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 9,
+            "missing_parent_observations": 5,
+            "order": [
+              "merge",
+              "branch_b",
+              "root",
+              "branch_a"
+            ],
+            "passes": 3
+          },
+          {
+            "digest": "18df030d5ca57c8277b99352dfceb7025ac562e2afd8f254d02dbb95b1dccee7",
+            "duplicate_suppressions": 8,
+            "missing_parent_observations": 6,
+            "order": [
+              "merge",
+              "branch_b",
+              "branch_a",
+              "root"
+            ],
+            "passes": 3
+          }
+        ],
+        "total_duplicate_suppressions": 138,
+        "total_missing_parent_observations": 78
+      },
+      "observations": [
+        "Causal parent gating plus set-valued heads converged for every measured order and duplicate schedule.",
+        "Canonical sorting was used only for comparison and serialization, never to choose a winning concurrent head.",
+        "Per-device sequence was not treated as a global order and wall clock was absent from correctness logic."
+      ],
+      "status": "pass",
+      "title": "permutation and duplicate convergence"
+    }
+  ],
+  "conclusions": {
+    "adr_runtime_boundary_inputs": [
+      "one local transaction for command acceptance, scoped idempotency receipt, revision, head update, device sequence, and outbox append",
+      "atomic monotonic local sequence allocation for an already supplied normative device identity",
+      "replay-worker boundary separating outbox attempt, transactional local inbox and effect receipt, and producer acknowledgement",
+      "at-least-once outbox handoff with transactional local inbox and effect receipt before producer acknowledgement",
+      "causal dependency buffering with finite replay bounds and isolated unresolved events",
+      "persistence port requirements for atomicity, uniqueness, durable restart recovery, and deterministic canonicalization",
+      "versioned event envelope separated from revision graph and delivery order"
+    ],
+    "already_normative_not_reopened": [
+      "immutable parented revisions and set-valued heads",
+      "no silent overwrite or wall-clock last-write-wins",
+      "offline baseline and optimistic revision conflict",
+      "specified idempotency scope and transactional outbox",
+      "device identity and versioned event requirements; their production lifecycle and envelope remain unselected"
+    ],
+    "deferred": [
+      "production entity revision and event ID encoding plus device provisioning",
+      "production logical-sequence computation and event-envelope shape and version lifecycle",
+      "revision DDL indexes backend and snapshot-patch-hybrid representation",
+      "runtime portability and extension decision owned by ADR-RUNTIME-BOUNDARY-001",
+      "network transport authentication reconciliation cursors and synchronization",
+      "automatic conflict resolution and merge user experience",
+      "external-effect exactly-once semantics and distributed transactions",
+      "retention compaction tombstone garbage collection and purge",
+      "production performance durability capacity and retry thresholds",
+      "multi-head command API shape and failed-intent retention lifecycle"
+    ]
+  },
+  "environment": {
+    "architecture": "x86_64",
+    "os": "Windows",
+    "os_release": "11",
+    "python": "3.12.7",
+    "sqlite": "3.45.3",
+    "sqlite_durability_settings": {
+      "journal_mode": "WAL",
+      "synchronous": "FULL"
+    }
+  },
+  "fixture": {
+    "path": "tests/spikes/revision-replay/fixtures/scenario-v1.json",
+    "sha256": "aeaa5aaec57884bf7acc73134d9cf6174e0404caf49b87cc3816c3414706a4d3",
+    "version": "revision-replay-v1"
+  },
+  "limitations": [
+    "The finite identity sample is not a global collision proof and the deterministic hash prefix is only a fixture encoding.",
+    "SQLite tables full-snapshot payloads event envelope and retry bounds are experimental mechanics rather than selected production contracts.",
+    "Process termination at explicit checkpoints does not cover power loss torn storage corruption or arbitrary instruction boundaries.",
+    "Consumer effect-once was measured only when the local effect and inbox receipt shared one transaction; external effects remain unproven.",
+    "Permutation convergence proves graph and frontier convergence for one complete fixed event set, not semantic auto-merge of conflicting payloads.",
+    "No network synchronization production persistence throughput scale or cross-platform durability claim was exercised."
+  ],
+  "summary": {
+    "assertion_count": 124,
+    "case_count": 7,
+    "passed_case_count": 7,
+    "semantic_digest": "f60a38c640d5b8c7bdd9b3f6bdbf727f3ebf9932746c04494421790495223771",
+    "status": "pass"
+  },
+  "task_id": "SPIKE-REVISION-REPLAY-001"
+}
