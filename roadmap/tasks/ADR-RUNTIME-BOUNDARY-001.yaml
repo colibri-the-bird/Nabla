@@ -41,6 +41,7 @@ context:
   impact_tags:
     - module-contract
     - failure-domain
+    - sensitive
   full_document_reads: []
   context_budget_justification: null
 contracts:
