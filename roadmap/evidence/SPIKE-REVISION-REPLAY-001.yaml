@@ -78,4 +78,4 @@ unresolved_decisions:
 - Owner approval is required before artifact publication, task completion, and successor activation.
 - ADR-RUNTIME-BOUNDARY-001 must decide the runtime, persistence-port, portability, and extension boundary.
 - Production ID encoding, revision DDL/representation, network synchronization, external-effect semantics, retention, and production limits remain deferred.
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/13
