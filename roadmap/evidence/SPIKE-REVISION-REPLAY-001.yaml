@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: SPIKE-REVISION-REPLAY-001
-context_manifest_sha256: 878d7770560e6eb7fc61ec5a8353f47e2a68ed6fc37ef08636aae2b25a40ab94
+context_manifest_sha256: 8b2734c702174f1816e4928c9619c28b7a572131c4944e30fd58636543def64c
 selectors:
 - CON:I3
 - CON:I12
@@ -30,6 +30,9 @@ impact_tags:
 - revisioned-entity
 triggers: []
 changed_paths:
+- governance/artifacts.yaml
+- roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+- roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
 - roadmap/evidence/SPIKE-REVISION-REPLAY-001.yaml
 - spikes/SPIKE-REVISION-REPLAY.md
 - tests/spikes/revision-replay/README.md
@@ -39,7 +42,7 @@ changed_paths:
 - tests/spikes/revision-replay/run_experiment.py
 - tests/spikes/revision-replay/worker.py
 changed_contracts:
-- REVISION-SYNC-PREPARATION-SPIKE-v1 (measured publication candidate; owner approval pending)
+- REVISION-SYNC-PREPARATION-SPIKE-v1 (published measured report)
 tests:
 - requirement: python tools/nabla_nav.py validate
   command: python tools/nabla_nav.py validate
@@ -63,19 +66,15 @@ acceptance_evidence:
 - requirement: REVISION-SYNC-PREPARATION-SPIKE is marked available with the report
     reference.
   proof: >-
-    Pending owner approval. The publication candidate is
-    spikes/SPIKE-REVISION-REPLAY.md; governance/artifacts.yaml intentionally
-    remains required until the approval gate is recorded.
+    governance/artifacts.yaml marks REVISION-SYNC-PREPARATION-SPIKE available
+    and records spikes/SPIKE-REVISION-REPLAY.md, the raw result SHA-256, PR #13,
+    and the owner approval comment.
 - requirement: ADR-RUNTIME-BOUNDARY-001 is the only activated successor.
   proof: >-
-    Pending owner approval. roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
-    intentionally remains blocked; the task card and report identify it as the
-    sole successor to activate after approval.
+    roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml is ready; the completed spike
+    card names it as the sole successor and no other successor was activated.
 owner_approval:
-  approved: false
-  reference: ''
-unresolved_decisions:
-- Owner approval is required before artifact publication, task completion, and successor activation.
-- ADR-RUNTIME-BOUNDARY-001 must decide the runtime, persistence-port, portability, and extension boundary.
-- Production ID encoding, revision DDL/representation, network synchronization, external-effect semantics, retention, and production limits remain deferred.
+  approved: true
+  reference: https://github.com/colibri-the-bird/Nabla/pull/13#issuecomment-5151065579
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/13
