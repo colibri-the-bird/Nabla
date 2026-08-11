@@ -1,9 +1,9 @@
-# Nabla Pre-development Bootstrap v0.2
+# Nabla Pre-development Bootstrap v0.3
 
 **Статус:** активный ненормативный router
-**Версия:** 0.2
-**Дата:** 2026-07-26
-**Основание:** `SPEC-NAVIGATION.md` v0.3
+**Версия:** 0.3
+**Дата:** 2026-08-11
+**Основание:** `SPEC-NAVIGATION.md` v0.4
 
 ---
 
@@ -34,7 +34,8 @@ Bootstrap выполняется последовательно:
 | `SPIKE-PDF-001` | Измерены PDF rendering и stable anchors | `SPIKE-CORE-PORTABILITY-001` |
 | `SPIKE-BACKUP-RESTORE-001` | Измерены backup/restore/corruption paths | `SPIKE-PDF-001` |
 | `SPIKE-REVISION-REPLAY-001` | Измерены identity/revision/outbox/replay paths | `SPIKE-BACKUP-RESTORE-001` |
-| `ADR-RUNTIME-BOUNDARY-001` | Приняты ADR-001 и ADR-010 | `SPIKE-REVISION-REPLAY-001` |
+| `BOOT-SOURCE-STATUS-REPAIR-001` | Исправлен pre-baseline source-status gate | `SPIKE-REVISION-REPLAY-001` |
+| `ADR-RUNTIME-BOUNDARY-001` | Приняты ADR-001 и ADR-010 | `BOOT-SOURCE-STATUS-REPAIR-001` |
 | `ADR-MODULE-TRUST-001` | Принят ADR-007 | `ADR-RUNTIME-BOUNDARY-001` |
 | `ADR-QUERY-DSL-001` | Принят ADR-003 | `ADR-MODULE-TRUST-001` |
 | `ADR-REVISION-IDENTITY-001` | Приняты ADR-002, ADR-004, ADR-009 и ADR-012 | `ADR-QUERY-DSL-001` |
@@ -51,6 +52,12 @@ Bootstrap выполняется последовательно:
 | `AUDIT-FOUNDATION-CONFORMANCE-001` | Проверена сквозная согласованность; owner checkpoint 2 | `SPEC-DDL-CONTENT-V1-001` |
 | `PREP-ROADMAP-PROD-001` | Созданы production roadmap и blocked scaffold card | `AUDIT-FOUNDATION-CONFORMANCE-001` |
 | `AUDIT-SCAFFOLD-READINESS-001` | Финальный owner start gate активирует scaffold | `PREP-ROADMAP-PROD-001` |
+
+До `SPEC-BASELINE-001` применимые task cards явно используют
+`required_spec_status: draft-allowed`: нормативные документы остаются draft и
+служат входом для spikes, ADR и ADR gate. Только `SPEC-BASELINE-001` после
+принятия всех ADR переводит согласованный нормативный baseline в approved;
+последующие task cards продолжают требовать `required_spec_status: approved`.
 
 В каждый момент ready может быть не более одной карточки. Завершаемая карточка
 имеет право активировать только своего непосредственного successor; все более

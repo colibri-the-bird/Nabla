@@ -1,7 +1,7 @@
-# Nabla Specification Navigation v0.3
+# Nabla Specification Navigation v0.4
 
 **Статус:** утверждена владельцем проекта
-**Дата:** 2026-07-26
+**Дата:** 2026-08-11
 **Роль:** ненормативный маршрутизатор нормативного контекста  
 **Не переопределяет:** `CONSTITUTION.md`, `ARCHITECTURE.md`, ADR, contracts,
 module specifications, Data Catalog или DDL
@@ -230,6 +230,29 @@ approval:
 dependencies, acceptance, approval или invariants invalid; неизвестная
 `schema_version` не принимается молча.
 
+### 3.1.1 Gate статуса входных документов
+
+`approval.required_spec_status` описывает статус нормативных документов в
+полностью расширенном входном context task, а не статус результата task и не
+заменяет `owner_required`:
+
+- `approved` требует, чтобы каждый выбранный нормативный документ был утверждён,
+  когда task находится в `ready` или `completed`;
+- `draft-allowed` явно разрешает draft-нормативные входы для pre-baseline
+  `spike`, `adr`, `spec`, `tooling` и `audit`, но не утверждает эти документы;
+- ненормативные router-документы не участвуют в этом gate;
+- task типа `implementation` в `ready` или `completed` всегда требует
+  `required_spec_status: approved`.
+
+Gate применяется после раскрытия required selectors, context packs, impact tags,
+full-document reads и активированных conditional triggers. Неактивная
+conditional branch не загружается; после её активации `prepare --trigger`
+повторно применяет gate к итоговому context.
+
+Таким образом, ADR MAY принимать решения из draft specification, если карточка
+явно объявляет `draft-allowed`; окончательное утверждение самих specifications
+остаётся отдельным owner-approved spec outcome.
+
 ## 3.4 Хранение и состояние task cards
 
 Task card хранится в отдельном YAML-файле и имеет одно из состояний:
@@ -248,7 +271,9 @@ Mutable execution evidence хранится отдельно в
 - dependency task не `completed`;
 - blocking ADR не `accepted`, а artifact не `available`;
 - selector или pinned context pack version не разрешается;
-- implementation task зависит от неутверждённой нормативной specification;
+- `required_spec_status: approved` task выбирает неутверждённую нормативную
+  specification;
+- implementation task объявляет `required_spec_status: draft-allowed`;
 - production `ROADMAP.md` ещё не существует;
 - context bundle превышает 16 000 слов;
 - slice между 12 000 и 16 000 слов не имеет явного
@@ -551,7 +576,8 @@ Generated values MUST NOT редактироваться как независи
 
 Task validator дополнительно проверяет YAML schema v2, единственность ready task,
 task/artifact-provider DAG, pinned pack versions, blockers, draft-spec
-prohibition, финальный scaffold-readiness gate, context budget, path scope и
+prohibition через `required_spec_status` для `ready`/`completed`, финальный
+scaffold-readiness gate, context budget, path scope и
 полное соответствие evidence v2 task acceptance и подготовленному context
 manifest, включая selectors, document hashes, impact tags и triggers.
 

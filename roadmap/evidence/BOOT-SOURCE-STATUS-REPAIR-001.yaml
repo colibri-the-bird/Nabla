@@ -1,0 +1,94 @@
+schema_version: 2
+task_id: BOOT-SOURCE-STATUS-REPAIR-001
+context_manifest_sha256: ff055de157d71a1c46485926a09d94a7351b423c08aea29e6e2e627cc373edd4
+selectors:
+- CON:7
+- ARCH:24
+- ARCH:25
+- NAV:3
+- NAV:6
+- NAV:8
+- BOOT:1
+- BOOT:2
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  BOOT: 35a18b3be1908b8a8d3fc58f5a6b9b01d2b9000ad75ac25eb0a3fbacc161c53a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  NAV: 4e70185d491d7691fa9cb4c544ba01d5cb510d1d6521e11e4143baac1b131608
+impact_tags: []
+triggers: []
+changed_paths:
+- SPEC-NAVIGATION.md
+- governance/spec-lock.json
+- roadmap/BOOTSTRAP.md
+- roadmap/evidence/BOOT-SOURCE-STATUS-REPAIR-001.yaml
+- roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml
+- roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+- roadmap/tasks/ADR-QUERY-DSL-001.yaml
+- roadmap/tasks/ADR-RETENTION-CRYPTO-001.yaml
+- roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+- roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+- roadmap/tasks/AUDIT-ADR-GATE-001.yaml
+- roadmap/tasks/BOOT-SOURCE-STATUS-REPAIR-001.yaml
+- roadmap/tasks/SPEC-BASELINE-001.yaml
+- roadmap/tasks/SPIKE-BACKUP-RESTORE-001.yaml
+- roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
+- spec-index.json
+- tests/test_nabla_nav.py
+- tools/nabla_nav.py
+changed_contracts:
+- TASK-CARD-v2
+- NAVIGATION-v0.4
+- BOOTSTRAP-DAG-v1
+tests:
+- requirement: python -m pytest -q tests/test_nabla_nav.py
+  command: python -m pytest -q tests/test_nabla_nav.py
+  exit_code: 0
+- requirement: python tools/spec_slice.py validate
+  command: python tools/spec_slice.py validate
+  exit_code: 0
+- requirement: python tools/nabla_nav.py validate
+  command: python tools/nabla_nav.py validate
+  exit_code: 0
+- requirement: python tools/nabla_nav.py check-lock
+  command: python tools/nabla_nav.py check-lock
+  exit_code: 0
+- requirement: python tools/nabla_nav.py list-ready
+  command: python tools/nabla_nav.py list-ready
+  exit_code: 0
+- requirement: git diff --check
+  command: git diff --check
+  exit_code: 0
+acceptance_evidence:
+- requirement: required_spec_status is enforced for expanded normative context documents
+    on ready and completed tasks.
+  proof: 65 navigation tests pass, including ready/completed, implementation,
+    approved/draft, non-normative and conditional-trigger cases; repository validation
+    reports 31 task cards and 0 warnings.
+- requirement: Every pre-baseline task that legitimately reads draft specifications
+    declares draft-allowed, including SPEC-BASELINE-001 itself.
+  proof: SPIKE-BACKUP-RESTORE-001, SPIKE-REVISION-REPLAY-001, all six ADR task
+    cards, AUDIT-ADR-GATE-001 and SPEC-BASELINE-001 declare draft-allowed; misleading
+    approved-input prose was removed without changing their product outcomes.
+- requirement: Tasks after SPEC-BASELINE-001 continue to require approved specifications.
+  proof: SPEC-BACKUP-RECOVERY-001 through AUDIT-SCAFFOLD-READINESS-001 retain
+    required_spec_status approved; no post-baseline card was migrated.
+- requirement: No normative document status or product semantic is changed by this
+    repair.
+  proof: No product normative path is present in changed_paths. ARCH remains draft at
+    sha256 e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd;
+    only the non-normative NAV/BOOT routers were versioned and their generated lock
+    refreshed.
+- requirement: Negative tests reject a ready task that requires approved specifications
+    while selecting a draft normative document.
+  proof: test_approved_input_gate_rejects_draft_normative_document covers ready and
+    completed states; test_triggered_context_cannot_bypass_approved_input_gate proves
+    prepare-trigger expansion also fails closed.
+- requirement: The repair is completed and ADR-RUNTIME-BOUNDARY-001 is the sole ready
+    successor.
+  proof: ''
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions: []
+pr_url: ''

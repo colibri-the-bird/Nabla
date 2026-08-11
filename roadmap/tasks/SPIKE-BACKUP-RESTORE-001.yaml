@@ -74,4 +74,4 @@ acceptance:
     - SPIKE-REVISION-REPLAY-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed

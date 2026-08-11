@@ -112,4 +112,4 @@ acceptance:
     - The owner explicitly approves this checkpoint and SPEC-BASELINE-001 is the only successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed

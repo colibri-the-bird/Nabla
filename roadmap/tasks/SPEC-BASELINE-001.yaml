@@ -6,7 +6,7 @@ outcome: The eight existing normative documents form one approved, internally co
 router: BOOT:1
 scope:
   include:
-    - Close open parameters already resolved by accepted ADRs without changing approved product intent.
+    - Close open parameters already resolved by accepted ADRs without changing the approved Constitution or accepted ADR outcomes.
     - Align status, authority, terminology, references, conformance matrices and acceptance criteria.
     - Record every remaining deferred item with an owner, trigger and non-blocking rationale.
     - Activate SPEC-BACKUP-RECOVERY-001 as the sole successor.
@@ -121,4 +121,4 @@ acceptance:
     - SPEC-BACKUP-RECOVERY-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed

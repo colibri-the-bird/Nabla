@@ -6,7 +6,7 @@ outcome: ADR-007 fixes module packaging, trust and activation boundaries before 
 router: BOOT:1
 scope:
   include:
-    - Resolve ADR-007 from approved module and capability contracts.
+    - Resolve ADR-007 from the active draft module and capability contracts.
     - Define packaging identity, trust levels, activation validation and failure isolation.
     - Update the decision registry only after owner approval.
     - Activate ADR-QUERY-DSL-001 as the sole successor.
@@ -78,4 +78,4 @@ acceptance:
     - ADR-QUERY-DSL-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed

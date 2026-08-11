@@ -19,6 +19,7 @@ scope:
       - tests/spikes/revision-replay/**
       - governance/artifacts.yaml
       - roadmap/tasks/SPIKE-REVISION-REPLAY-001.yaml
+      - roadmap/tasks/BOOT-SOURCE-STATUS-REPAIR-001.yaml
       - roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
       - roadmap/evidence/SPIKE-REVISION-REPLAY-001.yaml
     exclude:
@@ -73,4 +74,4 @@ acceptance:
     - ADR-RUNTIME-BOUNDARY-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed
