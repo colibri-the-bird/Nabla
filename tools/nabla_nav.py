@@ -359,13 +359,50 @@ def bootstrap_chain_errors(tasks: dict[str, dict[str, Any]]) -> list[str]:
 
 
 def is_approved_document(doc: spec_slice.ParsedDocument) -> bool:
-    status = (doc.status or "").lower()
-    return (
-        ("утвержден" in status or "утверждён" in status or "approved" in status)
-        and "к утвержд" not in status
-        and "draft" not in status
-        and not status.startswith("проект")
+    status = (doc.status or "").strip().lower()
+    return re.match(
+        r"^(?:approved|утвержден(?:а|о|ы)?|утверждён(?:а|о|ы)?)(?:\b|[\s:—–-])",
+        status,
+    ) is not None
+
+
+def required_spec_status_errors(
+    task: dict[str, Any],
+    selectors: Sequence[str],
+    index: dict[str, Any],
+    docs: dict[str, spec_slice.ParsedDocument],
+) -> list[str]:
+    if task["state"] not in {"ready", "completed"}:
+        return []
+
+    errors: list[str] = []
+    task_id = task["task_id"]
+    required_spec_status = task["approval"]["required_spec_status"]
+    implementation_requires_approved = task["type"] == "implementation"
+    if implementation_requires_approved and required_spec_status != "approved":
+        errors.append(
+            f"{task_id}: {task['state']} implementation task must require "
+            "approved specifications"
+        )
+
+    if required_spec_status != "approved" and not implementation_requires_approved:
+        return errors
+
+    entries = spec_slice.document_entries(index)
+    selected_doc_ids = {
+        spec_slice.parse_selector(selector)[0] for selector in selectors
+    }
+    context_kind = (
+        "implementation context"
+        if implementation_requires_approved
+        else "approved input context"
     )
+    for doc_id in sorted(selected_doc_ids):
+        if entries[doc_id].get("normative", True) and not is_approved_document(
+            docs[doc_id]
+        ):
+            errors.append(f"{task_id}: {context_kind} uses draft document {doc_id}")
+    return errors
 
 
 def validate_task_shape(task: dict[str, Any], path: Path) -> list[str]:
@@ -607,6 +644,15 @@ def build_context_bundle(
     triggers: Sequence[str] = (),
 ) -> tuple[str, dict[str, Any]]:
     selectors, pack_ids, tags = expanded_task_context(task, index, triggers)
+    entries = spec_slice.document_entries(index)
+    try:
+        for selector in selectors:
+            spec_slice.validate_selector(selector, docs, entries)
+    except spec_slice.SpecError as exc:
+        raise NavError(f"{task['task_id']}: {exc}") from exc
+    status_errors = required_spec_status_errors(task, selectors, index, docs)
+    if status_errors:
+        raise NavError("\n- ".join(status_errors))
     body = task_context_body(task, docs, index, selectors, pack_ids, tags)
     words = spec_slice.word_count(body)
     justification = task["context"]["context_budget_justification"]
@@ -855,14 +901,15 @@ def validate_task_semantics(
     warnings: list[str] = []
     task_id = task["task_id"]
     errors.extend(validate_pack_pins(task, index))
+    entries = spec_slice.document_entries(index)
     try:
         selectors, _, _ = expanded_task_context(task, index)
-        entries = spec_slice.document_entries(index)
         for selector in selectors:
             spec_slice.validate_selector(selector, docs, entries)
     except (NavError, spec_slice.SpecError) as exc:
         errors.append(str(exc))
         selectors = []
+    errors.extend(required_spec_status_errors(task, selectors, index, docs))
 
     dependencies = task["dependencies"]
     for dependency in dependencies["tasks"]:
@@ -902,12 +949,6 @@ def validate_task_semantics(
             )
 
     if task["type"] == "implementation" and task["state"] == "ready":
-        for selector in selectors:
-            doc_id, _ = spec_slice.parse_selector(selector)
-            if not is_approved_document(docs[doc_id]):
-                errors.append(
-                    f"{task_id}: implementation context uses draft document {doc_id}"
-                )
         if "ROADMAP" not in docs:
             errors.append(f"{task_id}: production ROADMAP.md is required")
         scaffold_gate = tasks.get(SCAFFOLD_READINESS_TASK_ID)

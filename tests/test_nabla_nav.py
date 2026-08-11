@@ -4,6 +4,7 @@ import copy
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -321,9 +322,189 @@ def test_ready_implementation_task_rejects_draft_spec_and_missing_roadmap() -> N
     errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
 
     assert any("uses draft document ARCH" in error for error in errors)
+    assert any("implementation task must require approved specifications" in error for error in errors)
     assert any("production ROADMAP.md is required" in error for error in errors)
     assert any("AUDIT-SCAFFOLD-READINESS-001 must be completed" in error for error in errors)
     assert any("must directly depend on AUDIT-SCAFFOLD-READINESS-001" in error for error in errors)
+
+
+@pytest.mark.parametrize(
+    ("status", "approved"),
+    [
+        ("approved", True),
+        ("Approved by owner", True),
+        ("утверждена владельцем проекта", True),
+        ("unapproved", False),
+        ("not-approved", False),
+        ("superseded; previously approved", False),
+        ("проект к утверждению", False),
+        ("unknown", False),
+        (None, False),
+    ],
+)
+def test_document_approval_status_is_fail_closed(
+    status: str | None, approved: bool
+) -> None:
+    document = SimpleNamespace(status=status)
+
+    assert nabla_nav.is_approved_document(document) is approved
+
+
+@pytest.mark.parametrize("state", ["ready", "completed"])
+def test_approved_input_gate_rejects_draft_normative_document(state: str) -> None:
+    index, docs, tasks, _ = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["state"] = state
+    task["context"]["required"] = ["ARCH:25"]
+    task["dependencies"]["tasks"] = []
+    task["approval"]["required_spec_status"] = "approved"
+
+    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+
+    assert any("approved input context uses draft document ARCH" in error for error in errors)
+
+
+@pytest.mark.parametrize("state", ["ready", "completed"])
+def test_draft_allowed_input_gate_accepts_draft_normative_document(state: str) -> None:
+    index, docs, tasks, _ = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["state"] = state
+    task["context"]["required"] = ["ARCH:25"]
+    task["dependencies"]["tasks"] = []
+
+    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+
+    assert not any("uses draft document ARCH" in error for error in errors)
+
+
+@pytest.mark.parametrize("state", ["ready", "completed"])
+def test_approved_input_gate_accepts_approved_normative_document(state: str) -> None:
+    index, docs, tasks, _ = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["state"] = state
+    task["context"]["required"] = ["CON:7"]
+    task["dependencies"]["tasks"] = []
+    task["approval"]["required_spec_status"] = "approved"
+
+    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+
+    assert not any("uses draft document CON" in error for error in errors)
+
+
+@pytest.mark.parametrize("state", ["ready", "completed"])
+def test_approved_input_gate_ignores_non_normative_document(state: str) -> None:
+    index, docs, tasks, _ = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["state"] = state
+    task["context"]["required"] = ["BOOT:1"]
+    task["dependencies"]["tasks"] = []
+    task["approval"]["required_spec_status"] = "approved"
+
+    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+
+    assert not any("uses draft document BOOT" in error for error in errors)
+
+
+def test_implementation_input_gate_fails_closed_on_draft_allowed() -> None:
+    index, docs, tasks, _ = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["type"] = "implementation"
+    task["context"]["required"] = ["CON:7"]
+    task["dependencies"]["tasks"] = []
+
+    errors, _ = nabla_nav.validate_task_semantics(task, tasks, index, docs, {}, {})
+
+    assert any("implementation task must require approved specifications" in error for error in errors)
+    assert not any("uses draft document CON" in error for error in errors)
+
+
+def test_triggered_context_cannot_bypass_approved_input_gate() -> None:
+    index, docs, tasks, paths = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["context"]["required"] = ["CON:7"]
+    task["context"]["conditional"] = [
+        {
+            "when": "draft-source",
+            "selectors": ["ARCH:25"],
+            "packs": [],
+            "impact_tags": [],
+        }
+    ]
+    task["approval"]["required_spec_status"] = "approved"
+
+    with pytest.raises(
+        nabla_nav.NavError,
+        match="approved input context uses draft document ARCH",
+    ):
+        nabla_nav.build_context_bundle(
+            ROOT,
+            task,
+            paths[task["task_id"]],
+            index,
+            docs,
+            triggers=["draft-source"],
+        )
+
+
+def test_triggered_draft_context_is_allowed_when_declared() -> None:
+    index, docs, tasks, paths = repository_state()
+    task = copy.deepcopy(tasks["BOOT-SOURCE-STATUS-REPAIR-001"])
+    task["context"]["required"] = ["CON:7"]
+    task["context"]["conditional"] = [
+        {
+            "when": "draft-source",
+            "selectors": ["ARCH:25"],
+            "packs": [],
+            "impact_tags": [],
+        }
+    ]
+
+    _, manifest = nabla_nav.build_context_bundle(
+        ROOT,
+        task,
+        paths[task["task_id"]],
+        index,
+        docs,
+        triggers=["draft-source"],
+    )
+
+    assert manifest["documents"]["ARCH"]["status"] == "проект к утверждению"
+
+
+def test_source_status_gate_matches_pre_and_post_baseline_phases() -> None:
+    _, _, tasks, _ = repository_state()
+    draft_allowed = {
+        "SPIKE-BACKUP-RESTORE-001",
+        "SPIKE-REVISION-REPLAY-001",
+        "ADR-RUNTIME-BOUNDARY-001",
+        "ADR-MODULE-TRUST-001",
+        "ADR-QUERY-DSL-001",
+        "ADR-REVISION-IDENTITY-001",
+        "ADR-DOCUMENT-ENGINE-001",
+        "ADR-RETENTION-CRYPTO-001",
+        "AUDIT-ADR-GATE-001",
+        "SPEC-BASELINE-001",
+    }
+    approved = {
+        "SPEC-BACKUP-RECOVERY-001",
+        "SPEC-DATA-CATALOG-V1-001",
+        "SPEC-CONTRACTS-CORE-V1-001",
+        "SPEC-CONTRACTS-CONTENT-V1-001",
+        "SPEC-DDL-CORE-V1-001",
+        "SPEC-DDL-CONTENT-V1-001",
+        "AUDIT-FOUNDATION-CONFORMANCE-001",
+        "PREP-ROADMAP-PROD-001",
+        "AUDIT-SCAFFOLD-READINESS-001",
+    }
+
+    assert {
+        tasks[task_id]["approval"]["required_spec_status"]
+        for task_id in draft_allowed
+    } == {"draft-allowed"}
+    assert {
+        tasks[task_id]["approval"]["required_spec_status"]
+        for task_id in approved
+    } == {"approved"}
 
 
 def test_ready_implementation_requires_completed_scaffold_gate_dependency() -> None:

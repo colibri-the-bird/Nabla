@@ -7,7 +7,7 @@ router: BOOT:1
 scope:
   include:
     - Resolve revision representation, conflict format, global identity and migration policy together.
-    - Ground ADR-002, ADR-004, ADR-009 and ADR-012 in approved contracts and replay measurements.
+    - Ground ADR-002, ADR-004, ADR-009 and ADR-012 in active draft contracts and measured replay evidence.
     - Update the decision registry only after owner approval.
     - Activate ADR-DOCUMENT-ENGINE-001 as the sole successor.
   exclude:
@@ -87,4 +87,4 @@ acceptance:
     - ADR-DOCUMENT-ENGINE-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed

@@ -6,7 +6,7 @@ outcome: ADR-005 and ADR-008 define encryption, key recovery, retention, tombsto
 router: BOOT:1
 scope:
   include:
-    - Resolve ADR-005 and ADR-008 from approved security, lifecycle and measured backup evidence.
+    - Resolve ADR-005 and ADR-008 from active draft security and lifecycle sources plus measured backup evidence.
     - Define authority, key recovery, retention, tombstone, audit, backup and purge boundaries.
     - Update the decision registry only after owner approval.
     - Activate AUDIT-ADR-GATE-001 as the sole successor.
@@ -90,4 +90,4 @@ acceptance:
     - AUDIT-ADR-GATE-001 is the only activated successor.
 approval:
   owner_required: true
-  required_spec_status: approved
+  required_spec_status: draft-allowed
