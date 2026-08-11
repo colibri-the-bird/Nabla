@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: BOOT-SOURCE-STATUS-REPAIR-001
-context_manifest_sha256: ff055de157d71a1c46485926a09d94a7351b423c08aea29e6e2e627cc373edd4
+context_manifest_sha256: 84c4489b0b62ce47b675a3b26d02c87e1f96926a19ac31ca92f2434d7245083a
 selectors:
 - CON:7
 - ARCH:24
@@ -86,9 +86,11 @@ acceptance_evidence:
     prepare-trigger expansion also fails closed.
 - requirement: The repair is completed and ADR-RUNTIME-BOUNDARY-001 is the sole ready
     successor.
-  proof: ''
+  proof: Owner-approved state transition marks BOOT-SOURCE-STATUS-REPAIR-001
+    completed; python tools/nabla_nav.py list-ready returns only
+    ADR-RUNTIME-BOUNDARY-001.
 owner_approval:
-  approved: false
-  reference: ''
+  approved: true
+  reference: 'Owner approval in Codex task on 2026-08-11: "Утверждаю результат BOOT-SOURCE-STATUS-REPAIR-001 и разрешаю перевести её в completed, а ADR-RUNTIME-BOUNDARY-001 — в ready."'
 unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/17
