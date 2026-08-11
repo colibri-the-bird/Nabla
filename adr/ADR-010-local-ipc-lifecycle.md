@@ -1,7 +1,8 @@
 # ADR-010: Authenticated local IPC and Core Service lifecycle
 
-- **Status:** Proposed — owner approval required
+- **Status:** Accepted
 - **Date:** 2026-08-01
+- **Accepted:** 2026-08-11
 - **Task:** `ADR-RUNTIME-BOUNDARY-001`
 - **Decision owner:** Nabla project owner
 - **Related decision:** `ADR-001`
@@ -25,14 +26,13 @@ authorization, production cancellation, multi-client supervision, or a product
 lifecycle. Its transport is therefore evidence that a process boundary is
 feasible, not the production transport selection.
 
-The prepared task manifest records `ARCHITECTURE.md`,
+This pre-baseline task consumes `ARCHITECTURE.md`,
 `CAPABILITY-CONTRACT.md`, `DATA-CLASSIFICATION.md`, and `MODULE-MANIFEST.md` as
-“project for approval”. The task card requires
-`required_spec_status: approved`. This record may be reviewed as a proposed
-decision, but it cannot become accepted and the decision registry cannot change
-until both an authoritative source-status correction and explicit owner
-approval of this ADR are recorded. This ADR task does not modify those
-normative sources.
+active draft normative inputs under the explicit `draft-allowed` gate repaired
+by `BOOT-SOURCE-STATUS-REPAIR-001`. Accepting this decision records an ADR
+outcome for later baseline incorporation; it neither approves nor modifies
+those normative sources. Their coherent approval remains owned by
+`SPEC-BASELINE-001` after the ADR gate.
 
 ## Decision
 
@@ -407,16 +407,18 @@ adds platform-specific evidence.
 
 ## Sources and evidence
 
-- `CONSTITUTION.md` v0.1: `CON:I15` and the conformance rules in `CON:7`.
+- `CONSTITUTION.md` v0.1: `CON:I15`, `CON:4.2`, and the conformance rules in
+  `CON:7`.
 - `ARCHITECTURE.md` v0.1: `ARCH:5`, `ARCH:6`, `ARCH:20`, `ARCH:24`, and
-  `ARCH:24.3`, subject to the source-status gate above.
-- `CAPABILITY-CONTRACT.md` v0.1: `CAP:24`, subject to the source-status gate
-  above.
-- `DATA-CLASSIFICATION.md` v0.1: `DATA:6` and `DATA:12`, subject to the
-  source-status gate above; the install credential is `P4/SE` and
+  `ARCH:24.3`, plus the security boundary in `ARCH:18`, as an active draft
+  normative input under the pre-baseline `draft-allowed` gate.
+- `CAPABILITY-CONTRACT.md` v0.1: `CAP:9` and `CAP:24`, as an active draft
+  normative input under that gate.
+- `DATA-CLASSIFICATION.md` v0.1: `DATA:6` and `DATA:12`, as an active draft
+  normative input under that gate; the install credential is `P4/SE` and
   `PROTECT_SECRET_STORE`.
-- `MODULE-MANIFEST.md` v0.1: `MOD:9` and `MOD:13`, subject to the source-status
-  gate above.
+- `MODULE-MANIFEST.md` v0.1: `MOD:9` and `MOD:13`, as an active draft normative
+  input under that gate.
 - Owner-approved `CORE-PORTABILITY-SPIKE-v1`:
   `spikes/SPIKE-CORE-PORTABILITY.md`, especially sections 4–10; raw result
   `tests/spikes/core-portability/results/windows-x86_64.json`, SHA-256
@@ -424,9 +426,13 @@ adds platform-specific evidence.
   owner approval recorded at
   `https://github.com/colibri-the-bird/Nabla/pull/10#issuecomment-5090647252`.
 - Prepared task context manifest:
-  `4def2994c972deaa9750ea850b6ad2ac58f63f2e22549078a8b6bfacf0ab139d`.
+  `e8023b44eb49939e1dff10dbda63f45e61901658ac8e5fa31ee710b28957ceff`.
 
 ## Approval
 
-Pending explicit owner approval. Until approval is recorded, this ADR remains
-proposed and `governance/decisions.yaml` remains `required` for `ADR-010`.
+Accepted by the Nabla project owner on 2026-08-11 in the Codex prompt for
+`TASK-ID: ADR-RUNTIME-BOUNDARY-001`: “прошу от моего имени утвердить ВСЕ
+документы у которых сейчас статус \"К утверждению\" или похожий”. The decision
+registry records `ADR-010` as accepted. Under this task the approval applies to
+ADR-001 and ADR-010 only; it does not transition the active draft normative
+sources, whose coherent approval remains owned by `SPEC-BASELINE-001`.
