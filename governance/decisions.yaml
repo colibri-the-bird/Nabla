@@ -32,7 +32,7 @@ decisions:
     selectors: [ARCH:24.1]
   - id: ADR-007
     title: Module packaging and trust
-    status: required
+    status: accepted
     required_before: Module framework freeze
     selectors: [ARCH:24.1]
   - id: ADR-008

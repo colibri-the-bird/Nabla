@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: ADR-MODULE-TRUST-001
 type: adr
-state: ready
+state: completed
 outcome: ADR-007 fixes module packaging, trust and activation boundaries before module contracts are frozen.
 router: BOOT:1
 scope:

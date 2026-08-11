@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: ADR-MODULE-TRUST-001
-context_manifest_sha256: 6be4f929dff2bfb67fe8937c9760e84f4e9b269b76853e5e558e14c496381b58
+context_manifest_sha256: 8ef7b628a17f60cdf9f6556c6d94ff61763f927e92efe98dab7537b150c5e0ec
 selectors:
   - CON:I6
   - ARCH:24
@@ -35,10 +35,13 @@ impact_tags:
 triggers: []
 changed_paths:
   - adr/ADR-007-module-packaging-trust.md
+  - governance/decisions.yaml
   - roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+  - roadmap/tasks/ADR-QUERY-DSL-001.yaml
   - roadmap/evidence/ADR-MODULE-TRUST-001.yaml
 changed_contracts:
-  - ADR-007 (proposed decision record; acceptance pending)
+  - ADR-007 (accepted decision record)
+  - DECISION-REGISTRY-v1 (ADR-007 accepted)
 tests:
   - requirement: python tools/nabla_nav.py validate
     command: python tools/nabla_nav.py validate
@@ -49,7 +52,7 @@ tests:
   - requirement: ADR decision record review
     command: >-
       manual cross-ADR review of ADR-007 against ADR-001, ADR-010, manifest
-      6be4f929dff2bfb67fe8937c9760e84f4e9b269b76853e5e558e14c496381b58,
+      8ef7b628a17f60cdf9f6556c6d94ff61763f927e92efe98dab7537b150c5e0ec,
       and all prepared selectors
     exit_code: 0
 acceptance_evidence:
@@ -69,17 +72,20 @@ acceptance_evidence:
       package, loader, sandbox, PKI and revocation evidence.
   - requirement: ADR-007 is accepted in the registry after owner approval.
     proof: >-
-      Pending explicit owner approval. ADR-007 remains Proposed and
-      governance/decisions.yaml intentionally keeps ADR-007 required; no
-      acceptance is inferred from review or PR creation.
+      Explicit Nabla project owner approval in the 2026-08-11 Codex prompt for
+      TASK-ID ADR-MODULE-TRUST-001 accepted ADR-007; the decision record is
+      Accepted and governance/decisions.yaml records ADR-007 as accepted.
   - requirement: ADR-QUERY-DSL-001 is the only activated successor.
     proof: >-
-      Pending explicit owner approval and ADR-007 acceptance.
-      roadmap/tasks/ADR-QUERY-DSL-001.yaml intentionally remains blocked and no
-      successor has been activated.
+      After ADR-007 acceptance, roadmap/tasks/ADR-MODULE-TRUST-001.yaml changed
+      ready to completed and roadmap/tasks/ADR-QUERY-DSL-001.yaml changed
+      blocked to ready; the final ready-list shows no other activated task.
 owner_approval:
-  approved: false
-  reference: ''
-unresolved_decisions:
-  - Explicit owner approval is required before ADR-007 acceptance, registry mutation, task completion, and successor activation.
+  approved: true
+  reference: >-
+    Nabla project owner approval in the 2026-08-11 Codex prompt for TASK-ID
+    ADR-MODULE-TRUST-001: “Утверждаю ADR-007 в PR #18 и разрешаю перевести
+    ADR-MODULE-TRUST-001 в completed, ADR-007 — в accepted, а
+    ADR-QUERY-DSL-001 — в ready.”
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/18
