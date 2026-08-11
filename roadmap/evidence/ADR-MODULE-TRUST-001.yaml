@@ -1,0 +1,85 @@
+schema_version: 2
+task_id: ADR-MODULE-TRUST-001
+context_manifest_sha256: 6be4f929dff2bfb67fe8937c9760e84f4e9b269b76853e5e558e14c496381b58
+selectors:
+  - CON:I6
+  - ARCH:24
+  - ARCH:24.1
+  - CAP:5
+  - MOD:4
+  - MOD:5
+  - MOD:8
+  - MOD:9
+  - MOD:13
+  - MOD:26
+  - NAV:6
+  - CON:I15
+  - ARCH:20
+  - CAP:24
+  - CON:4.2
+  - ARCH:18
+  - DATA:6
+  - DATA:12
+  - CAP:9
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 4e70185d491d7691fa9cb4c544ba01d5cb510d1d6521e11e4143baac1b131608
+impact_tags:
+  - failure-domain
+  - module-contract
+  - sensitive
+triggers: []
+changed_paths:
+  - adr/ADR-007-module-packaging-trust.md
+  - roadmap/tasks/ADR-MODULE-TRUST-001.yaml
+  - roadmap/evidence/ADR-MODULE-TRUST-001.yaml
+changed_contracts:
+  - ADR-007 (proposed decision record; acceptance pending)
+tests:
+  - requirement: python tools/nabla_nav.py validate
+    command: python tools/nabla_nav.py validate
+    exit_code: 0
+  - requirement: python tools/nabla_nav.py check-lock
+    command: python tools/nabla_nav.py check-lock
+    exit_code: 0
+  - requirement: ADR decision record review
+    command: >-
+      manual cross-ADR review of ADR-007 against ADR-001, ADR-010, manifest
+      6be4f929dff2bfb67fe8937c9760e84f4e9b269b76853e5e558e14c496381b58,
+      and all prepared selectors
+    exit_code: 0
+acceptance_evidence:
+  - requirement: ADR-007 assigns authority and failure isolation for packaging and activation.
+    proof: >-
+      ADR-007 sections 1-8 fix built_in/core_release identity and provenance;
+      section 4 computes fail-closed authority; section 5 makes activation
+      deterministic and atomic; and section 6 assigns validation, handler,
+      processor, panic, quarantine, and fatal shared-process failure behavior,
+      including I15 limits and Desktop/Mobile parity.
+  - requirement: Alternatives, rejected options, consequences and compatibility risks are explicit.
+    proof: >-
+      ADR-007 Compatibility constraints, Consequences, Alternatives considered,
+      Deferred decisions, and Supersession rules record selected, rejected and
+      deferred options, shared-process and release-cadence costs,
+      compatibility/data-survival constraints, and the absence of external
+      package, loader, sandbox, PKI and revocation evidence.
+  - requirement: ADR-007 is accepted in the registry after owner approval.
+    proof: >-
+      Pending explicit owner approval. ADR-007 remains Proposed and
+      governance/decisions.yaml intentionally keeps ADR-007 required; no
+      acceptance is inferred from review or PR creation.
+  - requirement: ADR-QUERY-DSL-001 is the only activated successor.
+    proof: >-
+      Pending explicit owner approval and ADR-007 acceptance.
+      roadmap/tasks/ADR-QUERY-DSL-001.yaml intentionally remains blocked and no
+      successor has been activated.
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions:
+  - Explicit owner approval is required before ADR-007 acceptance, registry mutation, task completion, and successor activation.
+pr_url: ''
