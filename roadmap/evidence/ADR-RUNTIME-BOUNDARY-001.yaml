@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: ADR-RUNTIME-BOUNDARY-001
-context_manifest_sha256: 4def2994c972deaa9750ea850b6ad2ac58f63f2e22549078a8b6bfacf0ab139d
+context_manifest_sha256: e8023b44eb49939e1dff10dbda63f45e61901658ac8e5fa31ee710b28957ceff
 selectors:
   - CON:7
   - ARCH:5
@@ -28,7 +28,7 @@ document_hashes:
   CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
   DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
   MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
-  NAV: 9dd08f5f3defe94e74e13dc6c237df96ae04e8391c974261d0d79320b9476a2d
+  NAV: 4e70185d491d7691fa9cb4c544ba01d5cb510d1d6521e11e4143baac1b131608
 impact_tags:
   - failure-domain
   - module-contract
@@ -37,11 +37,14 @@ triggers: []
 changed_paths:
   - adr/ADR-001-rust-core-runtime.md
   - adr/ADR-010-local-ipc-lifecycle.md
+  - governance/decisions.yaml
   - roadmap/tasks/ADR-RUNTIME-BOUNDARY-001.yaml
+  - roadmap/tasks/ADR-MODULE-TRUST-001.yaml
   - roadmap/evidence/ADR-RUNTIME-BOUNDARY-001.yaml
 changed_contracts:
-  - ADR-001 (proposed decision record; acceptance pending)
-  - ADR-010 (proposed decision record; acceptance pending)
+  - ADR-001 (accepted decision record)
+  - ADR-010 (accepted decision record)
+  - DECISION-REGISTRY-v1 (ADR-001 and ADR-010 accepted)
 tests:
   - requirement: python tools/nabla_nav.py validate
     command: python tools/nabla_nav.py validate
@@ -53,34 +56,37 @@ tests:
     command: "ADR decision record review: three independent read-only audits"
     exit_code: 0
 acceptance_evidence:
-  - requirement: ADR-001 and ADR-010 cite measured portability evidence and approved sources.
+  - requirement: ADR-001 and ADR-010 cite measured portability evidence and active draft normative sources.
     proof: >-
-      Both proposed records cite owner-approved CORE-PORTABILITY-SPIKE-v1,
-      its raw-result SHA-256 and approval reference, plus the approved
-      Constitution. They also explicitly record that ARCHITECTURE.md,
-      CAPABILITY-CONTRACT.md, DATA-CLASSIFICATION.md and MODULE-MANIFEST.md
-      remain project-for-approval sources; this requirement is therefore
-      pending authoritative source-status correction.
+      Both accepted records cite owner-approved CORE-PORTABILITY-SPIKE-v1,
+      its raw-result SHA-256 and approval reference, the approved Constitution,
+      and the active draft ARCHITECTURE.md, CAPABILITY-CONTRACT.md,
+      DATA-CLASSIFICATION.md and MODULE-MANIFEST.md inputs under the explicit
+      pre-baseline draft-allowed gate. They also preserve SPEC-BASELINE-001 as
+      the sole owner of later coherent normative-source approval.
   - requirement: Alternatives, rejected options, consequences and compatibility risks are explicit.
     proof: >-
-      Each proposed ADR contains Decision, Compatibility constraints,
+      Each accepted ADR contains Decision, Compatibility constraints,
       Consequences, Alternatives considered, Validation obligations, Deferred
       decisions, and Supersession rules sections. Three independent read-only
       audits passed after all actionable findings were resolved.
   - requirement: Both decisions are accepted in the registry after owner approval.
     proof: >-
-      Pending both prerequisite gates. governance/decisions.yaml intentionally
-      keeps ADR-001 and ADR-010 required; the proposed ADRs state that they
-      cannot become accepted before authoritative source-status correction and
-      explicit owner approval.
+      After the owner's explicit 2026-08-11 approval, both ADR records have
+      Status Accepted and governance/decisions.yaml records ADR-001 and ADR-010
+      with status accepted.
   - requirement: ADR-MODULE-TRUST-001 is the only activated successor.
     proof: >-
-      Pending both prerequisite gates. roadmap/tasks/ADR-MODULE-TRUST-001.yaml
-      intentionally remains blocked, and no other successor has been activated.
+      ADR-RUNTIME-BOUNDARY-001 is completed and
+      roadmap/tasks/ADR-MODULE-TRUST-001.yaml is ready; repository validation
+      and list-ready confirm that no other successor is activated.
 owner_approval:
-  approved: false
-  reference: ''
-unresolved_decisions:
-  - ARCHITECTURE.md, CAPABILITY-CONTRACT.md, DATA-CLASSIFICATION.md and MODULE-MANIFEST.md require authoritative approved status outside this ADR task's scope.
-  - The owner must explicitly approve proposed ADR-001 and ADR-010 after the normative source-status gate is resolved.
+  approved: true
+  reference: >-
+    Owner prompt on 2026-08-11 for TASK-ID ADR-RUNTIME-BOUNDARY-001: "прошу от
+    моего имени утвердить ВСЕ документы у которых сейчас статус \"К утверждению\"
+    или похожий (как я пытался сделать в некоторых из них)". Applied by this
+    task to ADR-001 and ADR-010 only; normative specification statuses remain
+    unchanged for coherent approval by SPEC-BASELINE-001.
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/14
