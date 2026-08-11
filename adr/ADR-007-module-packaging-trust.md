@@ -1,7 +1,8 @@
 # ADR-007: Module packaging, trust, activation, and failure isolation
 
-- **Status:** Proposed — owner approval required
+- **Status:** Accepted
 - **Date:** 2026-08-11
+- **Accepted:** 2026-08-11
 - **Task:** `ADR-MODULE-TRUST-001`
 - **Decision owner:** Nabla project owner
 - **Related decisions:** `ADR-001`, `ADR-010`
@@ -560,10 +561,13 @@ only when it preserves every decision and compatibility constraint above.
   under that gate for signing credentials and security evidence.
 - Approved `SPEC-NAVIGATION.md` v0.4: `NAV:6` execution and evidence protocol.
 - Prepared task context manifest:
-  `6be4f929dff2bfb67fe8937c9760e84f4e9b269b76853e5e558e14c496381b58`.
+  `8ef7b628a17f60cdf9f6556c6d94ff61763f927e92efe98dab7537b150c5e0ec`.
 
 ## Approval
 
-Pending explicit owner approval. Until approval is recorded, this ADR remains
-proposed, `governance/decisions.yaml` remains `required` for `ADR-007`, and
-`ADR-QUERY-DSL-001` remains blocked.
+Accepted by the Nabla project owner on 2026-08-11 in the Codex prompt:
+“Утверждаю ADR-007 в PR #18 и разрешаю перевести ADR-MODULE-TRUST-001 в
+completed, ADR-007 — в accepted, а ADR-QUERY-DSL-001 — в ready.” This approval
+accepts ADR-007 for `ADR-MODULE-TRUST-001`; it does not approve or amend the
+active draft normative specifications. `governance/decisions.yaml` records
+ADR-007 as accepted.
