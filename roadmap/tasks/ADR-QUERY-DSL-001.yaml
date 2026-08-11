@@ -30,11 +30,18 @@ scope:
 context:
   packs: []
   required:
+    - CON:I6
+    - ARCH:8
     - ARCH:24
     - ARCH:24.1
     - DATA:6
     - DATA:12
     - CAP:9
+    - CAP:3.4
+    - CAP:6
+    - CAP:7.4
+    - CAP:8.4
+    - CAP:10
     - CAP:12
     - CAP:12.8
     - CAP:24
@@ -42,6 +49,8 @@ context:
     - NAV:6
   conditional: []
   impact_tags:
+    - ai-boundary
+    - derived
     - sensitive
     - failure-domain
   full_document_reads: []
