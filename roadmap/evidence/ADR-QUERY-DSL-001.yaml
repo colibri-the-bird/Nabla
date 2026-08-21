@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: ADR-QUERY-DSL-001
-context_manifest_sha256: f1d4cdc84c4772fb51009792d7aa43d6d9a9a0c79dde7bdc7432fbdd2488fe89
+context_manifest_sha256: ec426d8f89a60d4aa386329aa2a685a9b339ed5a19adb9eef85cf2253307f176
 selectors:
   - CON:I6
   - ARCH:8
@@ -44,22 +44,25 @@ impact_tags:
 triggers: []
 changed_paths:
   - adr/ADR-003-safe-query-dsl.md
+  - governance/decisions.yaml
   - roadmap/tasks/ADR-QUERY-DSL-001.yaml
+  - roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
   - roadmap/evidence/ADR-QUERY-DSL-001.yaml
 changed_contracts:
-  - ADR-003 (proposed decision record; acceptance pending)
+  - ADR-003 (accepted decision record)
+  - DECISION-REGISTRY-v1 (ADR-003 accepted)
 tests:
   - requirement: python tools/nabla_nav.py validate
-    command: python tools/nabla_nav.py validate
+    command: .venv/Scripts/python.exe tools/nabla_nav.py validate
     exit_code: 0
   - requirement: python tools/nabla_nav.py check-lock
-    command: python tools/nabla_nav.py check-lock
+    command: .venv/Scripts/python.exe tools/nabla_nav.py check-lock
     exit_code: 0
   - requirement: ADR decision record review
     command: >-
       manual grammar/type, security/failure, and cross-boundary reviews of
       ADR-003 against ADR-007, manifest
-      f1d4cdc84c4772fb51009792d7aa43d6d9a9a0c79dde7bdc7432fbdd2488fe89,
+      ec426d8f89a60d4aa386329aa2a685a9b339ed5a19adb9eef85cf2253307f176,
       and all prepared selectors
     exit_code: 0
 acceptance_evidence:
@@ -82,18 +85,21 @@ acceptance_evidence:
       missing parser/planner/cost/cursor implementation evidence.
   - requirement: ADR-003 is accepted in the registry after owner approval.
     proof: >-
-      Pending explicit owner approval. ADR-003 remains Proposed and
-      governance/decisions.yaml intentionally keeps ADR-003 required; no
-      acceptance is inferred from reviews or PR creation.
+      Explicit Nabla project owner approval in the 2026-08-22 Codex prompt for
+      TASK-ID ADR-QUERY-DSL-001 accepted ADR-003; the decision record is
+      Accepted and governance/decisions.yaml records ADR-003 as accepted.
   - requirement: ADR-REVISION-IDENTITY-001 is the only activated successor.
     proof: >-
-      Pending explicit owner approval and ADR-003 acceptance.
-      roadmap/tasks/ADR-QUERY-DSL-001.yaml remains ready,
-      roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml remains blocked, and no
-      successor has been activated.
+      After ADR-003 acceptance, roadmap/tasks/ADR-QUERY-DSL-001.yaml changed
+      ready to completed and roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+      changed blocked to ready; the final ready-list shows no other activated
+      task.
 owner_approval:
-  approved: false
-  reference: ''
-unresolved_decisions:
-  - Explicit owner approval is required before ADR-003 acceptance, registry mutation, task completion, and successor activation.
+  approved: true
+  reference: >-
+    Nabla project owner approval in the 2026-08-22 Codex prompt for TASK-ID
+    ADR-QUERY-DSL-001: “Утверждаю ADR-003 в PR #19 и разрешаю перевести
+    ADR-QUERY-DSL-001 в completed, ADR-003 — в accepted, а
+    ADR-REVISION-IDENTITY-001 — в ready.”
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/19
