@@ -1,7 +1,8 @@
 # ADR-003: Bounded safe Query DSL
 
-- **Status:** Proposed — owner approval required
+- **Status:** Accepted
 - **Date:** 2026-08-11
+- **Accepted:** 2026-08-22
 - **Task:** `ADR-QUERY-DSL-001`
 - **Decision owner:** Nabla project owner
 - **Related decision:** `ADR-007`
@@ -788,10 +789,13 @@ requires a superseding ADR.
   extension through query data.
 - Approved `SPEC-NAVIGATION.md` v0.4: `NAV:6` execution and evidence protocol.
 - Prepared task context manifest:
-  `f1d4cdc84c4772fb51009792d7aa43d6d9a9a0c79dde7bdc7432fbdd2488fe89`.
+  `ec426d8f89a60d4aa386329aa2a685a9b339ed5a19adb9eef85cf2253307f176`.
 
 ## Approval
 
-Pending explicit owner approval. Until approval is recorded, this ADR remains
-proposed, `governance/decisions.yaml` remains `required` for `ADR-003`, and
-`ADR-REVISION-IDENTITY-001` remains blocked.
+Accepted by the Nabla project owner on 2026-08-22 in the Codex prompt:
+“Утверждаю ADR-003 в PR #19 и разрешаю перевести ADR-QUERY-DSL-001 в
+completed, ADR-003 — в accepted, а ADR-REVISION-IDENTITY-001 — в ready.” This
+approval accepts ADR-003 for `ADR-QUERY-DSL-001`; it does not approve or amend
+the active draft normative specifications. `governance/decisions.yaml` records
+ADR-003 as accepted.

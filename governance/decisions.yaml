@@ -12,7 +12,7 @@ decisions:
     selectors: [ARCH:24.1]
   - id: ADR-003
     title: Safe Query DSL
-    status: required
+    status: accepted
     required_before: Layout and saved-query implementation
     selectors: [ARCH:24.1]
   - id: ADR-004
