@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: ADR-DOCUMENT-ENGINE-001
 type: adr
-state: blocked
+state: ready
 outcome: ADR-006 and ADR-011 define stable anchors and the PDF engine boundary from measured evidence.
 router: BOOT:1
 scope:

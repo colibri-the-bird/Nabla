@@ -7,7 +7,7 @@ decisions:
     selectors: [ARCH:24.1]
   - id: ADR-002
     title: Full snapshots, patches or hybrid revisions
-    status: required
+    status: accepted
     required_before: Revision DDL
     selectors: [ARCH:24.1]
   - id: ADR-003
@@ -17,7 +17,7 @@ decisions:
     selectors: [ARCH:24.1]
   - id: ADR-004
     title: Markdown three-way merge and conflict format
-    status: required
+    status: accepted
     required_before: Sync conflict implementation
     selectors: [ARCH:24.1]
   - id: ADR-005
@@ -42,7 +42,7 @@ decisions:
     selectors: [ARCH:24.1]
   - id: ADR-009
     title: Global IDs, device identity, sequence and logical time
-    status: required
+    status: accepted
     required_before: v1 identity schema freeze
     selectors: [ARCH:24.2]
   - id: ADR-010
@@ -57,6 +57,6 @@ decisions:
     selectors: [ARCH:24.2]
   - id: ADR-012
     title: Migration framework and compatibility policy
-    status: required
+    status: accepted
     required_before: First long-lived DDL
     selectors: [ARCH:24.2]

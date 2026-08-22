@@ -1,6 +1,6 @@
 # ADR-009: Typed global IDs, device sequence, and causal time
 
-- **Status:** Proposed — owner approval required
+- **Status:** Accepted — owner approved in PR #20 workflow
 - **Date:** 2026-08-22
 - **Task:** `ADR-REVISION-IDENTITY-001`
 - **Decision owner:** Nabla project owner
@@ -452,10 +452,12 @@ explicit migration that never silently remaps existing IDs.
   `b9ea6908f265440f36add96ac2f8123ea37e50610e3e6360dd81a75e1e0a3b9c`.
 - Approved `SPEC-NAVIGATION.md` v0.4: `NAV:6` execution and evidence protocol.
 - Prepared task context manifest:
-  `6785c3183b4f810a523888e32152edec74db73f40a128cfdcd1a93bba1b84185`.
+  `c2e2f9ab5128c589585333ef40c367661383f1c03336d65e33992f9a0281a1c0`.
 
 ## Approval
 
-Owner approval is pending. Until explicit approval, this ADR remains Proposed,
-`governance/decisions.yaml` keeps ADR-009 `required`,
-`ADR-REVISION-IDENTITY-001` remains `ready`, and no successor is activated.
+The Nabla project owner explicitly approved this ADR in the Codex task
+conversation on 2026-08-22 for PR #20. ADR-009 is Accepted,
+`governance/decisions.yaml` records it as `accepted`,
+`ADR-REVISION-IDENTITY-001` is `completed`, and the sole successor
+`ADR-DOCUMENT-ENGINE-001` is `ready`.
