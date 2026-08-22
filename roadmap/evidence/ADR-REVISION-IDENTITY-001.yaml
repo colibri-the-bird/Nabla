@@ -1,6 +1,6 @@
 schema_version: 2
 task_id: ADR-REVISION-IDENTITY-001
-context_manifest_sha256: 6785c3183b4f810a523888e32152edec74db73f40a128cfdcd1a93bba1b84185
+context_manifest_sha256: c2e2f9ab5128c589585333ef40c367661383f1c03336d65e33992f9a0281a1c0
 selectors:
   - CON:I3
   - CON:I12
@@ -79,13 +79,17 @@ changed_paths:
   - adr/ADR-004-markdown-merge-conflict-format.md
   - adr/ADR-009-global-identity-causal-time.md
   - adr/ADR-012-migration-compatibility-framework.md
+  - governance/decisions.yaml
+  - roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml
   - roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
   - roadmap/evidence/ADR-REVISION-IDENTITY-001.yaml
 changed_contracts:
-  - ADR-002 (proposed decision record; acceptance pending)
-  - ADR-004 (proposed decision record; acceptance pending)
-  - ADR-009 (proposed decision record; acceptance pending)
-  - ADR-012 (proposed decision record; acceptance pending)
+  - ADR-002 (accepted decision record)
+  - ADR-004 (accepted decision record)
+  - ADR-009 (accepted decision record)
+  - ADR-012 (accepted decision record)
+  - DECISION-REGISTRY-v1 (ADR-002/004/009/012 accepted)
+  - ADR-DOCUMENT-ENGINE-001 (sole successor activated to ready)
 tests:
   - requirement: python tools/nabla_nav.py validate
     command: .venv/Scripts/python.exe tools/nabla_nav.py validate
@@ -97,7 +101,7 @@ tests:
     command: >-
       manual independent revision/merge, identity/migration, evidence/scope,
       and integrated cross-ADR reviews against manifest
-      6785c3183b4f810a523888e32152edec74db73f40a128cfdcd1a93bba1b84185,
+      c2e2f9ab5128c589585333ef40c367661383f1c03336d65e33992f9a0281a1c0,
       accepted ADR-003, and approved REVISION-SYNC-PREPARATION-SPIKE-v1
     exit_code: 0
 acceptance_evidence:
@@ -133,18 +137,17 @@ acceptance_evidence:
       mobile, network, clone fencing, and UX remain explicitly unmeasured.
   - requirement: ADR-002, ADR-004, ADR-009 and ADR-012 are accepted after owner approval.
     proof: >-
-      Pending explicit owner approval. All four ADRs remain Proposed and
-      governance/decisions.yaml intentionally keeps all four decisions
-      required; acceptance is not inferred from review or draft PR creation.
+      The Nabla project owner explicitly approved ADR-002, ADR-004, ADR-009 and
+      ADR-012 in the Codex task conversation on 2026-08-22 for PR #20 and
+      authorized the state transitions. All four records are Accepted and
+      governance/decisions.yaml records all four as accepted.
   - requirement: ADR-DOCUMENT-ENGINE-001 is the only activated successor.
     proof: >-
-      Pending explicit owner approval and acceptance of all four ADRs.
-      roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml remains ready,
-      roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml remains blocked, and no
-      successor is activated by this draft.
+      After that explicit approval, roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+      is completed and roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml is the sole
+      successor changed to ready. No other successor task was activated.
 owner_approval:
-  approved: false
-  reference: ''
-unresolved_decisions:
-  - Explicit owner approval is required before accepting all four ADRs, mutating the registry, completing the task, and activating the sole successor.
+  approved: true
+  reference: 'Codex task conversation, 2026-08-22: owner approved ADR-002/004/009/012 and authorized ADR-REVISION-IDENTITY-001 completed plus ADR-DOCUMENT-ENGINE-001 ready for PR #20.'
+unresolved_decisions: []
 pr_url: https://github.com/colibri-the-bird/Nabla/pull/20

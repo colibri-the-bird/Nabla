@@ -1,7 +1,7 @@
 schema_version: 2
 task_id: ADR-REVISION-IDENTITY-001
 type: adr
-state: ready
+state: completed
 outcome: ADR-002, ADR-004, ADR-009 and ADR-012 fix revision, conflict, identity and migration semantics before DDL.
 router: BOOT:1
 scope:
