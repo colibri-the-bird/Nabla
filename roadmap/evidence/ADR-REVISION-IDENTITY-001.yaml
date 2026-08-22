@@ -1,0 +1,150 @@
+schema_version: 2
+task_id: ADR-REVISION-IDENTITY-001
+context_manifest_sha256: 6785c3183b4f810a523888e32152edec74db73f40a128cfdcd1a93bba1b84185
+selectors:
+  - CON:I3
+  - CON:I12
+  - ARCH:10
+  - ARCH:16
+  - ARCH:24
+  - ARCH:24.1
+  - ARCH:24.2
+  - CAP:11.6
+  - CAP:20
+  - CAP:21
+  - KNOW:26
+  - DOC:27
+  - NAV:6
+  - CON:I1
+  - CON:I10
+  - ARCH:7
+  - DATA:2
+  - CAP:10
+  - CAP:11
+  - CON:I2
+  - DATA:4.1
+  - CAP:11.9
+  - LOOP:8
+  - LOOP:10
+  - ARCH:10.3
+  - ARCH:10.4
+  - CON:I4
+  - ARCH:9
+  - DATA:4.6
+  - CAP:14
+  - CAP:18
+  - CON:I14
+  - ARCH:18
+  - CAP:19
+  - CON:I16
+  - ARCH:19
+  - DATA:9
+  - CAP:17
+  - MOD:19
+  - DATA:10
+  - CON:I7
+  - CON:I8
+  - LOOP:4
+  - LOOP:6
+  - LOOP:7
+  - MOD:18
+  - CON:I15
+  - ARCH:20
+  - CAP:24
+document_hashes:
+  ARCH: e207289552b30e2a0c090badaf384c75dc77b27e7177f1f17982a01f1b95e8cd
+  CAP: 686e12ce1ff9fdc57f563e4f8831af17795a0af5e37deb68db0bf4a55fc9197a
+  CON: e69ae33175b2a0b0bccd0c721a33e000e2caabd09d96fbb811edf671cd7a773d
+  DATA: 378350d29ae5aa22ac3cec99c9fe747d0798e3bedb5e774bd8398cc81cc2c882
+  DOC: d35289539a86cbbd6f2373adc7ed3f3f96398380938a4df80cd06269331d0555
+  KNOW: 42fda7eed2f0d34bbb56e9b0516c86d5d1ff37dc11044b9f62330a8c1c93a581
+  LOOP: 0b96a6171c33faae8a01506352ebe793a013f4634f8e420e24a847f351004597
+  MOD: 176e17d9f28c5a11047f8d79aa48c9d4b815e3aff1db1be55809850eaf43c3a4
+  NAV: 4e70185d491d7691fa9cb4c544ba01d5cb510d1d6521e11e4143baac1b131608
+impact_tags:
+  - backup-recovery
+  - canonical-write
+  - derived
+  - export
+  - failure-domain
+  - immutable-fact
+  - import
+  - loop-coverage
+  - offline-sync-ready
+  - revisioned-entity
+  - workflow
+triggers: []
+changed_paths:
+  - adr/ADR-002-hybrid-immutable-revisions.md
+  - adr/ADR-004-markdown-merge-conflict-format.md
+  - adr/ADR-009-global-identity-causal-time.md
+  - adr/ADR-012-migration-compatibility-framework.md
+  - roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml
+  - roadmap/evidence/ADR-REVISION-IDENTITY-001.yaml
+changed_contracts:
+  - ADR-002 (proposed decision record; acceptance pending)
+  - ADR-004 (proposed decision record; acceptance pending)
+  - ADR-009 (proposed decision record; acceptance pending)
+  - ADR-012 (proposed decision record; acceptance pending)
+tests:
+  - requirement: python tools/nabla_nav.py validate
+    command: .venv/Scripts/python.exe tools/nabla_nav.py validate
+    exit_code: 0
+  - requirement: python tools/nabla_nav.py check-lock
+    command: .venv/Scripts/python.exe tools/nabla_nav.py check-lock
+    exit_code: 0
+  - requirement: ADR decision record review
+    command: >-
+      manual independent revision/merge, identity/migration, evidence/scope,
+      and integrated cross-ADR reviews against manifest
+      6785c3183b4f810a523888e32152edec74db73f40a128cfdcd1a93bba1b84185,
+      accepted ADR-003, and approved REVISION-SYNC-PREPARATION-SPIKE-v1
+    exit_code: 0
+acceptance_evidence:
+  - requirement: The four ADRs form one compatible identity, revision, conflict and migration model.
+    proof: >-
+      ADR-009 defines typed offline UUID identities, distinct store/writer
+      incarnation state, per-device commit sequence, explicit ancestry/dependency
+      causality, versioned operational event envelopes, and non-authoritative
+      clocks. ADR-002 binds those identities to fingerprinted immutable CE
+      revision envelopes, bounded hybrid bodies, a single-root graph, an exact
+      unordered frontier, opaque maxima, and immutable migration/resolution
+      provenance; persisted frontier indexes and redundant materializations are
+      rebuildable DD. ADR-004 uses exact graph/frontier inputs for conservative
+      Markdown merge, bounded rebuildable DD conflict descriptors, final
+      resolution, and ancestry-preserving reductions for frontiers above eight.
+      ADR-012 preserves identities and graph meaning during physical migration,
+      models migration as a privileged hash-chained OT workflow with separate CA,
+      and emits one branch-preserving child per bounded complete frontier: a full
+      snapshot for live/archived content or DeletedBody for deleted content.
+  - requirement: Replay measurements are cited and unmeasured assumptions are explicit.
+    proof: >-
+      Each ADR cites approved REVISION-SYNC-PREPARATION-SPIKE-v1, semantic digest
+      f60a38c640d5b8c7bdd9b3f6bdbf727f3ebf9932746c04494421790495223771,
+      and raw-result SHA-256
+      b9ea6908f265440f36add96ac2f8123ea37e50610e3e6360dd81a75e1e0a3b9c.
+      The records distinguish 7 passed cases and 124 assertions, the bounded
+      512-ID/two-device fixture with zero measured collisions, two preserved
+      heads, stale/partial rejection with exactly four absent effects (command
+      receipt, revision, frontier change, and outbox row), selected transaction
+      crash points, typed missing parents, and all 24 convergent schedules with
+      at most 3 passes under 6. Audit/log effects, production IDs, hybrid storage,
+      Markdown merge, migration, performance, power-loss/corruption durability,
+      mobile, network, clone fencing, and UX remain explicitly unmeasured.
+  - requirement: ADR-002, ADR-004, ADR-009 and ADR-012 are accepted after owner approval.
+    proof: >-
+      Pending explicit owner approval. All four ADRs remain Proposed and
+      governance/decisions.yaml intentionally keeps all four decisions
+      required; acceptance is not inferred from review or draft PR creation.
+  - requirement: ADR-DOCUMENT-ENGINE-001 is the only activated successor.
+    proof: >-
+      Pending explicit owner approval and acceptance of all four ADRs.
+      roadmap/tasks/ADR-REVISION-IDENTITY-001.yaml remains ready,
+      roadmap/tasks/ADR-DOCUMENT-ENGINE-001.yaml remains blocked, and no
+      successor is activated by this draft.
+owner_approval:
+  approved: false
+  reference: ''
+unresolved_decisions:
+  - Explicit owner approval is required before accepting all four ADRs, mutating the registry, completing the task, and activating the sole successor.
+pr_url: ''
