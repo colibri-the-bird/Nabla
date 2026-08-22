@@ -48,7 +48,15 @@ context:
     - NAV:6
   conditional: []
   impact_tags:
+    - canonical-write
+    - immutable-fact
     - revisioned-entity
+    - derived
+    - workflow
+    - import
+    - export
+    - backup-recovery
+    - loop-coverage
     - offline-sync-ready
     - failure-domain
   full_document_reads: []
