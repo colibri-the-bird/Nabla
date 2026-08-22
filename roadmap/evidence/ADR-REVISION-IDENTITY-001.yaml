@@ -147,4 +147,4 @@ owner_approval:
   reference: ''
 unresolved_decisions:
   - Explicit owner approval is required before accepting all four ADRs, mutating the registry, completing the task, and activating the sole successor.
-pr_url: ''
+pr_url: https://github.com/colibri-the-bird/Nabla/pull/20
